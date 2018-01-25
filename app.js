@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var ejs = require('ejs');
 
+var http = require('http');
 var app = express();
 
 // view engine setup
@@ -42,6 +43,12 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+//Create Server and listen on port 3000
+var httpServer = http.createServer(app);
+httpServer.listen(3000,function(){
+	console.log('Proxy listening on port 8080');
 });
 
 module.exports = app;
