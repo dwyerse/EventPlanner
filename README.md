@@ -48,6 +48,8 @@ Install mongoDB
 ```
 sudo apt-get install -y mongodb-org
 ```
+Important: Ensure a folder is created at: (Replace 'C' with relevant top folder level) <br>
+C://data/db
 ## Selenium Setup
 Run npm command to install all webdriverio drivers
 ```
