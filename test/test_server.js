@@ -18,3 +18,38 @@ describe('testing suite', function() {
 		});
 	});
 });
+
+describe('db testing suite', function() {
+	
+	const MongoClient = require('mongodb').MongoClient;
+	const url = 'mongodb://localhost:27017';
+
+	it('should connect to database', function() {
+		MongoClient.connect(url, function(err, client) {
+			assert.equal(null, err);	
+		});
+	});
+
+	it('should be able to insert data', function() {
+		MongoClient.connect(url, function(err, client) {
+					
+			var dbo = client.db("mydb");
+			var myobj = { name: "Company Inc", address: "Highway 37" };
+			dbo.collection("customers").insertOne(myobj, function(err, res) {
+			assert.equal(null, error);	
+			console.log("1 document inserted");			
+			});
+		}); 
+	});
+
+	it('should be able to find data', function() {
+		MongoClient.connect(url, function(err, client) {					
+			if (err) throw err;
+			var dbo = db.db("mydb");
+			dbo.collection("customers").findOne({}, function(err, result) {
+				console.log(result.name);	
+				assert.equal(null, error);							
+			});
+		}); 	
+	});  
+});
