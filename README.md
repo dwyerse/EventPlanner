@@ -58,7 +58,8 @@ npm run-script selenium-install
 # Running the Application
 Run the mongodb server. (Defaults to localhost:27017)
 ```
-mongod
+sudo service mongod start
+mongo --host 127.0.0.1:27017
 ```
 In another terminal:
 Start the app server.  (Defaults to localhost:3000)
