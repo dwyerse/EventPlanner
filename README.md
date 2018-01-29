@@ -1,4 +1,5 @@
 
+
 # EventPlanner
 ### About
 This Event Planner application was developed as part of CS4098.
@@ -53,7 +54,12 @@ Run npm command to install all webdriverio drivers
 npm run-script selenium-install
 ```
 # Running the Application
-Start the app server. (Defaults to localhost:3000)
+Run the mongodb server. (Defaults to localhost:27017)
+```
+mongod
+```
+In another terminal:
+Start the app server.  (Defaults to localhost:3000)
 ```
 npm start
 ```
@@ -72,26 +78,6 @@ In a new terminal: To run the webdriver tests (Note: Expects local server on por
 ```
 npm run-script selenium-test
 ```
-# Project Structure
-This project top level structure is as follows
-.
-├── app.js
-├── .gitignore
-├── package.json
-├── README
-├── public	 
-│   └── stylesheets
-│       └── style.css
-├── routes                   
-│   ├── index.js
-└── views
-│   └── index.ejs
-└── models
-│   └── user.json
-└── mapper
-│   └── user_mapper.js
-└── seleniumTest
-└── test
 # Errors
 ### Port already in use
 Following commands work in 'git bash' terminal
