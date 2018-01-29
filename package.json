@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "wdio",
+    "test": "mocha",
+    "selenium-test": "wdio",
     "selenium-install": "./node_modules/.bin/selenium-standalone install",
     "selenium-start": "./node_modules/.bin/selenium-standalone start"
   },
@@ -22,7 +23,6 @@
     "webdriverio": "^4.10.1"
   },
   "devDependencies": {
-    "wdio-chromedriver-service": "^0.1.2",
     "wdio-mocha-framework": "^0.5.12",
     "wdio-selenium-standalone-service": "0.0.9",
     "wdio-spec-reporter": "^0.1.3"

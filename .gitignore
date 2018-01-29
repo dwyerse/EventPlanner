@@ -58,4 +58,7 @@ typings/
 .env
 
 # Output errors from wdio
-./errorShots
+errorShots/
+
+# Output from mongodb
+data/
