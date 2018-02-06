@@ -16,8 +16,13 @@ router.get('/password', function(req, res) {
 });
 
 //Handle POST
+//Can find form values at req.body.ELEMNAMEHERE
 router.post('/password', function(req,res){
-	console.log(req.body);
 	res.sendStatus(200);
 });
+router.post('/account', function(req,res){
+	res.sendStatus(200);
+});
+
+
 module.exports = router;
