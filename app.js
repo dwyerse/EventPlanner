@@ -9,6 +9,21 @@ var index = require("./routes/index");
 var http = require("http");
 var app = express();
 
+//Import the mongoose module
+var mongoose = require('mongoose');
+
+//Set up default mongoose connection
+var mongoDB = 'mongodb://127.0.0.1/test';
+mongoose.connect(mongoDB);
+//Get the default connection
+mongoose.connection.on('connected', function () {  
+  console.log('Mongoose default connection open to ' + mongoDB);
+}); 
+// If the connection throws an error
+mongoose.connection.on('error',function (err) {  
+  console.log('Mongoose default connection error: ' + err);
+}); 
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -29,21 +44,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-//Import the mongoose module
-var mongoose = require('mongoose');
-
-//Set up default mongoose connection
-var mongoDB = 'mongodb://127.0.0.1/my_database';
-mongoose.connect(mongoDB);
-//Get the default connection
-mongoose.connection.on('connected', function () {  
-  console.log('Mongoose default connection open to ' + mongoDB);
-}); 
-// If the connection throws an error
-mongoose.connection.on('error',function (err) {  
-  console.log('Mongoose default connection error: ' + err);
-}); 
 
 // error handler
 app.use(function(err, req, res, next) {
