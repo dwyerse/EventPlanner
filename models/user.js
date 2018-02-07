@@ -4,7 +4,8 @@ var userSchema = new Schema;
 userSchema.add({ 
 	name: { type: String, required: true },
 	email: 'string',
-	password:'string'
+	password:'string',
+	type:'string'
 });
 User = mongoose.model('user',userSchema);
 module.exports = User;

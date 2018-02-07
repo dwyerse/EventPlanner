@@ -34,15 +34,59 @@ describe('Database testing suite', function() {
 		});
 	});	
 
-	it('should add user to the database ', function(done) {
-		var aUser = new User({name:'Seamus'});
+	var mapper = require('../mappers/userMapper');
 
-		aUser.save(function (err) {
-			assert.equal(err,null);
-			assert.equal(!aUser.isNew,true); //Need to double check  the isNew property
-			done();
-		});	
+	it('should remove all users from the collection', function(done) {
 		
+		mapper.deleteAllUsers(function(err){
+			assert.equal(err,null);			
+			done();		
+		});		
 	});
+
+	it('should add user to the database without error', function(done) {
+		
+		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin',function(err){
+			assert.equal(err,null);
+			done();
+		});		
+	});
+
+	it('should add user to the database with correct values ', function(done) {		
+		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin',function(err,res){				
+			assert.equal(res.name,'Seamus');
+			assert.equal(res.email,'dwyerse@tcd.ie');
+			assert.equal(res.password,'password');
+			assert.equal(res.type,'admin');
+			done();
+		});		
+	});
+
+	it('should return an error if a required field is empty ', function(done) {		
+		mapper.addUser(null,'dwyerse@tcd.ie','password','admin',function(err){				
+			assert.notEqual(err,null);
+			done();
+		});		
+	});
+
+	it('find previously saved user', function(done) {		
+		
+		mapper.findUserByName('Seamus',function(err,res){
+			assert.equal(err,null);
+			assert.equal(res[0].name,'Seamus');
+			done();
+		});
+
+	});
+
+	it('should return all users without error ', function(done) {		
+		mapper.allUsers(function(err){
+			assert.equal(err,null);
+			done();
+		});
+	});
+
+
+	
 
 });
