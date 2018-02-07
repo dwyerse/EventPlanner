@@ -25,14 +25,17 @@ function findUserById(id,callback){
 	});	
 }
 
-function updateNameById(id,name,callback){
+function findUserByEmail(email,callback){
+	User.find({ email:email }, function(err,res){
+		return callback(err,res);
+	});	
+}
 
-	User.findById(id, function (err, user) {
-		if (err) return callback(err);
-		
-		user.name = name;
-		user.save(function (err, updatedUser) {
-			return(err,updatedUser);
+function updateUserByEmail(email,userObj,callback){
+	findUserByEmail(email,function(err,res){		
+		res = userObj;
+		res.save(function (err, updatedUser) {
+			return callback(err,updatedUser);
 		});
 	});
 }
@@ -43,6 +46,4 @@ function deleteAllUsers(callback){
 	});
 }
 
-
-
-module.exports = {allUsers,addUser,findUserById,findUserByName,updateNameById,deleteAllUsers};
+module.exports = {allUsers,addUser,findUserById,findUserByName,updateUserByEmail,deleteAllUsers};

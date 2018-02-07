@@ -69,7 +69,15 @@ describe('Database testing suite', function() {
 		});		
 	});
 
-	it('find previously saved user', function(done) {		
+	it('should return all users', function(done) {		
+		mapper.allUsers(function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.length,2);
+			done();
+		});
+	});
+
+	it('find previously saved user by name', function(done) {		
 		
 		mapper.findUserByName('Seamus',function(err,res){
 			assert.equal(err,null);
@@ -79,14 +87,26 @@ describe('Database testing suite', function() {
 
 	});
 
-	it('should return all users without error ', function(done) {		
-		mapper.allUsers(function(err){
-			assert.equal(err,null);
+	it('shouldnt find unsaved user by name', function(done) {		
+		
+		mapper.findUserByName('unsavedUserName',function(err,res){
+			assert.equal(res.length,0);
 			done();
 		});
-	});
 
+	});	
 
 	
+	it('should update user', function(done) {		
+		
+		var userObj = new User({name: 'Ben',email: 'ben@ben.ben',password:'benspassword',type:'admin'}); 
+
+		mapper.updateUserByEmail('dwyerse@tcd.ie',userObj,function(err,res){
+			assert.equal(userObj,res);
+			done();
+		});
+
+	});	
+		
 
 });
