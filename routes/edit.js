@@ -3,8 +3,7 @@ var router = express.Router();
 
 var exampleUser = {
 	email: 'email@email.com',
-	fName: 'Sean',
-	lName: 'Durban',
+	name: 'Sean Durban',
 	subscribed : false
 };
 
@@ -12,6 +11,7 @@ var exampleUser = {
 router.get('/account', function(req, res) {
 	res.render('editAcc', {user:exampleUser});
 });
+
 router.get('/password', function(req, res) {
 	res.render('changePassword',{});
 });
@@ -22,7 +22,7 @@ router.post('/password', function(req,res){
 	res.sendStatus(200).send('success');
 });
 router.post('/account', function(req,res){
-	if(req.body.inputfName && req.body.inputfName=='S'){
+	if(req.body.inputName && req.body.inputName=='S'){
 		res.flash('succ', 'Success!');
 		res.redirect('/edit/account');
 	} else {

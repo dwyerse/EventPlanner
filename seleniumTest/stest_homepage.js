@@ -6,10 +6,10 @@ describe('homepage tests', function() {
 	browser.url('/');
 	it('should have the correct title', function() {
 		var title = browser.getTitle();
-		assert.equal(title, 'Homepage');
+		return assert.equal(title, 'Homepage');
 	});
 	it('Should have welcome message', function() {
 		var welcomeText = browser.getText('#welcome');
-		assert.equal(welcomeText, 'Welcome to our site!');
+		return assert.equal(welcomeText, 'Welcome to our site!');
 	});
 });

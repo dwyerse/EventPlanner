@@ -16,22 +16,20 @@
 			<%= flash.succ %>
 		</div>
 	<% } %>
-	<form  action="/edit/account" method="post">
+	<h2> Edit Account Details </h2>
+	<br>
+	<form  action="/edit/account" method="post" id='form'>
 	  <div class="form-row">
 	    <div class="form-group col-md-6">
 	      <label for="inputEmail">Email</label>
-	      <input type="email" class="form-control" name="inputEmail" placeholder= <%= user.email %>>
+	      <input type="email" class="form-control" name="inputEmail" value= <%= user.email %>>
 	    </div>
 	  </div>
 	  <div class="form-row">
-			<div class="col">
-	    	<label for="inputfName">First Name</label>
-	    	<input type="text" class="form-control" name="inputfName" placeholder=<%= user.fName %>>
+			<div class="form-group col-md-6">
+	    	<label for="inputName">Name</label>
+	    	<input type="text" class="form-control" name="inputName" value='<%= user.name %>'>
 			</div>
-			<div class="col">
-	    	<label for="inputlName">Last Name</label>
-	    	<input type="text" class="form-control" name="inputlName" placeholder=<%= user.lName %>>
-	  	</div>
 		</div>
 	  <div class="form-group">
 	    <div class="form-check">
