@@ -15,7 +15,7 @@ describe('Database testing suite', function() {
 	//Import the mongoose module
 	var mongoose = require('mongoose');
 	//Set up default mongoose connection
-	var mongoDB = 'mongodb://127.0.0.1/eventplanner_db';
+	var mongoDB = 'mongodb://127.0.0.1/test_eventplanner_db';
 	mongoose.connect(mongoDB);
 
 	var User = require('../models/user');
@@ -102,11 +102,12 @@ describe('Database testing suite', function() {
 		var userObj = new User({name: 'Ben',email: 'ben@ben.ben',password:'benspassword',type:'admin'}); 
 
 		mapper.updateUserByEmail('dwyerse@tcd.ie',userObj,function(err,res){
-			assert.equal(userObj,res);
+			assert.equal(userObj.name,res.name);
+			assert.equal(userObj.email,res.email);
+			assert.equal(userObj.password,res.password);
+			assert.equal(userObj.type,res.type);
 			done();
 		});
-
-	});	
-		
-
+	});		
+	
 });

@@ -31,13 +31,18 @@ function findUserByEmail(email,callback){
 	});	
 }
 
-function updateUserByEmail(email,userObj,callback){
-	findUserByEmail(email,function(err,res){		
-		res = userObj;
-		res.save(function (err, updatedUser) {
+function updateUserByEmail(email,userObj,callback){	
+
+	User.findOne({ email:email }, function(err,res){
+		res.name = userObj.name;	
+		res.email = userObj.email;
+		res.type = userObj.type;
+		res.password = userObj.password;			
+		res.save(function (err, updatedUser) {			
 			return callback(err,updatedUser);
 		});
-	});
+	});	
+
 }
 
 function deleteAllUsers(callback){
@@ -46,4 +51,4 @@ function deleteAllUsers(callback){
 	});
 }
 
-module.exports = {allUsers,addUser,findUserById,findUserByName,updateUserByEmail,deleteAllUsers};
+module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers};
