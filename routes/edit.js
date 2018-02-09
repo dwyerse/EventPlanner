@@ -20,22 +20,22 @@ router.get('/password', function(req, res) {
 //Handle POST
 //Can find form values at req.body.ELEMNAMEHERE
 router.post('/password', function(req, res) {
-		if (req.body.inputPassword1 == req.body.inputPassword2) {
-			exampleUser.password = req.body.inputPassword1;
-				userMapper.updateUserByEmail(exampleUser.email, exampleUser, function(error,result) {
-					if (!result) {
-						res.flash('err', 'User not found');
-					} else if (error) {
-						res.flash('err', error);
-					} else {
-						res.flash('succ', 'Successfully changed password!');
-					}
-					res.redirect('/edit/password');
-				});
-		} else {
-			res.flash('err', 'Passwords do not match');
+	if (req.body.inputPassword1 == req.body.inputPassword2) {
+		exampleUser.password = req.body.inputPassword1;
+		userMapper.updateUserByEmail(exampleUser.email, exampleUser, function(error,result) {
+			if (!result) {
+				res.flash('err', 'User not found');
+			} else if (error) {
+				res.flash('err', error);
+			} else {
+				res.flash('succ', 'Successfully changed password!');
+			}
 			res.redirect('/edit/password');
-		}
+		});
+	} else {
+		res.flash('err', 'Passwords do not match');
+		res.redirect('/edit/password');
+	}
 });
 router.post('/account', function(req, res) {
 	if (req.body.inputName && req.body.inputEmail) {
