@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "mocha --exit",
     "lint": "eslint ./",
     "selenium-test": "wdio",
@@ -36,5 +36,15 @@
     "hooks": {
       "pre-commit": "npm run-script lint && npm test"
     }
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "views/*",
+      "seleniumTest/*",
+      "package.json",
+      "package-lock.json"
+    ],
+    "delay": "2100"
   }
 }
