@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "mocha --exit",
     "lint": "eslint ./",
     "selenium-test": "wdio",
@@ -20,6 +20,7 @@
     "mocha": "^5.0.0",
     "mongodb": "^3.0.1",
     "morgan": "~1.9.0",
+    "nodemon": "^1.14.12",
     "selenium-standalone": "^6.12.0",
     "serve-favicon": "~2.4.5",
     "webdriverio": "^4.10.1"
@@ -32,7 +33,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm lint && npm test"
+      "pre-commit": "npm run-script lint && npm test"
     }
   }
 }
