@@ -12,6 +12,21 @@ var app = express();
 var session = require('express-session');
 var flash = require('express-flash-2');
 
+//Import the mongoose module
+var mongoose = require('mongoose');
+
+//Set up default mongoose connection
+var mongoDB = 'mongodb://127.0.0.1/eventplanner_db';
+mongoose.connect(mongoDB);
+//Get the default connection
+mongoose.connection.on('connected', function () {  
+  console.log('Mongoose default connection open to ' + mongoDB);
+}); 
+// If the connection throws an error
+mongoose.connection.on('error',function (err) {  
+  console.log('Mongoose default connection error: ' + err);
+}); 
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -58,3 +73,4 @@ httpServer.listen(3000, function() {
 });
 
 module.exports = app;
+
