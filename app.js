@@ -9,7 +9,7 @@ var index = require("./routes/index");
 var edit = require('./routes/edit');
 var http = require("http");
 var app = express();
-//var session = require('express-session');
+var session = require('express-session');
 var flash = require('express-flash-2');
 
 // view engine setup
@@ -24,12 +24,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser('Flash001'));
 app.use(express.static(path.join(__dirname, "public")));
 //For flash
-/*app.use(express.session({
+app.use(session({
     secret: 'Flash001',
     resave: true,
     saveUninitialized:true}));
-  app.use(flash());
-*/
+app.use(flash());
 
 app.use("/", index);
 app.use("/edit", edit);
