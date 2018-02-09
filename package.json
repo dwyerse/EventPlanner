@@ -35,5 +35,9 @@
     "hooks": {
       "pre-commit": "npm run-script lint && npm test"
     }
-  }
+  },
+	"nodemonConfig": {
+		"ignore": ["test/*", "views/*", "seleniumTest/*", "package.json", "package-lock.json"],
+		"delay": "2100"
+	}
 }
