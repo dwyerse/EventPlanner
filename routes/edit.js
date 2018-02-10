@@ -17,8 +17,8 @@ router.get('/password', function(req, res) {
 	res.render('changePassword', {});
 });
 
-//Handle POST
-//Can find form values at req.body.ELEMNAMEHERE
+//Handle POST requests
+//Need to replace exampleUser here with req.user
 router.post('/password', function(req, res) {
 	if (req.body.inputPassword1 == req.body.inputPassword2) {
 		exampleUser.password = req.body.inputPassword1;
@@ -37,13 +37,28 @@ router.post('/password', function(req, res) {
 		res.redirect('/edit/password');
 	}
 });
+//Need to replace password string with req.user.password
 router.post('/account', function(req, res) {
-	if (req.body.inputName && req.body.inputEmail) {
-		res.flash('succ', 'Successfully edited account!');
+	if(validUpdateParams(req.body)){
+		var updatedUser =  { name: req.body.inputName, email: req.body.inputEmail, password:'xx21asd'};
+		userMapper.updateUserByEmail(updatedUser.email, updatedUser, function(error,result) {
+			if (!result) {
+				res.flash('err', 'User not found');
+			} else if (error) {
+				res.flash('err', error);
+			} else {
+				res.flash('succ', 'Successfully updated account!');
+			}
+			res.redirect('/edit/account');
+		});
 	} else {
 		res.flash('err', 'Not all details provided');
+		res.redirect('/edit/account');
 	}
-	return res.redirect('/edit/account');
 });
+//Validate all correct params included in POST
+function validUpdateParams(body){
+	return (body.inputName && body.inputEmail);
+}
 
 module.exports = router;

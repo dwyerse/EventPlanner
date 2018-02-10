@@ -2,9 +2,13 @@ var assert = require('assert');
 
 describe('Change Password tests', function() {
 	browser.url('/edit/password');
+	
 	it('should have the correct title', function() {
-		var title = browser.getTitle();
-		return assert.equal(title, 'Change Password');
+		return new Promise(function(resolve){
+			var title = browser.getTitle();
+			assert.equal(title, 'Change Password');
+			resolve();
+		});
 	});
 
 	it('Should have form POST to /edit/password', function() {

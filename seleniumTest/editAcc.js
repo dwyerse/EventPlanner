@@ -3,8 +3,11 @@ var assert = require('assert');
 describe('Edit Account tests', function() {
 	browser.url('/edit/account');
 	it('should have the correct title', function() {
-		var title = browser.getTitle();
-		return assert.equal(title, 'Edit Account');
+		return new Promise(function(resolve){
+			var title = browser.getTitle();
+			assert.equal(title, 'Edit Account');
+			resolve();
+		});
 	});
 
 	it('should have form POST to /edit/account', function() {
