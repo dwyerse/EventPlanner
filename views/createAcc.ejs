@@ -2,6 +2,8 @@
 <html lang="en">
 	<head>
 		<title>Create Administrator Account</title>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
@@ -10,26 +12,12 @@
 		
 		<h2>Create Administrator Account</h2>
 
-		<form action="/create/account" method="post">
+		<form action="/create/admin" method="post" id='form'>
 
 			<div class="form-row">
 				<div class="form-group col-md-6">
-					<label for="inputFirstName">First Name</label>
-					<input type="text" class="form-control" name="inputFirstName" value=""/>
-				</div>
-			</div>
-
-			<div class="form-row">
-				<div class="form-group col-md-6">
-					<label for="inputLastName">Last Name</label>
-					<input type="text" class="form-control" name="inputLastName" value=""/>
-				</div>
-			</div>
-
-			<div class="form-row">
-				<div class="form-group col-md-6">
-					<label for="inputPhoneNumber">Phone Number</label>
-					<input type="text" class="form-control" name="inputPhoneNumber" value=""/>
+					<label for="inputName">Name</label>
+					<input type="text" class="form-control" name="inputName" value=""/>
 				</div>
 			</div>
 
