@@ -7,6 +7,7 @@ userSchema.add({
 	password:'string',
 	type:'string'
 });
+userSchema.index({email:1}, {unique: true});
 User = mongoose.model('user',userSchema);
 module.exports = User;
 

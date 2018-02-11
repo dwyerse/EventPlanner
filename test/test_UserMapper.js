@@ -6,14 +6,13 @@ const TEST_DB = 'mongodb://127.0.0.1/test_eventplanner_db';
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 
 describe('userMapper testing suite', function() {
-	//Before all tests connect to TEST_DB
-	before(function(){
-		mongoose.connect(TEST_DB);
-	});
+	
 	//After all tests reconnect to APP_DB
 	after(function(){
 		mongoose.connect(APP_DB);
 	});
+	
+	mongoose.connect(TEST_DB);	
 
 	it('User model should be invalid if name is empty', function(done) {
 
@@ -103,13 +102,13 @@ describe('userMapper testing suite', function() {
 			done();
 		});
 	});
-
+	
 	it('should remove all users from the collection', function(done) {
 
 		mapper.deleteAllUsers(function(err){
 			assert.equal(err,null);
 			done();
 		});
-		done();
 	});
+	
 });
