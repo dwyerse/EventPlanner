@@ -9,25 +9,17 @@ var genRandomString = function(length) {
 };
 
 /* Hash password with pbkdf2 and sha512. */
-var hash = function(password, salt) {
+var generateHash = function(password, salt) {
 	var hashValue = crypto.pbkdf2Sync(password, salt, 2048, 32, 'sha512').toString('hex'); /** Hashing algorithm */
+	return hashValue;
+};
+
+var createHash= function(userPassword) {
+	var salt = genRandomString(16); /** Gives us salt of length 16 */
 	return {
-		salt:salt,
-		passwordHash:hashValue
+		hash: generateHash(userPassword, salt),
+		salt:salt
 	};
 };
 
-var saltHashPassword = function(userpassword) {
-	var salt = genRandomString(16); /** Gives us salt of length 16 */
-	var passwordData = hash(userpassword, salt);
-	//console.log('UserPassword = '+userpassword);
-	//console.log('Passwordhash = '+passwordData.passwordHash);
-	//console.log('nSalt = '+passwordData.salt);
-
-	return passwordData;
-};
-
-saltHashPassword('MYPASSWORD');
-saltHashPassword('MYPASSWORD');
-
-module.exports = {saltHashPassword};
+module.exports = {generateHash, createHash};

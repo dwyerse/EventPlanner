@@ -1,21 +1,12 @@
 var assert = require('assert');
-var hashing = require('../security/hashSaltPassword');
-//var request = require('request');
+var hashing = require('../security/hashing');
 
 describe('Password security testing suite', function() {
 	it('password should not be hashed the same twice', function(done) {
-		var passwordOne = 'testPassword';
-		var hashPasswordOne = hashing.saltHashPassword(passwordOne);
-
-		var passwordTwo = 'testPassword';
-		var hashPasswordTwo = hashing.saltHashPassword(passwordTwo);
-
-		assert.notEqual(hashPasswordOne.passwordHash, hashPasswordTwo.passwordHash); 
-
-		//var hash = hashPassword.passwordHash;
-		//var salt = hashPassword.salt;
-
+		var password = 'testPassword3442';
+		var {hash, salt} = hashing.createHash(password);
+		var hash2 = hashing.generateHash(password, salt);
+		assert.equal(hash, hash2);
 		done();
-
 	});
 });
