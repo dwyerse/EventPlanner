@@ -1,8 +1,8 @@
-var assert = require('assert');
+/*var assert = require('assert');
 
 describe('Change Password tests', function() {
 	browser.url('/edit/password');
-	
+
 	it('should have the correct title', function() {
 		return new Promise(function(resolve){
 			var title = browser.getTitle();
@@ -20,3 +20,4 @@ describe('Change Password tests', function() {
 		});
 	});
 });
+*/
