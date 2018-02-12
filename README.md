@@ -10,14 +10,7 @@ Ben Stratford
 Sean Durban
 # Setup
 ### Note: This setup is for target machine, Ubuntu 16.04
-## Installing Node.js
 
-```
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-```
-```
-sudo apt-get install -y nodejs
-```
 ## Setting up the git repository
 Clone  the repo
 ```
@@ -27,29 +20,12 @@ Enter the repo folder
 ```
 cd EventPlanner
 ```
-Install project dependencies. (Found in package.json)
+Run the install script
 ```
-npm install
+sudo chmod +x install.sh
+./install.sh
 ```
 
-## MongoDB setup
-Download mongoDB
-```
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-```
-```
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-```
-Ensure version is the latest release
-```
-sudo apt-get update
-```
-Install mongoDB
-```
-sudo apt-get install -y mongodb-org
-```
-Important: Ensure a folder is created at: (Replace 'C' with relevant top folder level) <br>
-C://data/db
 ## Selenium Setup
 Run npm command to install all webdriverio drivers
 ```
@@ -61,7 +37,7 @@ Run the mongodb server. (Defaults to localhost:27017)
 sudo service mongod start
 mongo --host 127.0.0.1:27017
 ```
-In another terminal:
+In another terminal (in EventPlanner folder):
 Start the app server.  (Defaults to localhost:3000)
 ```
 npm start
@@ -69,6 +45,7 @@ npm start
 # Testing
 ### Unit Tests
 Expects local server on port 3000 and mongoDB server. Test files found in ./test
+In another terminal (in EventPlanner folder):
 ```
 npm test
 ```
