@@ -38,7 +38,7 @@ sudo service mongod start
 mongo --host 127.0.0.1:27017
 ```
 In another terminal (in EventPlanner folder):
-Start the app server.  (Defaults to localhost:3000)
+<br>Start the app server.  (Defaults to localhost:3000)
 ```
 npm start
 ```
@@ -46,7 +46,7 @@ npm start
 All tests expect local app server on port 3000 and mongoDB server running. 
 ### Unit Tests
 Unit test files found in ./test
-In a new terminal (in EventPlanner folder):
+<br>In a new terminal (in EventPlanner folder):
 ```
 npm test
 ```
@@ -56,7 +56,7 @@ Note: this must be done every time you wish to test. To launch selenium standalo
 npm run-script selenium-start
 ```
 Selenium test files found in ./seleniumTest
-In a new terminal (in EventPlanner folder):
+<br>In a new terminal (in EventPlanner folder):
 ```
 npm run-script selenium-test
 ```
@@ -73,7 +73,7 @@ Once app server and mongoDB server running:
 - Click login
 - Dashboard with user credentials show should appear.
 - Point browser to http://localhost:3000/edit/account to change account details
-- Point browser to http://localhostL3000/edit/password to change password
+- Point browser to http://localhost:3000/edit/password to change password
 
 # Errors
 ### Port already in use
