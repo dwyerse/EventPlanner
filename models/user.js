@@ -1,13 +1,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var userSchema = new Schema;
-userSchema.add({ 
+userSchema.add({
 	name: { type: String, required: true },
 	email: { type: String, required: true,unique:true},
 	password:'string',
-	type:'string'
+	type:'string',
+	salt:{ type: String, required: true }
 });
 userSchema.index({email:1}, {unique: true});
 User = mongoose.model('user',userSchema);
 module.exports = User;
-
