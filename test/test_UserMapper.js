@@ -6,7 +6,6 @@ const TEST_DB = 'mongodb://127.0.0.1/test_eventplanner_db';
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 
 describe('userMapper testing suite', function() {
-
 	//After all tests reconnect to APP_DB
 	after(function(){
 		mongoose.connect(APP_DB);
@@ -32,7 +31,6 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should add user to the database without error', function(done) {
-
 		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin','fakesalt',function(err){
 			assert.equal(err,null);
 			done();
@@ -40,7 +38,6 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should throw error if email is not unique', function(done) {
-
 		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin','fakesalt',function(err){
 			assert.notEqual(err,null);
 			done();
@@ -93,7 +90,6 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should update user', function(done) {
-
 		var userObj = new User({name: 'Ben',email: 'ben@ben.ben',password:'benspassword',type:'admin',salt:'newfakesalt'});
 		mapper.updateUserByEmail('dwyerse@tcd.ie',userObj,function(err,res){
 			assert.equal(userObj.name,res.name);
@@ -112,5 +108,4 @@ describe('userMapper testing suite', function() {
 			done();
 		});
 	});
-
 });

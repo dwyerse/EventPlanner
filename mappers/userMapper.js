@@ -51,5 +51,4 @@ function deleteAllUsers(callback){
 		return callback(err,res);
 	});
 }
-
 module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers};
