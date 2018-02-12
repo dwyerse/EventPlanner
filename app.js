@@ -5,13 +5,43 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+var passport = require('passport');
+var flash = require('connect-flash');
+var session = require('express-session');
 var index = require("./routes/index");
+var login = require("./routes/login");
 var http = require("http");
 var app = express();
+
+//Import the mongoose module
+var mongoose = require('mongoose');
+
+//Set up default mongoose connection
+var mongoDB = 'mongodb://127.0.0.1/eventplanner_db';
+mongoose.connect(mongoDB);
+//Get the default connection
+mongoose.connection.on('connected', function () {  
+  console.log('Mongoose default connection open to ' + mongoDB);
+}); 
+// If the connection throws an error
+mongoose.connection.on('error',function (err) {  
+  console.log('Mongoose default connection error: ' + err);
+}); 
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+require('./config/passport')(passport); // pass passport for configuration
+
+// required for passport
+app.use(session({ secret: 'thisisthesecret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -22,6 +52,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", index);
+app.use("/login", login);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -48,3 +80,4 @@ httpServer.listen(3000, function() {
 });
 
 module.exports = app;
+
