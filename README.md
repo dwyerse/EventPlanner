@@ -12,7 +12,7 @@ Sean Durban
 ### Note: This setup is for target machine, Ubuntu 16.04
 
 ## Setting up the git repository
-Clone  the repo
+Clone the repo
 ```
 git clone https://github.com/dwyerse/EventPlanner.git
 ```
@@ -27,7 +27,7 @@ sudo chmod +x install.sh
 ```
 
 ## Selenium Setup
-Run npm command to install all webdriverio drivers
+Run npm command to install all webdriverio drivers (in EventPlanner folder):
 ```
 npm run-script selenium-install
 ```
@@ -43,32 +43,37 @@ Start the app server.  (Defaults to localhost:3000)
 npm start
 ```
 # Testing
+All tests expect local app server on port 3000 and mongoDB server running. 
 ### Unit Tests
-Expects local server on port 3000 and mongoDB server. Test files found in ./test
-In another terminal (in EventPlanner folder):
+Unit test files found in ./test
+In a new terminal (in EventPlanner folder):
 ```
 npm test
 ```
 ### Run the Selenium Tests
-Note: this must be done every time you wish to test
+Note: this must be done every time you wish to test. To launch selenium standalone server:
 ```
 npm run-script selenium-start
 ```
-In a new terminal: To run the webdriver tests (Note: Expects local server on port 3000 and mongoDB server). Test files found in ./seleniumTest
+Selenium test files found in ./seleniumTest
+In a new terminal (in EventPlanner folder):
 ```
 npm run-script selenium-test
 ```
 # Testing implemented features
-### Feature 1: 'I want to be able to login (change password/details/create account) - *Needs review!*'
+### Feature 1: 'I want to be able to login (change password/details/create account) - *Not yet complete!*'
 Once app server and mongoDB server running:
 - Point browser to http:://localhost:3000
 - Click Create Account button
 - Enter all required fields
-- Click create Account
+- Click Create Account
 - Return to homepage
 - Click login buttons
 - Enter credentials of previously created account
--
+- Click login
+- Dashboard with user credentials show should appear.
+- Point browser to http://localhost:3000/edit/account to change account details
+- Point browser to http://localhostL3000/edit/password to change password
 
 # Errors
 ### Port already in use
