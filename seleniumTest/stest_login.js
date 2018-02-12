@@ -11,7 +11,7 @@ describe('login tests', function() {
 
 	mongoose.connect(TEST_DB);
 
-	mapper.addUser('TestName','test@test.test','test','admin','fakesalt',function(err){});
+	mapper.addUser('TestName','test@test.test','test','admin','fakesalt',function(err){return err;});
 
 	//Set browser to localhost:3000
 	//Note: localhost set as default domain in config file
@@ -65,6 +65,6 @@ describe('login tests', function() {
 		});
 	});
 	*/
-	mapper.deleteAllUsers(function(err){});
+	mapper.deleteAllUsers(function(err){return err;});
 
 });
