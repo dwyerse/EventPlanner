@@ -6,8 +6,8 @@ function allUsers(callback){
 	});
 }
 
-function addUser(name,email,password,type,callback){
-	var newUser = new User({name: name,email: email,password:password,type:type});
+function addUser(name,email,password,type,salt,callback){
+	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt});
 	newUser.save(function (err,product) {
 		return callback(err,product);
 	});
@@ -34,17 +34,14 @@ function findUserByEmail(email,callback){
 function updateUserByEmail(email,userObj,callback){
 
 	User.findOne({ email:email }, function(err,res){
-		if(err || !res){
-			return callback(err,res);
-		} else {
-			res.name = userObj.name;
-			res.email = userObj.email;
-			res.type = userObj.type;
-			res.password = userObj.password;
-			res.save(function (err, updatedUser) {
-				return callback(err,updatedUser);
-			});
-		}
+		res.name = userObj.name;
+		res.email = userObj.email;
+		res.type = userObj.type;
+		res.password = userObj.password;
+		res.salt = userObj.salt;
+		res.save(function (err, updatedUser) {
+			return callback(err,updatedUser);
+		});
 	});
 
 }
