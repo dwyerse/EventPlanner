@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-
-require('../config/passport')(passport); // pass passport for configuration
+var isLoggedIn = require('../config/utils').isLoggedIn;
 
 /* GET login page. */
 router.get('/', function(req, res) {
@@ -10,7 +9,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/landingPage', isLoggedIn, function(req, res) {
-	res.render('landingPage.ejs', {
+	res.render('landingPage', {
 		user : req.user
 	});
 });
@@ -20,13 +19,5 @@ router.post('/authenticate', passport.authenticate('local-login', {
 	failureRedirect : '/login', // redirect back to the login page if there is an error
 	failureFlash : true // allow flash messages
 }));
-
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated())
-		return next();
-
-	res.redirect('/');
-}
-
 
 module.exports = router;
