@@ -1,17 +1,10 @@
 var assert = require('assert');
-const TEST_DB = 'mongodb://127.0.0.1/test_eventplanner_db';
-const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
-var mongoose = require('mongoose');
-var mapper = require('../mappers/userMapper');
 describe('login tests', function() {
 
-	after(function(){
-		mongoose.connect(APP_DB);
-	});
-
-	mongoose.connect(TEST_DB);
-
+	/*
+	mongoose.connect(APP_DB);
 	mapper.addUser('TestName','test@test.test','test','admin','fakesalt',function(err){return err;});
+	*/
 
 	//Set browser to localhost:3000
 	//Note: localhost set as default domain in config file
@@ -43,6 +36,7 @@ describe('login tests', function() {
 			resolve();
 		});
 	});
+	/*
 	it('should give error when password is wrong', function() {
 		return new Promise(function(resolve) {
 			browser.setValue('#emailInput', 'test@test.test');
@@ -55,7 +49,7 @@ describe('login tests', function() {
 			resolve();
 		});
 	});
-	/*
+	
 	it('should log in correctly', function() {
 		return new Promise(function(resolve) {
 			browser.click('#submitId');
@@ -65,6 +59,6 @@ describe('login tests', function() {
 		});
 	});
 	*/
-	mapper.deleteAllUsers(function(err){return err;});
+	
 
 });
