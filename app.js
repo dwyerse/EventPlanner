@@ -9,13 +9,10 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session');
 var index = require("./routes/index");
-
 var edit = require('./routes/edit');
 var login = require("./routes/login");
 var http = require("http");
 var app = express();
-var session = require('express-session');
-var flash = require('express-flash-2');
 
 
 
@@ -39,9 +36,15 @@ mongoose.connection.on('error',function (err) {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-require('./config/passport')(passport); // pass passport for configuration
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger("dev"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser('thisisthesecret'));
+app.use(express.static(path.join(__dirname, "public")));
 
 // required for passport
+require('./config/passport')(passport); // pass passport for configuration
 app.use(session({ secret: 'thisisthesecret',
     resave: true,
     saveUninitialized: true
@@ -50,24 +53,16 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser('Flash001'));
-app.use(express.static(path.join(__dirname, "public")));
-//For flash
+/*For flash
 app.use(session({
     secret: 'Flash001',
     resave: true,
     saveUninitialized:true}));
-app.use(flash());
+app.use(flash());*/
 
-app.use("/", index);
+app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -92,5 +87,13 @@ var httpServer = http.createServer(app);
 httpServer.listen(3000, function() {
   console.log("Server listening on port 3000");
 });
+
+
+function userAuthenticated(req, res, next) {
+	if (req.isAuthenticated()){
+		return next();
+	}
+	res.redirect('/');
+}
 
 module.exports = app;
