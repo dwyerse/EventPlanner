@@ -1,5 +1,5 @@
 var assert = require('assert');
-var hashing = require('../security/hashing');
+var hashing = require('../config/hashing');
 
 describe('Password security testing suite', function() {
 	it('Identical passwords should return same hash using same salt', function(done) {

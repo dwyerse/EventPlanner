@@ -5,7 +5,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 // load up the user model
 var User = require('../models/user');
-
+var hashing = require('./hashing');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -49,7 +49,9 @@ module.exports = function(passport) {
 
 			// if the user is found but the password is wrong
 			//if (!user.validPassword(password))
-			if(user.password!=password){
+
+			var hash = hashing.generateHash(password, user.salt);
+			if(user.password!=hash){
 				return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 			}
 

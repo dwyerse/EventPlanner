@@ -13,6 +13,8 @@ var login = require("./routes/login");
 var http = require("http");
 var app = express();
 
+
+
 //Import the mongoose module
 var mongoose = require('mongoose');
 
@@ -27,6 +29,7 @@ mongoose.connection.on('connected', function () {
 mongoose.connection.on('error',function (err) {  
   console.log('Mongoose default connection error: ' + err);
 }); 
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
