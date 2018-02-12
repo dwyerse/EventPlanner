@@ -5,9 +5,9 @@
 </head>
 <body class="container">
 	<h1>EventPlanning Website</h1>
-	
+
 	<h5>Login</h5>
-    <% if (message.length > 0) { %>
+    <% if (message && message.length > 0) { %>
         <div id='messageId' class="alert alert-danger"><%= message %></div>
     <% } %>
 	<form action="/login/authenticate" method="post">
@@ -25,7 +25,7 @@
 			</div>
 		</div>
 		<button type="submit" id='submitId' class="btn btn-primary">Submit</button>
-	
+
 	</form>
 
 	<!-- Bootstrap Javascript -->

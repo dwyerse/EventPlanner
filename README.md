@@ -58,6 +58,18 @@ In a new terminal: To run the webdriver tests (Note: Expects local server on por
 ```
 npm run-script selenium-test
 ```
+# Testing implemented features
+### Feature 1: 'I want to be able to login (change password/details/create account) - *Needs review!*'
+Once app server and mongoDB server running:
+- Point browser to http:://localhost:3000
+- Click Create Account button
+- Enter all required fields
+- Click create Account
+- Return to homepage
+- Click login buttons
+- Enter credentials of previously created account
+-
+
 # Errors
 ### Port already in use
 Following commands work in 'git bash' terminal
