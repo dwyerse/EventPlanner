@@ -15,10 +15,9 @@ router.post('/create', function(req, res) {
 					req.flash('err', 'Event not created');
 				} else if (error) {
 					req.flash('err', error);
-				} else {
 				}
 				res.redirect('/event/create');
-		});
+			});
 	} else {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/create');

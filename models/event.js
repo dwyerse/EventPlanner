@@ -12,5 +12,5 @@ eventSchema.add({
 	invitees:[{type:String}]
 });
 
-Event = mongoose.model('event',eventSchema);
-module.exports = Event;
+EventModel = mongoose.model('event',eventSchema);
+module.exports = EventModel;

@@ -31,8 +31,7 @@ describe('eventMapper testing suite', function() {
 	});
 
 	it('should create new event', function(done) {
-		mapper.createEvent('My Birthday','Dublin','12/12/2007','test description',12,[],[],
-		function(err){
+		mapper.createEvent('My Birthday','Dublin','12/12/2007','test description',12,[],[],function(err){
 			assert.equal(err,null);
 			done();
 		});		
@@ -40,8 +39,7 @@ describe('eventMapper testing suite', function() {
 
 	it('should update event by ID', function(done) {
 		var newEvent = new Event({name:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',event_id:12,creators:[],invitees:[]});
-		mapper.updateEventBy_event_id(12,newEvent,
-		function(err){
+		mapper.updateEventBy_event_id(12,newEvent,function(err){
 			assert.equal(err,null);
 			done();
 		});

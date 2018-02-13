@@ -1,7 +1,7 @@
-Event = require('../models/event')
+EventModel = require('../models/event');
 
 function createEvent(name,location,date,description,event_id,creators,invitees,callback){
-	var newEvent = new Event({name:name,location:location,date:date,description:description,event_id:event_id,creators:creators,invitees:invitees});
+	var newEvent = new EventModel({name:name,location:location,date:date,description:description,event_id:event_id,creators:creators,invitees:invitees});
 	newEvent.save(function (err,product) {
 		return callback(err,product);
 	});
@@ -9,7 +9,7 @@ function createEvent(name,location,date,description,event_id,creators,invitees,c
 
 function updateEventBy_event_id(event_id,eventObj,callback){
 
-	Event.findOne({ event_id:event_id }, function(err,res){
+	EventModel.findOne({ event_id:event_id }, function(err,res){
 		res.name = eventObj.name;
 		res.location = eventObj.location;
 		res.date = eventObj.date;
@@ -26,7 +26,7 @@ function updateEventBy_event_id(event_id,eventObj,callback){
 }
 
 function deleteAllEvents(callback){
-	User.remove({},function(err,res){
+	EventModel.remove({},function(err,res){
 		return callback(err,res);
 	});
 }
