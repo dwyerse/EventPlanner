@@ -3,18 +3,30 @@ var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 EventModel = require('../models/event');
 
+router.get('/:event_id', function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+		res.render('event', {result});
+	});
+});
+
 router.get('/create', function(req, res) {
 	res.render('createEvent', {} );
 });
 
 router.get('/edit/:event_id', function(req, res) {
-	//res.send(req.params.event_id);
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
 		}
 		res.render('editEvent', {result});
 	});	
+});
+
+router.post('/goToEdit/:event_id',function(req,res){
+	res.redirect('/event/edit/'+req.params.event_id);
 });
 
 router.post('/create', function(req, res) {	
@@ -45,13 +57,12 @@ router.post('/edit/:event_id', function(req, res) {
 				} else if (error) {
 					req.flash('err', error);
 				}
-				res.redirect('/event/edit/' + req.params.event_id);
+				res.redirect('/event/' + req.params.event_id);
 			});
 	} else {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/create');
 	}
-
 });
 
 

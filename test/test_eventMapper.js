@@ -61,7 +61,5 @@ describe('eventMapper testing suite', function() {
 			done();
 		});
 	});	
-
-	
 	
 });
