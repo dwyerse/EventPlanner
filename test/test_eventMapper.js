@@ -13,6 +13,15 @@ describe('eventMapper testing suite', function() {
 
 	mongoose.connect(TEST_DB);
 
+	it('Model should be valid', function(done) {
+
+		var anEvent = new Event({name:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',event_id:12,creators:[],invitees:[]});
+		anEvent.validate(function(err) {
+			assert.equal(err,null);
+			done();
+		});
+	});
+
 	it('Model should be invalid if name is empty', function(done) {
 
 		var anEvent = new Event;
@@ -37,6 +46,14 @@ describe('eventMapper testing suite', function() {
 		});		
 	});
 
+	it('should create new event with correct values', function(done) {
+		mapper.createEvent('My Birthday','Dublin','12/12/2007','test description',13,[],[],function(err,res){
+			assert.equal(res.name,'My Birthday');
+			assert.equal(res.location,'Dublin');
+			done();
+		});		
+	});
+
 	it('should update event by ID', function(done) {
 		var newEvent = new Event({name:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',event_id:12,creators:[],invitees:[]});
 		mapper.updateEventBy_event_id(12,newEvent,function(err){
@@ -45,12 +62,6 @@ describe('eventMapper testing suite', function() {
 		});
 	});	
 
-	it('should remove all events from the collection', function(done) {
-
-		mapper.deleteAllEvents(function(err){
-			assert.equal(err,null);
-			done();
-		});
-	});
+	
 	
 });

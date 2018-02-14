@@ -7,9 +7,23 @@ function createEvent(name,location,date,description,event_id,creators,invitees,c
 	});
 }
 
+function findEventBy_event_id(event_id,callback){
+	EventModel.findOne({ event_id:event_id }, function(err,res){
+		return callback(err,res);
+	});
+}
+
 function updateEventBy_event_id(event_id,eventObj,callback){
 
 	EventModel.findOne({ event_id:event_id }, function(err,res){
+
+		if(err){
+			return callback(err);
+		}
+		if(!res){
+			return callback(err,[]);
+		}
+
 		res.name = eventObj.name;
 		res.location = eventObj.location;
 		res.date = eventObj.date;
@@ -22,7 +36,6 @@ function updateEventBy_event_id(event_id,eventObj,callback){
 			return callback(err,updatedEvent);
 		});
 	});
-
 }
 
 function deleteAllEvents(callback){
@@ -31,4 +44,4 @@ function deleteAllEvents(callback){
 	});
 }
 
-module.exports = {createEvent,updateEventBy_event_id,deleteAllEvents};
+module.exports = {createEvent,updateEventBy_event_id,findEventBy_event_id,deleteAllEvents};
