@@ -1,25 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var userMapper = require('../mappers/userMapper');
-
-var exampleUser = {
-	name: 'Luke Agnew',
-	email: 'la@tcd.ie',
-	password: 'password123',
-	passwordConfirm: 'password123',
-	subscribed : true
-};
+var hashing = require('../config/hashing');
 
 /* GET create account page. */
-router.get('create/admin', function(req, res) {
-	res.render('createAcc', {user: exampleUser });
+router.get('/create/admin', function(req, res) {
+	res.render('createAcc', {user: req.user, err: req.flash('err'), succ: req.flash('succ') });
 });
 
-//Handle POST
+//Handle POST requests
 //Can find form values at req.body.ELEMNAMEHERE
-router.post('create/admin', function(req,res){
+router.post('/create/admin', function(req,res){
 	if (validUserParams(req.body)) {
-		userMapper.addUser(req.body.inputName, req.body.inputEmail, req.body.inputPassword, req.body.type, function(error, result) {
+		var {hash, salt} = hashing.createHash(req.body.inputPassword);
+
+		userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, req.body.type, salt, function(error, result) {
 			if (!result) {
 				res.flash('err', 'User could not be created');
 			} else if (error) {
