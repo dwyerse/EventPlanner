@@ -39,6 +39,7 @@ describe('userMapper testing suite', function() {
 
 	it('should throw error if email is not unique', function(done) {
 		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin','fakesalt',function(err){
+	
 			assert.notEqual(err,null);
 			done();
 		});
