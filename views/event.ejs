@@ -7,25 +7,25 @@
 	</head>
 	<body class="container">
 		<br>
-		<h2> <%= result.name %> </h2>
+		<h2 style="word-break: break-all;" > <%= result.name %> </h2>
 		<br>
-		<form  action="goToEdit/<%= result.event_id %>" method="post" id='form'>			
+		<form  action="/event/goToEdit/<%= result.event_id %>" method="post" id='form'>			
 			<div class="form-row">
 				<div class="form-group col-md-6">
 				<h4>Location</h4>
-				<label for="inputName"><%= result.location %></label>
+				<label style="word-break: break-all;" for="inputName"><%= result.location %></label>
 				</div>
 			</div>
 			<div class="form-row">
 					<div class="form-group col-md-6">
 					<h4>Date</h4>
-					<label for="inputName"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
+					<label style="word-break: break-all;" for="inputName"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
 				</div>
 			</div>
 			<div class="form-row">
 					<div class="form-group col-md-6">
 					<h4>Description</h4>
-					<label for="inputName"><%= result.description %></label>
+					<div style="word-break: break-all;" for="inputName"><%= result.description %></div>
 					</div>
 			</div>	
 		  <button type="submit" class="btn btn-primary">Edit</button>
