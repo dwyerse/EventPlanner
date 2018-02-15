@@ -5,9 +5,16 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+var passport = require('passport');
+var flash = require('connect-flash');
+var session = require('express-session');
 var index = require("./routes/index");
+var edit = require('./routes/edit');
+var login = require("./routes/login");
 var http = require("http");
 var app = express();
+
+
 
 //Import the mongoose module
 var mongoose = require('mongoose');
@@ -16,27 +23,46 @@ var mongoose = require('mongoose');
 var mongoDB = 'mongodb://127.0.0.1/eventplanner_db';
 mongoose.connect(mongoDB);
 //Get the default connection
-mongoose.connection.on('connected', function () {  
+mongoose.connection.on('connected', function () {
   console.log('Mongoose default connection open to ' + mongoDB);
-}); 
+});
 // If the connection throws an error
-mongoose.connection.on('error',function (err) {  
+mongoose.connection.on('error',function (err) {
   console.log('Mongoose default connection error: ' + err);
-}); 
+});
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-// uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('thisisthesecret'));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", index);
+// required for passport
+require('./config/passport')(passport); // pass passport for configuration
+app.use(session({ secret: 'thisisthesecret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+/*For flash
+app.use(session({
+    secret: 'Flash001',
+    resave: true,
+    saveUninitialized:true}));
+app.use(flash());*/
+
+app.use("/",index);
+app.use("/edit", edit);
+app.use("/login", login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -62,5 +88,12 @@ httpServer.listen(3000, function() {
   console.log("Server listening on port 3000");
 });
 
-module.exports = app;
 
+function userAuthenticated(req, res, next) {
+	if (req.isAuthenticated()){
+		return next();
+	}
+	res.redirect('/');
+}
+
+module.exports = app;

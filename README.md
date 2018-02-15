@@ -10,16 +10,9 @@ Ben Stratford
 Sean Durban
 # Setup
 ### Note: This setup is for target machine, Ubuntu 16.04
-## Installing Node.js
 
-```
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-```
-```
-sudo apt-get install -y nodejs
-```
 ## Setting up the git repository
-Clone  the repo
+Clone the repo
 ```
 git clone https://github.com/dwyerse/EventPlanner.git
 ```
@@ -27,31 +20,14 @@ Enter the repo folder
 ```
 cd EventPlanner
 ```
-Install project dependencies. (Found in package.json)
+Run the install script
 ```
-npm install
+sudo chmod +x install.sh
+./install.sh
 ```
 
-## MongoDB setup
-Download mongoDB
-```
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-```
-```
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
-```
-Ensure version is the latest release
-```
-sudo apt-get update
-```
-Install mongoDB
-```
-sudo apt-get install -y mongodb-org
-```
-Important: Ensure a folder is created at: (Replace 'C' with relevant top folder level) <br>
-C://data/db
 ## Selenium Setup
-Run npm command to install all webdriverio drivers
+Run npm command to install all webdriverio drivers (in EventPlanner folder):
 ```
 npm run-script selenium-install
 ```
@@ -61,26 +37,44 @@ Run the mongodb server. (Defaults to localhost:27017)
 sudo service mongod start
 mongo --host 127.0.0.1:27017
 ```
-In another terminal:
-Start the app server.  (Defaults to localhost:3000)
+In another terminal (in EventPlanner folder):
+<br>Start the app server.  (Defaults to localhost:3000)
 ```
 npm start
 ```
 # Testing
+All tests expect local app server on port 3000 and mongoDB server running. 
 ### Unit Tests
-Expects local server on port 3000 and mongoDB server. Test files found in ./test
+Unit test files found in ./test
+<br>In a new terminal (in EventPlanner folder):
 ```
 npm test
 ```
 ### Run the Selenium Tests
-Note: this must be done every time you wish to test
+Note: this must be done every time you wish to test. To launch selenium standalone server:
 ```
 npm run-script selenium-start
 ```
-In a new terminal: To run the webdriver tests (Note: Expects local server on port 3000 and mongoDB server). Test files found in ./seleniumTest
+Selenium test files found in ./seleniumTest
+<br>In a new terminal (in EventPlanner folder):
 ```
 npm run-script selenium-test
 ```
+# Testing implemented features
+### Feature 1: 'I want to be able to login (change password/details/create account) - *Not yet complete!*'
+Once app server and mongoDB server running:
+- Point browser to http:://localhost:3000
+- Click Create Account button
+- Enter all required fields
+- Click Create Account
+- Return to homepage
+- Click login buttons
+- Enter credentials of previously created account
+- Click login
+- Dashboard with user credentials show should appear.
+- Point browser to http://localhost:3000/edit/account to change account details
+- Point browser to http://localhost:3000/edit/password to change password
+
 # Errors
 ### Port already in use
 Following commands work in 'git bash' terminal
