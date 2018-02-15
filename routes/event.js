@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
+var isLoggedIn = require('../config/utils').isLoggedIn;
 EventModel = require('../models/event');
 
-router.get('/view/:event_id', function(req, res) {
+router.get('/view/:event_id',isLoggedIn, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
@@ -12,11 +13,11 @@ router.get('/view/:event_id', function(req, res) {
 	});
 });
 
-router.get('/create', function(req, res) {
+router.get('/create',isLoggedIn, function(req, res) {
 	res.render('createEvent', {} );
 });
 
-router.get('/edit/:event_id', function(req, res) {
+router.get('/edit/:event_id',isLoggedIn, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
@@ -25,13 +26,13 @@ router.get('/edit/:event_id', function(req, res) {
 	});	
 });
 
-router.post('/goToEdit/:event_id',function(req,res){
+router.post('/goToEdit/:event_id',isLoggedIn,function(req,res){
 	res.redirect('/event/edit/'+req.params.event_id);
 });
 
-router.post('/create', function(req, res) {	
-	if(validUpdateParams(req.body)){		
-		eventMapper.createEvent(req.body.name,req.body.location,req.body.date,req.body.description,11,[],[],
+router.post('/create',isLoggedIn, function(req, res) {	
+	if(validUpdateParams(req.body)){	
+		eventMapper.createEvent(req.body.name,req.body.location,req.body.date,req.body.description,11,[req.user],[],
 			function(error,result) {
 				if (!result) {
 					req.flash('err', 'Event not created');
@@ -47,7 +48,7 @@ router.post('/create', function(req, res) {
 
 });
 
-router.post('/edit/:event_id', function(req, res) {
+router.post('/edit/:event_id',isLoggedIn, function(req, res) {
 	if(validUpdateParams(req.body)){		
 		var eventObj = new EventModel({name:req.body.name,location:req.body.location,date:req.body.date,description:req.body.description,event_id:req.params.event_id,creators:[],invitees:[]});
 		eventMapper.updateEventBy_event_id(req.params.event_id,eventObj,
