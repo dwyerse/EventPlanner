@@ -4,7 +4,7 @@ const ADMIN_EMAIL = 'eventplanner.gp@gmail.com';
 
 describe('Mailer Service testing suite', function() {
 	it('should return an error with incorrect error', function(done) {
-		mailer.sendMail(['gpEventPlannerError'],[],'Fake test','Fake Test', function(err, info){
+		mailer.sendMail(['gpEventPlannerError'],[],'Fake test','Fake body', function(err, info){
 			assert.notEqual(err,null);
 			assert.equal(info, null);
 			done();
