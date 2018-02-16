@@ -5,7 +5,7 @@ var hashing = require('../config/hashing');
 
 /* GET create account page. */
 router.get('/admin', function(req, res) {
-	res.render('createAcc', {user: req.user, err: req.flash('err'), succ: req.flash('succ') });
+	res.render('createAcc', {err: req.flash('err'), succ: req.flash('succ') });
 });
 
 //Handle POST requests
@@ -26,15 +26,11 @@ router.post('/admin', function(req,res){
 				} else {
 					req.flash('succ', 'Successfully created new admin account!');
 				}
-
 				res.redirect('/login');
 			});
-		}
-		else
-		{
+		} else {
 			req.flash('err', 'Passwords do not match');
 			res.redirect('/create/admin');
-			
 		}
 	} else {
 		req.flash('err', 'Not all details provided');
@@ -46,6 +42,5 @@ router.post('/admin', function(req,res){
 function validUserParams(body) {
 	return (body.inputName && body.inputEmail && body.inputPassword && body.inputConfirmPassword);
 }
-
 
 module.exports = router;
