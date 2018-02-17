@@ -21,4 +21,10 @@ function findMenusByEvent(eventId){
 	});
 }
 
-module.exports = {createMenu, findMenusByEvent};
+function deleteAllMenus(callback){
+	Menu.remove({},function(err,res){
+		return callback(err,res);
+	});
+}
+
+module.exports = {createMenu, findMenusByEvent, deleteAllMenus};

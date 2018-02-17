@@ -2,16 +2,19 @@
 	<title>Upload Menu</title>
 </head>
 <body>
-	<form ref='uploadForm' id='uploadForm' action='/uploadMenu/upload' method='post' encType="multipart/form-data">
+	<form ref='uploadForm' id='uploadForm' action='/event/edit/<%=event_id%>/addMenu/upload' method='post' encType="multipart/form-data">
 		<input type="file" name="uploadedFile"/>
 		<input type='text' name='menuName' value='Menu Name'/>
 		<input type='submit' value='Upload!'/>
 	</form>
+	<h5>Current menus for this event:</h5>
 	<table>
 		<% for(var i=0; i < menus.length; i++) { %>
 		   <tr>
-		     <td><a href='/uploadMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
+		     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
 		   </tr>
 		<% } %>
 	</table>  
+	<br>
+	<a href="/event/edit/<%=event_id%>"> Back </a>
 </body>

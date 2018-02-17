@@ -12,7 +12,8 @@ var session = require('express-session');
 var index = require("./routes/index");
 var edit = require('./routes/edit');
 var login = require("./routes/login");
-var uploadMenu = require("./routes/uploadMenu");
+var event = require('./routes/event')
+var createAcc = require("./routes/createAcc");
 var http = require("http");
 var app = express();
 
@@ -64,7 +65,8 @@ app.use(flash());*/
 app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
-app.use("/uploadMenu", uploadMenu);
+app.use("/event", event);
+app.use("/create", createAcc);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
