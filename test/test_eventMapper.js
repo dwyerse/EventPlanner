@@ -4,6 +4,7 @@ var mapper = require('../mappers/eventMapper');
 var userMapper = require('../mappers/userMapper');
 var mongoose = require('mongoose');
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
+const ADMIN_EMAIL = 'admin@eventplanner';
 const testInvitees = [{email:'test@email.com', state:'pending'},{email:'test2@email.com', state:'accepted'}];
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
@@ -13,7 +14,7 @@ const TEST_EVENT = {
 describe('eventMapper testing suite', function() {
 	before(function(done){
 		mongoose.connect(APP_DB);
-		userMapper.findUserByEmail('admin@eventplanner', function(err,res) {
+		userMapper.findUserByEmail(ADMIN_EMAIL, function(err,res) {
 			assert.equal(err,null);
 			TEST_EVENT.creators = [res[0]._id];
 			done();
@@ -44,13 +45,14 @@ describe('eventMapper testing suite', function() {
 				assert.equal(err,null);
 				assert.equal(res.title,TEST_EVENT.title);
 				assert.equal(res.invitees.length, 2);
+				assert.equal(res.creators.length, 1);
 				done();
 			});
 	});
 
 	it('should update event details by event_id', function(done) {
 		var newEvent = new Event({title:'Updated Title',location:'Updated Location',date:'02/01/2018',description:'Updated description',
-			event_id:0,creators:[],invitees:TEST_EVENT.invitees});
+			event_id:0,creators:TEST_EVENT.creators,invitees:TEST_EVENT.invitees});
 		mapper.updateEventDetailsBy_event_id(testEventId,newEvent,function(err,res){
 			assert.equal(err,null);
 			assert.equal(res.event_id, testEventId);
