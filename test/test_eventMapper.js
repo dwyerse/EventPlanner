@@ -12,54 +12,72 @@ describe('eventMapper testing suite', function() {
 	});
 
 	mongoose.connect(TEST_DB);
+	var testEventId=-1;
 
 	it('Model should be valid', function(done) {
 
-		var anEvent = new Event({name:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',event_id:12,creators:[],invitees:[]});
+		var anEvent = new Event({title:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',event_id:12,creators:[],invitees:[]});
 		anEvent.validate(function(err) {
 			assert.equal(err,null);
 			done();
 		});
 	});
 
-	it('Model should be invalid if name is empty', function(done) {
+	it('Model should be invalid if title is empty', function(done) {
 
 		var anEvent = new Event;
 		anEvent.validate(function(err) {
-			assert.notEqual(err.errors.name,null);
+			assert.notEqual(err.errors.title,null);
 			done();
 		});
 	});
 
 	it('should remove all events from the collection', function(done) {
-
 		mapper.deleteAllEvents(function(err){
 			assert.equal(err,null);
 			done();
 		});
 	});
 
-	it('should create new event', function(done) {
-		mapper.createEvent('My Birthday','Dublin','12/12/2007','test description',12,[],[],function(err){
+	it('should create a new event with correct values', function(done) {
+		var testInvitees = [{email:'test@email.com', state:'pending'},{email:'test2@email.com', state:'accepted'}];
+		mapper.createEvent('My Birthday','Dublin','12/12/2007','test description',0,[],testInvitees,function(err,res){
+			testEventId = res.event_id;
 			assert.equal(err,null);
-			done();
-		});		
-	});
-
-	it('should create new event with correct values', function(done) {
-		mapper.createEvent('My Birthday','Dublin','12/12/2007','test description',13,[],[],function(err,res){
-			assert.equal(res.name,'My Birthday');
-			assert.equal(res.location,'Dublin');
-			done();
-		});		
-	});
-
-	it('should update event by ID', function(done) {
-		var newEvent = new Event({name:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',event_id:12,creators:[],invitees:[]});
-		mapper.updateEventBy_event_id(12,newEvent,function(err){
-			assert.equal(err,null);
+			assert.equal(res.title,'My Birthday');
+			assert.equal(res.invitees.length, 2);
 			done();
 		});
-	});	
-	
+	});
+
+	it('should update event details by event_id', function(done) {
+		var newEvent = new Event({title:'Updated My Birthday',location:'Updated Dublin',date:'12/12/2007',description:'test description',
+			event_id:0,creators:[],invitees:[]});
+		mapper.updateEventDetailsBy_event_id(testEventId,newEvent,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.event_id, testEventId);
+			assert.equal(res.title,'Updated My Birthday');
+			assert.equal(res.invitees.length, 2);
+			done();
+		});
+	});
+
+	it('should find updated event details by event_id', function(done) {
+		mapper.findEventBy_event_id(testEventId,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.event_id, testEventId);
+			assert.equal(res.title,'Updated My Birthday');
+			done();
+		});
+	});
+
+	it('should remove the test event', function(done){
+		mapper.deleteEventByEventId(testEventId, function(err){
+			assert.equal(err,null);
+			mapper.findEventBy_event_id(testEventId, function(err2,res) {
+				assert.equal(res,null);
+				done();
+			});
+		});
+	});
 });

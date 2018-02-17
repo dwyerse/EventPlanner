@@ -3,13 +3,16 @@ var Schema = mongoose.Schema;
 var eventSchema = new Schema;
 
 eventSchema.add({
-	name: { type: String, required: true },
+	title: { type: String, required: true },
 	location: { type: String, required: true},
 	date:{type:Date,required:true,default:Date.now()},
 	description:{ type: String, required: true },
 	event_id:{type:Number,required:true,unique:true},
 	creators:[{ type: Schema.Types.ObjectId, ref: 'User' }],
-	invitees:[{type:String}]
+	invitees:[{
+		email: String,
+		state: String
+	}]
 });
 
 eventSchema.pre('save', function (next) {
@@ -19,7 +22,7 @@ eventSchema.pre('save', function (next) {
 			this.event_id = res; // Increment count
 			next();
 		});
-	} 
+	}
 	else{
 		next();
 	}

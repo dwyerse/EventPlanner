@@ -7,14 +7,25 @@
 </head>
 
 <body class="container">
+	<% if(err && err.length > 0) { %>
+		<% console.log(err) %>
+		<div class="alert alert-danger" role="alert">
+			Error in details provided: <%= err %>
+		</div>
+	<% } %>
+	<% if (succ && succ.length > 0) { %>
+		<div class="alert alert-success" role="alert">
+			<%= succ %>
+		</div>
+	<% } %>
 	<br>
 	<h2> Create Event </h2>
 	<br>
 	<form  action="/event/create" method="post" id='form'>
 		<div class="form-row">
 		<div class="form-group col-md-6">
-			<label for="inputEmail">Name</label>
-			<input type="name" class="form-control" name="name" required>
+			<label for="title">Title</label>
+			<input type="text" class="form-control" name="title" required>
 		</div>
 		</div>
 		<div class="form-row">
@@ -25,17 +36,17 @@
 		</div>
 		<div class="form-row">
 				<div class="form-group col-md-6">
-				<label for="inputName">Date</label>
-				<input type="text" id="datepicker" name="date">
+				<label for="date">Date</label>
+				<input type="text" id="datepicker" name="date" required>
 				</div>
-		</div>		
+		</div>
 		<div class="form-row">
 				<div class="form-group col-md-6">
-				<label for="inputName">Description</label>
-				<textarea type="name" class="form-control" rows="5" name="description" required></textarea>
+				<label for="description">Description</label>
+				<textarea type="text" class="form-control" rows="5" name="description" required></textarea>
 				</div>
-		</div>	
-		
+		</div>
+
 	  <button type="submit" class="btn btn-primary">Confirm</button>
 	</form>
 </body>
