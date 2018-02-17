@@ -9,7 +9,7 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-		res.render('event', {result});
+		res.render('event', {result,err: req.flash('err'),succ: req.flash('succ')});
 	});
 });
 
@@ -26,10 +26,6 @@ router.get('/edit/:event_id',isLoggedIn, function(req, res) {
 	});
 });
 
-router.post('/goToEdit/:event_id',isLoggedIn,function(req,res){
-	res.redirect('/event/edit/'+req.params.event_id);
-});
-
 router.post('/create',isLoggedIn, function(req, res) {
 	if(validUpdateParams(req.body)){
 		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
@@ -38,14 +34,16 @@ router.post('/create',isLoggedIn, function(req, res) {
 					req.flash('err', 'Event not created');
 				} else if (error) {
 					req.flash('err', error);
+				} else{
+					req.flash('succ', 'Succesfully created event');
+					return res.redirect('/event/view/'+ result.event_id);
 				}
-				res.redirect('/event/view/'+ result.event_id);
+				res.redirect('/event/create');
 			});
 	} else {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/create');
 	}
-
 });
 
 router.post('/edit/:event_id',isLoggedIn, function(req, res) {
@@ -58,11 +56,15 @@ router.post('/edit/:event_id',isLoggedIn, function(req, res) {
 					req.flash('err', 'Event not updated');
 				} else if (error) {
 					req.flash('err', error);
+				} else{
+					req.flash('succ', 'Succesfully updated event');
+					return res.redirect('/event/view/'+ result.event_id);
 				}
-				res.redirect('/event/view/' + req.params.event_id);
+				res.redirect('/event/edit' + req.params.event_id);
 			});
 	} else {
 		req.flash('err', 'Not all details provided');
+		res.redirect('/event/edit' + req.params.event_id);
 	}
 });
 
