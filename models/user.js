@@ -5,8 +5,8 @@ var userSchema = new Schema;
 userSchema.add({
 	name: { type: String, required: true },
 	email: { type: String, required: true,unique:true},
-	password:'string',
-	type:'string',
+	password:{ type: String, required: true },
+	type:{ type: String, required: true },
 	salt:{ type: String, required: true }
 });
 userSchema.index({email:1}, {unique: true});
