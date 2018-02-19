@@ -13,6 +13,7 @@ var edit = require('./routes/edit');
 var login = require("./routes/login");
 var event = require('./routes/event')
 var createAcc = require("./routes/createAcc");
+var adminAccess = require("./routes/adminAccess");
 var http = require("http");
 var app = express();
 
@@ -67,6 +68,7 @@ app.use("/edit", edit);
 app.use("/login", login);
 app.use("/event", event);
 app.use("/create", createAcc);
+app.use("/grant", adminAccess);
 
 
 // catch 404 and forward to error handler
