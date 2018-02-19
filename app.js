@@ -11,6 +11,9 @@ var session = require('express-session');
 var index = require("./routes/index");
 var edit = require('./routes/edit');
 var login = require("./routes/login");
+var event = require('./routes/event')
+var createAcc = require("./routes/createAcc");
+var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
 
@@ -20,16 +23,22 @@ var app = express();
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var mongoDB = 'mongodb://127.0.0.1/eventplanner_db';
-mongoose.connect(mongoDB);
+const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
+mongoose.connect(APP_DB);
+
 //Get the default connection
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + mongoDB);
+  console.log('Mongoose default connection open to ' + APP_DB);
+	userMapper.addAdminUser((err) => {
+		if(err)
+			console.log('Failed to add admin user ', err);
+	});
 });
 // If the connection throws an error
 mongoose.connection.on('error',function (err) {
   console.log('Mongoose default connection error: ' + err);
 });
+
 
 
 // view engine setup
@@ -63,6 +72,9 @@ app.use(flash());*/
 app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
+app.use("/event", event);
+app.use("/create", createAcc);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -88,12 +100,5 @@ httpServer.listen(3000, function() {
   console.log("Server listening on port 3000");
 });
 
-
-function userAuthenticated(req, res, next) {
-	if (req.isAuthenticated()){
-		return next();
-	}
-	res.redirect('/');
-}
 
 module.exports = app;

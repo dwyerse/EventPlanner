@@ -2,19 +2,27 @@ var assert = require('assert');
 var User = require('../models/user');
 var mapper = require('../mappers/userMapper');
 var mongoose = require('mongoose');
-const TEST_DB = 'mongodb://127.0.0.1/test_eventplanner_db';
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
-
+const TESTUSER= {
+	'name' : 'Test Account',
+	'email' : 'test@eventplanner',
+	'password' : 'password',
+	'type' : 'admin',
+	'salt' : 'salt'
+};
 describe('userMapper testing suite', function() {
-	//After all tests reconnect to APP_DB
-	after(function(){
+	before(function(){
 		mongoose.connect(APP_DB);
 	});
 
-	mongoose.connect(TEST_DB);
+	it('should validate the user model successfully', function(done) {
+		new User(TESTUSER).validate(function(err){
+			assert.equal(err,null);
+			done();
+		});
+	});
 
 	it('User model should be invalid if name is empty', function(done) {
-
 		var aUser = new User;
 		aUser.validate(function(err) {
 			assert.notEqual(err.errors.name,null);
@@ -22,41 +30,24 @@ describe('userMapper testing suite', function() {
 		});
 	});
 
-	it('should remove all users from the collection', function(done) {
-
-		mapper.deleteAllUsers(function(err){
-			assert.equal(err,null);
-			done();
-		});
-	});
-
 	it('should add user to the database without error', function(done) {
-		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin','fakesalt',function(err){
+		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, function(err,res){
 			assert.equal(err,null);
+			assert.equal(res.name,TESTUSER.name);
+			assert.equal(res.email,TESTUSER.email);
 			done();
 		});
 	});
 
 	it('should throw error if email is not unique', function(done) {
-		mapper.addUser('Seamus','dwyerse@tcd.ie','password','admin','fakesalt',function(err){
+		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, function(err){
 			assert.notEqual(err,null);
 			done();
 		});
 	});
 
-	it('should add user to the database with correct values ', function(done) {
-		mapper.addUser('Seamus','Seamus@tcd.ie','password','admin','fakesalt',function(err,res){
-			assert.equal(res.name,'Seamus');
-			assert.equal(res.email,'Seamus@tcd.ie');
-			assert.equal(res.password,'password');
-			assert.equal(res.type,'admin');
-			assert.equal(res.salt, 'fakesalt');
-			done();
-		});
-	});
-
 	it('should return an error if a required field is empty ', function(done) {
-		mapper.addUser(null,'Sean@tcd.ie','password','admin','fakesalt',function(err){
+		mapper.addUser(null,'email@email.ie','password','admin','fakesalt',function(err){
 			assert.notEqual(err,null);
 			done();
 		});
@@ -65,47 +56,41 @@ describe('userMapper testing suite', function() {
 	it('should return all users', function(done) {
 		mapper.allUsers(function(err,res){
 			assert.equal(err,null);
-			assert.equal(res.length,2);
+			assert.notEqual(res.length,0);
 			done();
 		});
 	});
 
-	it('find previously saved user by name', function(done) {
-
-		mapper.findUserByName('Seamus',function(err,res){
+	it('should find previously saved user by name', function(done) {
+		mapper.findUserByName(TESTUSER.name,function(err,res){
 			assert.equal(err,null);
-			assert.equal(res[0].name,'Seamus');
+			assert.equal(res[0].name,TESTUSER.name);
 			done();
 		});
-
 	});
 
-	it('shouldnt find unsaved user by name', function(done) {
-
+	it('shouldnt find non-existent user by name', function(done) {
 		mapper.findUserByName('unsavedUserName',function(err,res){
 			assert.equal(res.length,0);
 			done();
 		});
-
 	});
 
 	it('should update user', function(done) {
-		var userObj = new User({name: 'Ben',email: 'ben@ben.ben',password:'benspassword',type:'admin',salt:'newfakesalt'});
-		mapper.updateUserByEmail('dwyerse@tcd.ie',userObj,function(err,res){
+		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',salt:'newfakesalt'});
+		mapper.updateUserByEmail(TESTUSER.email,userObj,function(err,res){
 			assert.equal(userObj.name,res.name);
 			assert.equal(userObj.email,res.email);
 			assert.equal(userObj.password,res.password);
-			assert.equal(userObj.type,res.type);
-			assert.equal(userObj.salt,res.salt);
 			done();
 		});
 	});
 
-	it('should remove all users from the collection', function(done) {
-
-		mapper.deleteAllUsers(function(err){
+	it('should remove the test user', function(done){
+		mapper.deleteUserByEmail(TESTUSER.email, function(err){
 			assert.equal(err,null);
 			done();
 		});
 	});
+
 });
