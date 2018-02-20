@@ -20,9 +20,10 @@ router.post('/admin', isLoggedIn, isAdminUser, function(req, res) {
 			} else {
 
 				var adminType = 'admin';
-				var adminGrantedUser =  {name: result[0].name, email: result[0].email, password:result[0].password, type: adminType, salt:result[0].salt};
-		
-				userMapper.updateUserByEmail(result[0].email, adminGrantedUser, function(error,result) {
+				//var adminGrantedUser =  {name: result[0].name, email: result[0].email, password:result[0].password, type: adminType, salt:result[0].salt};
+				result[0].type = adminType;
+
+				userMapper.updateUserByEmail(result[0].email, result, function(error,result) {
 					if (!result) {
 						req.flash('err', 'User email not found');
 					} else if (error) {
