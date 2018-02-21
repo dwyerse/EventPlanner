@@ -14,20 +14,20 @@ router.post('/admin', isLoggedIn, isAdminUser, function(req, res) {
 		userMapper.findUserByEmail(req.body.userEmail, function(error, result) {
 			if (!result || isEmpty(result)) {
 				req.flash('err', 'User email not found');
-				res.redirect('/');
+				res.redirect('/grant/admin');
 			} else if (error) {
 				req.flash('err', error);
 			} else {
 
 				var adminType = 'admin';
-				//var adminGrantedUser =  {name: result[0].name, email: result[0].email, password:result[0].password, type: adminType, salt:result[0].salt};
+				
 				result[0].type = adminType;
 
-				userMapper.updateUserByEmail(result[0].email, result, function(error,result) {
-					if (!result) {
+				userMapper.updateUserByEmail(result[0].email, result[0], function(updateErr,updateRes) {
+					if (!updateRes) {
 						req.flash('err', 'User email not found');
 					} else if (error) {
-						req.flash('err', error);
+						req.flash('err', updateErr);
 					} else {
 						//We need to update the passport stored user here with 'result'
 						req.flash('succ', 'Successfully granted admin access!');
@@ -35,11 +35,10 @@ router.post('/admin', isLoggedIn, isAdminUser, function(req, res) {
 					res.redirect('/grant/admin');
 				});
 			}
-
 		});
 
 	} else {
-		req.flash('err', 'Not all details provided');
+		req.flash('err', 'No email provided');
 		res.redirect('/grant/admin');
 	}
 });
@@ -51,6 +50,7 @@ function isEmpty(obj) {
 	// Assume if it has a length property with a non-zero value
 	// that that property is correct.
 	if (obj.length > 0)    return false;
+
 	if (obj.length === 0)  return true;
 
 	if (typeof obj !== 'object') return true;

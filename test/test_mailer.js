@@ -11,10 +11,11 @@ describe('Mailer Service testing suite', function() {
 		});
 	});
 	it('should successfully send email with valid options', function(done) {
+		this.timeout(7000);
 		mailer.sendMail([ADMIN_EMAIL],[],'Mocha Test Spam','Mocha Test spam', function(err, info){
 			assert.notEqual(info,null);
 			assert.equal(err,null);
-			done();
+			setTimeout(done,2000);
 		});
 	});
 });
