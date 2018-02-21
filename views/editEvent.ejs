@@ -45,7 +45,12 @@
 					<textarea type="name" class="form-control" name="description" rows="5" required><%= result.description %></textarea>
 					</div>
 			</div>
-		  <button type="submit" class="btn btn-primary">Confirm</button>
+
+			<div id="buttons">
+				<a class="btn btn-primary" href="/register/guest/:event_id" role="button" id='createBtn'>Register Guest</a>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Confirm</button>
 		</form>
 	</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

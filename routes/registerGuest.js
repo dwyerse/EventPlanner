@@ -31,12 +31,11 @@ router.post('/register/guest/:event_id',isLoggedIn, isAdminUser, function(req, r
 				req.flash('err', error);
 			} else {
 
-				var updatedInvitees = result[0].invitees;
-				updatedInvitees.push({email:guestEmail, state:'attending'});
+				//var updatedEventObj = new EventModel({title:result[0].title,location:result[0].location,date:result[0].date,description:result[0].description,event_id:result[0].event_id,creators:[],invitees:updatedInvitees});
+				result[0].invitees.push({email:guestEmail, state:'attending'});
 
-				var updatedEventObj = new EventModel({title:result[0].title,location:result[0].location,date:result[0].date,description:result[0].description,event_id:result[0].event_id,creators:[],invitees:updatedInvitees});
 				//We corrupt the invitees and creator array here by resetting it to empty
-				eventMapper.updateEventDetailsBy_event_id(result[0].event_id,updatedEventObj,
+				eventMapper.updateEventDetailsBy_event_id(result[0].event_id, result[0],
 					function(error,result) {
 						if (!result) {
 							req.flash('err', 'Event not updated');
