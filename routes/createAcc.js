@@ -16,7 +16,7 @@ router.post('/admin', function(req,res){
 		if (req.body.inputPassword === req.body.inputConfirmPassword) {
 			var {hash, salt} = hashing.createHash(req.body.inputPassword);
 
-			var userType = 'admin';
+			var userType = 'user';
 
 			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, function(error, result) {
 				if (!result) {

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var isLoggedIn = require('../config/utils').isLoggedIn;
+var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
@@ -13,11 +14,11 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 	});
 });
 
-router.get('/create',isLoggedIn, function(req, res) {
+router.get('/create',isLoggedIn, isAdminUser, function(req, res) {
 	res.render('createEvent', {err: req.flash('err'),succ: req.flash('succ')} );
 });
 
-router.get('/edit/:event_id',isLoggedIn, function(req, res) {
+router.get('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
@@ -26,7 +27,7 @@ router.get('/edit/:event_id',isLoggedIn, function(req, res) {
 	});
 });
 
-router.post('/create',isLoggedIn, function(req, res) {
+router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
 			function(error,result) {
@@ -46,7 +47,7 @@ router.post('/create',isLoggedIn, function(req, res) {
 	}
 });
 
-router.post('/edit/:event_id',isLoggedIn, function(req, res) {
+router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		var eventObj = new EventModel({title:req.body.title,location:req.body.location,date:req.body.date,description:req.body.description,event_id:req.params.event_id,creators:[],invitees:[]});
 		//We corrupt the invitees and creator array here by resetting it to empty

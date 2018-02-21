@@ -5,4 +5,12 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
-module.exports = {isLoggedIn};
+function isAdminUser(req, res, next) {
+	if (req.user.type === 'admin')
+	{
+		return next();
+	}
+	res.redirect('/login/landingPage');
+}
+
+module.exports = {isLoggedIn, isAdminUser};
