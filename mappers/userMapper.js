@@ -1,4 +1,11 @@
 User = require('../models/user');
+const ADMINUSER= {
+	'name' : 'Admin Account',
+	'email' : 'admin@eventplanner',
+	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
+	'type' : 'admin',
+	'salt' : 'a548ce51589fff7a'
+};
 
 function allUsers(callback){
 	User.find(function (err,users) {
@@ -51,4 +58,16 @@ function deleteAllUsers(callback){
 		return callback(err,res);
 	});
 }
-module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers};
+
+function deleteUserByEmail(email, callback){
+	User.remove({email:email}, function(err) {
+		return callback(err);
+	});
+}
+
+function addAdminUser(callback){
+	User.update({email:ADMINUSER.email}, ADMINUSER, {upsert:true}, function(err) {
+		callback(err);
+	});
+}
+module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser};

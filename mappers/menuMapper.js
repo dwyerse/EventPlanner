@@ -21,10 +21,10 @@ function findMenusByEvent(eventId){
 	});
 }
 
-function deleteAllMenus(callback){
-	Menu.remove({},function(err,res){
+function deleteMenuByEventAndMenuId(eventId, menuId, callback){
+	Menu.remove({eventId:eventId,menuId:menuId},function(err,res){
 		return callback(err,res);
 	});
 }
 
-module.exports = {createMenu, findMenusByEvent, deleteAllMenus};
+module.exports = {createMenu, findMenusByEvent, deleteMenuByEventAndMenuId};
