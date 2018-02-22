@@ -5,7 +5,7 @@ const ADMINUSER= {
 	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
 	'type' : 'admin',
 	'salt' : 'a548ce51589fff7a',
-	'subscribed': true  //Admin gmail can be used for subscribed emails acceptance testing
+	'subscribed': false  
 };
 
 function allUsers(callback){
