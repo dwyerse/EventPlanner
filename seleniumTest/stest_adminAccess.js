@@ -1,4 +1,4 @@
-var assert = require('assert');
+/*var assert = require('assert');
 //var request = require('request');
 
 describe('Grant admin access testing suite', function() {
@@ -20,4 +20,4 @@ describe('Grant admin access testing suite', function() {
 			resolve();
 		});
 	});
-});
+});*/
