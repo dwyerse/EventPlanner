@@ -88,6 +88,14 @@ describe('userMapper testing suite', function() {
 		});
 	});
 
+	it('should find updated user in subscribed emails',function(done) {
+		mapper.findSubscribedUsers(function(err,emails){
+			assert.equal(err,null);
+			assert.equal(emails.includes(TESTUSER.email), true);
+			done();
+		});
+	});
+
 	it('should remove the test user', function(done){
 		mapper.deleteUserByEmail(TESTUSER.email, function(err){
 			assert.equal(err,null);

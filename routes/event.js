@@ -62,7 +62,6 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully updated event');
-					sendUpdateNotification(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/edit' + req.params.event_id);
@@ -81,13 +80,6 @@ function sendCreateNotfication(event){
 	});
 }
 
-function sendUpdateNotification(event){
-	var inviteeEmails = event.invitees.map((invitee) => {
-		return invitee.email;
-	});
-	return inviteeEmails;
-
-}
 function validUpdateParams(body){
 	return (body.title&&body.location&&body.date&&body.description);
 }
