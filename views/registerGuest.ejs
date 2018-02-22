@@ -23,20 +23,20 @@
 		<form  action="/register/guest/<%= result.event_id %>" method="post" id='form'>
 			<div class="form-row">
 				<div class="form-group col-md-6">
-					<label for="title">Email</label>
+					<label for="guestEmail">Email</label>
 					<input type="email" class="form-control" name="guestEmail" value= '<%= result.title %>' required>
 				</div>
 			</div>
 			<div class="form-row">
 					<div class="form-group col-md-6">
-						<label for="description">Access Requirements</label>
+						<label for="accessRequirements">Access Requirements</label>
 						<textarea type="name" class="form-control" name="accessRequirements" rows="5" required></textarea>
 					</div>
 			</div>
 
 			<div class="form-row">
 					<div class="form-group col-md-6">
-						<label for="description">Dietary Restrictions</label>
+						<label for="dietaryRestrictions">Dietary Restrictions</label>
 						<textarea type="name" class="form-control" name="dietaryRestrictions" rows="5" required></textarea>
 					</div>
 			</div>
