@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
+var userMapper = require('../mappers/userMapper');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
+var mailer = require('../config/mailer');
 EventModel = require('../models/event');
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
@@ -37,6 +39,7 @@ router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully created event');
+					sendCreateNotfication(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/create');
@@ -59,6 +62,7 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully updated event');
+					sendUpdateNotification(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/edit' + req.params.event_id);
@@ -69,7 +73,21 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	}
 });
 
+function sendCreateNotfication(event){
+	userMapper.findSubscribedUsers(function(err,subEmails) {
+		if(!err){
+			return mailer.sendEventNotification(subEmails, event, 'created');
+		}
+	});
+}
 
+function sendUpdateNotification(event){
+	var inviteeEmails = event.invitees.map((invitee) => {
+		return invitee.email;
+	});
+	return inviteeEmails;
+
+}
 function validUpdateParams(body){
 	return (body.title&&body.location&&body.date&&body.description);
 }

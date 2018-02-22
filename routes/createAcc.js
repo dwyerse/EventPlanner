@@ -18,7 +18,8 @@ router.post('/admin', function(req,res){
 
 			var userType = 'user';
 
-			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, function(error, result) {
+			var isSubscribed = (req.body.subscribed && req.body.subscribed=='on')? true:false;
+			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, isSubscribed, function(error, result) {
 				if (!result) {
 					req.flash('err', 'User could not be created');
 				} else if (error) {
