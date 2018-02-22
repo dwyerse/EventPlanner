@@ -94,10 +94,10 @@ httpServer.listen(3000, function() {
 
 
 function userAuthenticated(req, res, next) {
-	if (req.isAuthenticated()){
-		return next();
-	}
-	res.redirect('/');
+  if (req.isAuthenticated()){
+    return next();
+  }
+  res.redirect('/');
 }
 
 module.exports = app;
