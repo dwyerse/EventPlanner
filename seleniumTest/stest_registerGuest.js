@@ -2,7 +2,7 @@
 //var request = require('request');
 
 describe('Register Guest testing suite', function() {
-	browser.url('/reguster/guest/:event_id');
+	browser.url('/register/guest/:event_id');
 	it('should have the correct title', function() {
 		return new Promise(function(resolve){
 			var title = browser.getTitle();
