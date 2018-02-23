@@ -45,8 +45,22 @@
 					<textarea type="name" class="form-control" name="description" rows="5" required><%= result.description %></textarea>
 					</div>
 			</div>
-		  <button type="submit" class="btn btn-primary">Confirm</button>
+			<div class="form-row">
+					<div class="form-group col-md-6">
+						<a href="/event/edit/<%=result.event_id%>/addMenu">Add Menu</a><br><br>
+						<h5>Menus:</h5>
+						<table>
+							<% for(var i=0; i < menus.length; i++) { %>
+							   <tr>
+							     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
+							   </tr>
+							<% } %>
+						</table> 
+					</div>
+			</div>
+			<button type="submit" class="btn btn-primary">Confirm</button>
 		</form>
+
 	</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
