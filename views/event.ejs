@@ -31,7 +31,18 @@
 			<h4>Description</h4>
 			<div style="word-break: break-all;"><%= result.description %></div>
 		</div>
-		<a href="http://localhost:3000/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+		<div class="form-group col-md-6">
+			<h5>Menus:</h5>
+				<table>
+					<% for(var i=0; i < menus.length; i++) { %>
+					   <tr>
+						     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
+					   </tr>
+					<% } %>
+				</table> 
+			
+		</div>
+		<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
 
 	</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
