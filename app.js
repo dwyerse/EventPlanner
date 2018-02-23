@@ -14,6 +14,7 @@ var login = require("./routes/login");
 var event = require('./routes/event');
 var createAcc = require("./routes/createAcc");
 var adminAccess = require("./routes/adminAccess");
+var registerGuest = require('./routes/registerGuest');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
@@ -76,6 +77,7 @@ app.use("/login", login);
 app.use("/event", event);
 app.use("/create", createAcc);
 app.use("/grant", adminAccess);
+app.use("/register", registerGuest);
 
 
 // catch 404 and forward to error handler

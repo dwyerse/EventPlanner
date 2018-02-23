@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
+var userMapper = require('../mappers/userMapper');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
 
-router.get('/register/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+router.get('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
@@ -14,8 +15,9 @@ router.get('/register/guest/:event_id',isLoggedIn, isAdminUser, function(req, re
 	});
 });
 
-router.post('/register/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
-	if(validUpdateParams(req.body)){
+router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+
+	if(validGuestParams(req.body)){
 
 		var guestEmail = req.body.guestEmail;
 		var guestAccessRequirements = req.body.accessRequirements;
@@ -23,42 +25,71 @@ router.post('/register/guest/:event_id',isLoggedIn, isAdminUser, function(req, r
 
 		var currentEventId = req.params.event_id;
 
-		eventMapper.findEventBy_event_id(currentEventId, function(err, result) {
-			if (!result) {
-				req.flash('err', 'Event not found');
-				res.redirect('/');
-			} else if (error) {
-				req.flash('err', error);
+		userMapper.findUserByEmail(guestEmail, function(err, result) {
+			// Only register guest if their email is found
+			if (!result || isEmpty(result)) {
+				req.flash('err', 'Guest email not found');
+				res.redirect(req.params.event_id);
+			} else if (err) {
+				req.flash('err', err);
 			} else {
+				eventMapper.findEventBy_event_id(currentEventId, function(err, result) {
+					if (!result) {
+						req.flash('err', 'Event not found');
+						res.redirect('/');
+					} else if (err) {
+						req.flash('err', err);
+					} else {
 
-				//var updatedEventObj = new EventModel({title:result[0].title,location:result[0].location,date:result[0].date,description:result[0].description,event_id:result[0].event_id,creators:[],invitees:updatedInvitees});
-				result[0].invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
+						result.invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
 
-				eventMapper.updateEventDetailsBy_event_id(result[0].event_id, result[0],
-					function(error,result) {
-						if (!result) {
-							req.flash('err', 'Event not updated');
-						} else if (error) {
-							req.flash('err', error);
-						} else{
-							req.flash('succ', 'Succesfully registered guest');
-							return res.redirect('/event/view/'+ result[0].event_id);
-						}
-						res.redirect('/event/view' + req.params.event_id);
+						eventMapper.updateEventDetailsBy_event_id(result.event_id, result, function(error,result) {
+							if (!result) {
+								req.flash('err', 'Event not updated');
+							} else if (error) {
+								req.flash('err', error);
+							} else {
+								req.flash('succ', 'Succesfully registered guest');
+								return res.redirect('/event/view/'+ result.event_id);
+							}
+							res.redirect('/event/view/' + req.params.event_id);
+						});
+				
 					}
-				);
+				});
+						
 			}
-		});
 
+		});
 		
 	} else {
 		req.flash('err', 'Not all details provided');
-		res.redirect('/event/view' + req.params.event_id);
+		res.redirect('/event/view/' + req.params.event_id);
 	}
 });
 
+function isEmpty(obj) {
+	// null and undefined are "empty"
+	if (obj == null) return true;
 
-function validUpdateParams(body){
-	return (body.title&&body.location&&body.date&&body.description);
+	// Assume if it has a length property with a non-zero value
+	// that that property is correct.
+	if (obj.length > 0)    return false;
+
+	if (obj.length === 0)  return true;
+
+	if (typeof obj !== 'object') return true;
+
+	// Does it have any properties of its own?
+	for (var key in obj) {
+		if (hasOwnProperty.call(obj, key)) return false;
+	}
+
+	return true;
 }
+
+function validGuestParams(body){
+	return (body.guestEmail && body.accessRequirements && body.dietaryRestrictions);
+}
+
 module.exports = router;
