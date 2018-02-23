@@ -69,7 +69,7 @@ describe('eventMapper testing suite', function() {
 			done();
 		});
 	});
-
+	
 	it('should remove the test event', function(done){
 		mapper.deleteEventByEventId(testEventId, function(err){
 			assert.equal(err,null);
@@ -79,4 +79,5 @@ describe('eventMapper testing suite', function() {
 			});
 		});
 	});
+	
 });
