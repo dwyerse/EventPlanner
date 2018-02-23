@@ -27,13 +27,13 @@ function findUserByName(name,callback){
 }
 
 function findUserById(id,callback){
-	User.find({ _id:id }, function(err,res){
+	User.findOne({ _id:id }, function(err,res){
 		return callback(err,res);
 	});
 }
 
 function findUserByEmail(email,callback){
-	User.find({ email:email }, function(err,res){
+	User.findOne({ email:email }, function(err,res){
 		return callback(err,res);
 	});
 }
