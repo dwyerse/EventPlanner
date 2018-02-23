@@ -74,6 +74,14 @@ Once app server and mongoDB server running:
 - Dashboard with user credentials show should appear.
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
+### Feature 17: 'Send out emails automatically when an event is created'
+- Log in to the admin account (eventplanner.gp@gmail.com) with password provided
+- Click create event 
+- Fill out event details as required
+- Click confirm button
+- Ensure success message is displayed. 
+- Go to gmail.com and log into admin gmail account (eventplanner.gp@gmail.com)
+- Observe an email is present stating that an event with the title provided has been created
 
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
