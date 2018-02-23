@@ -45,6 +45,7 @@
 					<textarea type="name" class="form-control" name="description" rows="5" required><%= result.description %></textarea>
 					</div>
 			</div>
+
 			<div class="form-row">
 					<div class="form-group col-md-6">
 						<a href="/event/edit/<%=result.event_id%>/addMenu">Add Menu</a><br><br>
@@ -58,6 +59,11 @@
 						</table> 
 					</div>
 			</div>
+
+			<div id="buttons">
+				<a class="btn btn-primary" href="/register/guest/<%= result.event_id %>" role="button" id='createBtn'>Register Guest</a>
+			</div>
+
 			<button type="submit" class="btn btn-primary">Confirm</button>
 		</form>
 
