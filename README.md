@@ -74,6 +74,26 @@ Once app server and mongoDB server running:
 - Dashboard with user credentials show should appear.
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
+### Feature 17: 'Send out emails automatically when an event is created'
+- Log in to the admin account (eventplanner.gp@gmail.com) with password provided
+- Click create event 
+- Fill out event details as required
+- Click confirm button
+- Ensure success message is displayed. 
+- Go to gmail.com and log into admin gmail account (eventplanner.gp@gmail.com)
+- Observe an email is present stating that an event with the title provided has been created
+
+### Feature 29: 'I want to create menus'
+- Create a new event or view an existing event
+- Click Edit button
+- Click the Add Menu link
+- Click the Browse button
+- Select a pdf file to upload as the menu, for example pdf-sample.pdf in the root directory of eventplanner
+- Type in a name for the menu or leave it as 'Menu Name'
+- Click the Upload button
+- The menu should appear uder the Current menus for this event header
+- To view the menu, click the menu's name here or in the event view or edit page
+- Click the back link to return to the edit screen of the event
 
 # Errors
 ### Port already in use
