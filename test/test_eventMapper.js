@@ -16,7 +16,7 @@ describe('eventMapper testing suite', function() {
 		mongoose.connect(APP_DB);
 		userMapper.findUserByEmail(ADMIN_EMAIL, function(err,res) {
 			assert.equal(err,null);
-			TEST_EVENT.creators = [res[0]._id];
+			TEST_EVENT.creators = [res._id];
 			done();
 		});
 	});

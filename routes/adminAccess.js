@@ -21,9 +21,9 @@ router.post('/admin', isLoggedIn, isAdminUser, function(req, res) {
 
 				var adminType = 'admin';
 				
-				result[0].type = adminType;
+				result.type = adminType;
 
-				userMapper.updateUserByEmail(result[0].email, result[0], function(updateErr,updateRes) {
+				userMapper.updateUserByEmail(result.email, result, function(updateErr,updateRes) {
 					if (!updateRes) {
 						req.flash('err', 'User email not found');
 					} else if (error) {
