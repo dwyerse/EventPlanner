@@ -75,6 +75,23 @@ Once app server and mongoDB server running:
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
 
+### Feature 2: 'I want to be able to give admin access to other people'
+- Login as non-admin user created from testing previous feature
+- Click Grant Admin Access button
+- This user account will not be allowed to proceed to grant admin access page because it currently lacks admin access
+- Return to homepage
+- Login as administrator user - email: admin@eventplanner password: cs4098
+- Click Grant Admin Access button
+- This account will be allowed to proceed to grant admin access page because it has admin access
+- Enter email of non-admin user account created from testing previous feature
+- Click Grant button
+- Confirmation of successfully granted admin access should appear
+- Return to Homepage
+- Login as user that was just granted admin access
+- Click Grant Admin Access button
+- The user account will now be allowed to proceed to the grant admin access page because it now has admin access
+
+
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
 - Click Edit button
