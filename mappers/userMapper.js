@@ -4,7 +4,8 @@ const ADMINUSER= {
 	'email' : 'admin@eventplanner',
 	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
 	'type' : 'admin',
-	'salt' : 'a548ce51589fff7a'
+	'salt' : 'a548ce51589fff7a',
+	'subscribed': false  
 };
 
 function allUsers(callback){
@@ -13,8 +14,8 @@ function allUsers(callback){
 	});
 }
 
-function addUser(name,email,password,type,salt,callback){
-	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt});
+function addUser(name,email,password,type,salt,subscribed,callback){
+	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt,subscribed:subscribed});
 	newUser.save(function (err,product) {
 		return callback(err,product);
 	});
@@ -46,6 +47,7 @@ function updateUserByEmail(email,userObj,callback){
 		res.type = userObj.type;
 		res.password = userObj.password;
 		res.salt = userObj.salt;
+		res.subscribed = userObj.subscribed;
 		res.save(function (err, updatedUser) {
 			return callback(err,updatedUser);
 		});
@@ -65,9 +67,16 @@ function deleteUserByEmail(email, callback){
 	});
 }
 
+function findSubscribedUsers(callback) {
+	User.find({subscribed:true}, 'email', function(err,users) {
+		var emails = users.map((user) => {return user.email;});
+		return callback(err,emails);
+	});
+}
+
 function addAdminUser(callback){
 	User.update({email:ADMINUSER.email}, ADMINUSER, {upsert:true}, function(err) {
 		callback(err);
 	});
 }
-module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser};
+module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,findSubscribedUsers,addAdminUser};

@@ -8,7 +8,8 @@ const TESTUSER= {
 	'email' : 'test@eventplanner',
 	'password' : 'password',
 	'type' : 'admin',
-	'salt' : 'salt'
+	'salt' : 'salt',
+	'subscribed': false
 };
 describe('userMapper testing suite', function() {
 	before(function(){
@@ -31,7 +32,7 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should add user to the database without error', function(done) {
-		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, function(err,res){
+		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, TESTUSER.subscribed,function(err,res){
 			assert.equal(err,null);
 			assert.equal(res.name,TESTUSER.name);
 			assert.equal(res.email,TESTUSER.email);
@@ -40,14 +41,14 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should throw error if email is not unique', function(done) {
-		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, function(err){
+		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt,TESTUSER.subscribed,function(err){
 			assert.notEqual(err,null);
 			done();
 		});
 	});
 
 	it('should return an error if a required field is empty ', function(done) {
-		mapper.addUser(null,'email@email.ie','password','admin','fakesalt',function(err){
+		mapper.addUser(null,'email@email.ie','password','admin','fakesalt',false,function(err){
 			assert.notEqual(err,null);
 			done();
 		});
@@ -77,11 +78,20 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should update user', function(done) {
-		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',salt:'newfakesalt'});
+		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',salt:'newfakesalt', subscribed:true});
 		mapper.updateUserByEmail(TESTUSER.email,userObj,function(err,res){
 			assert.equal(userObj.name,res.name);
 			assert.equal(userObj.email,res.email);
 			assert.equal(userObj.password,res.password);
+			assert.equal(userObj.subscribed,true);
+			done();
+		});
+	});
+
+	it('should find updated user in subscribed emails',function(done) {
+		mapper.findSubscribedUsers(function(err,emails){
+			assert.equal(err,null);
+			assert.equal(emails.includes(TESTUSER.email), true);
 			done();
 		});
 	});
