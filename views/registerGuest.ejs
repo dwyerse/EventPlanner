@@ -1,5 +1,5 @@
 <head>
-		<title>Edit Event</title>
+		<title>Register Guest for Event</title>
 		<meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- Bootstrap CSS -->
@@ -18,54 +18,31 @@
 			</div>
 		<% } %>
 		<br>
-		<h2> Edit Event </h2>
+		<h2> Register Guest for Event </h2>
 		<br>
-		<form  action="/event/edit/<%= result.event_id %>" method="post" id='form'>
-			<div class="form-row">
-			<div class="form-group col-md-6">
-				<label for="title">Title</label>
-				<input type="name" class="form-control" name="title" value= '<%= result.title %>' required>
-			</div>
-			</div>
+		<form  action="/register/guest/<%= result.event_id %>" method="post" id='form'>
 			<div class="form-row">
 				<div class="form-group col-md-6">
-				<label for="location">Location</label>
-				<input type="name" class="form-control" name="location" value= '<%= result.location %>' required>
+					<label for="guestEmail">Email</label>
+					<input type="email" class="form-control" name="guestEmail" value='' required>
 				</div>
 			</div>
 			<div class="form-row">
 					<div class="form-group col-md-6">
-					<label for="date">Date</label>
-					<input type="text" id="datepicker" name="date"  value= '<%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %>' required>
-				</div>
-			</div>
-			<div class="form-row">
-					<div class="form-group col-md-6">
-					<label for="description">Description</label>
-					<textarea type="name" class="form-control" name="description" rows="5" required><%= result.description %></textarea>
+						<label for="accessRequirements">Access Requirements</label>
+						<textarea type="name" class="form-control" name="accessRequirements" rows="5" required></textarea>
 					</div>
-			</div>
-
-			<div id="buttons">
-				<a class="btn btn-primary" href="/register/guest/<%= result.event_id %>" role="button" id='createBtn'>Register Guest</a>
 			</div>
 
 			<div class="form-row">
 					<div class="form-group col-md-6">
-						<a href="/event/edit/<%=result.event_id%>/addMenu">Add Menu</a><br><br>
-						<h5>Menus:</h5>
-						<table>
-							<% for(var i=0; i < menus.length; i++) { %>
-							   <tr>
-							     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
-							   </tr>
-							<% } %>
-						</table> 
+						<label for="dietaryRestrictions">Dietary Restrictions</label>
+						<textarea type="name" class="form-control" name="dietaryRestrictions" rows="5" required></textarea>
 					</div>
 			</div>
-			<button type="submit" class="btn btn-primary">Confirm</button>
+			
+			<button type="submit" class="btn btn-primary">Register Guest</button>
 		</form>
-
 	</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
