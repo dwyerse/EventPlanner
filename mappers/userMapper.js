@@ -15,7 +15,7 @@ function allUsers(callback){
 }
 
 function addUser(name,email,password,type,salt,subscriptions,callback){
-	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt});
+	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt,subscriptions:subscriptions});
 	newUser.save(function (err,product) {
 		return callback(err,product);
 	});

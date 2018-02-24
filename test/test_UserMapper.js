@@ -11,9 +11,9 @@ const TESTUSER= {
 	'salt' : 'salt',
 	'subscriptions' : []
 };
-const NEWEVENTS_SUB = 'newEvents';
+const NEWEVENTS_SUB = 'Event_new';
 
-describe('userMapper testing suite', function() {
+describe.only('userMapper testing suite', function() {
 	before(function(){
 		mongoose.connect(APP_DB);
 	});
