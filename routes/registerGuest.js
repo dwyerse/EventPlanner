@@ -41,18 +41,29 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 						req.flash('err', err);
 					} else {
 						var alreadyRegistered = false;
+						var wasPending = false;
 
 						for (var i = 0; i < result.invitees.length; i++)
 						{
-							if (result.invitees[i].email === guestEmail)
+							if (result.invitees[i].email === guestEmail && result.invitees[i].state === 'attending')
 							{
 								alreadyRegistered = true;
+							}
+							else if (result.invitees[i].email === guestEmail && result.invitees[i].state === 'pending')
+							{
+								result.invitees[i].state = 'attending';
+								result.invitees[i].accessRequirements = guestAccessRequirements;
+								result.invitees[i].dietaryRestrictions = guestDietaryRestrictions;
+								wasPending = true;
 							}
 						}
 
 						if (!alreadyRegistered)
 						{
-							result.invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
+							if (!wasPending)
+							{
+								result.invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
+							}
 
 							eventMapper.updateEventBy_event_id(result.event_id, result, function(error,result) {
 								if (!result) {
