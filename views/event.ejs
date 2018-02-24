@@ -46,7 +46,31 @@
 			</div>
 		</div>
 		<div class="col-sm">
-			<h5>Invite List</h5>
+			<h5>
+				Invite List 
+				<span class="float-right">
+					<a class="btn btn-default" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
+					<span class="dropdown">
+						<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Compose Email...
+						</button>
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<a class="dropdown-item" href="#">To all invitees</a>
+							<a class="dropdown-item" href="#">To all confirmed attending</a>
+							<a class="dropdown-item" href="#">To all pending confirmation</a>
+						</div>
+					</span>
+				</span>
+			</h5>
+			<br>
+			<form method="post" action="<%=result.event_id%>/addInvitee" class="inline">
+				<div class="input-group">
+					<input type="email" name="email" class="form-control" placeholder="Add new invite...">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Add</button>
+					</span>
+				</div>
+			</form>
 			<table class="table table-sm">
 				<tbody>
 					<% for(var i=0; i < result.invitees.length; i++) { %>
@@ -56,7 +80,7 @@
 						<td>
 							<form method="post" action="<%=result.event_id%>/removeInvitee" class="inline">
 								<input type="hidden" name="inviteeId" value="<%=i%>">
-								<button type="submit" name="submitInvitee" value="submit_value" class="link-button">
+								<button type="submit" name="submitInvitee">
 									Delete
 								</button>
 							</form>
@@ -65,14 +89,6 @@
 					<% } %>
 				</tbody>
 			</table>
-			<form method="post" action="<%=result.event_id%>/addInvitee" class="inline">
-				<div class="input-group">
-					<input type="email" name="email" class="form-control" placeholder="Add new invite...">
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit">Add</button>
-					</span>
-				</div>
-			</form>
 		</div>
 	</div>
 	<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>

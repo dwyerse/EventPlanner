@@ -76,35 +76,57 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	}
 });
 
+//Attendee Report
+
+router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+		var attending = [];
+		for (var i = 0; i < result.invitees.length; i++) {
+			if(result.invitees[i].state=='accepted'){
+				attending.push(result.invitees[i]);
+			}
+		}
+		res.render('attendeeReport', {attending, err: req.flash('err'), succ: req.flash('succ')});
+	});
+});
+
 //Add invitee
 router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
-		var emailAlreadyExists = false;
-		for (var i = 0; i < result.invitees.length; i++) {
-			if(req.body.email==result.invitees[i].email){
-				emailAlreadyExists = true;
-				break;
-			}
-		}
-		if(emailAlreadyExists){
-			req.flash('err', 'Invitee failed to be added: invitee already exists');
+		if(!req.body.email){
 			res.redirect('/event/view/' + req.params.event_id);
 		}
 		else{
-			var newInvitees = result.invitees;
-			newInvitees.push({email:req.body.email,state:'pending'});
-			var newEvent = new EventModel({title:result.title,location:result.location,date:result.date,
-				description:result.description, event_id:result.event_id,creators:result.creators,
-				invitees:newInvitees});
-			eventMapper.updateEventBy_event_id(req.params.event_id,newEvent,function(err,res){
-				if(err){
-					req.flash('err', 'Invitee failed to be added');
-					res.redirect('/event/view/' + req.params.event_id);
+			var emailAlreadyExists = false;
+			for (var i = 0; i < result.invitees.length; i++) {
+				if(req.body.email==result.invitees[i].email){
+					emailAlreadyExists = true;
+					break;
 				}
-			});
+			}
+			if(emailAlreadyExists){
+				req.flash('err', 'Invitee failed to be added: invitee already exists');
+				res.redirect('/event/view/' + req.params.event_id);
+			}
+			else{
+				var newInvitees = result.invitees;
+				newInvitees.push({email:req.body.email,state:'pending'});
+				var newEvent = new EventModel({title:result.title,location:result.location,date:result.date,
+					description:result.description, event_id:result.event_id,creators:result.creators,
+					invitees:newInvitees});
+				eventMapper.updateEventBy_event_id(req.params.event_id,newEvent,function(err,res){
+					if(err){
+						req.flash('err', 'Invitee failed to be added');
+						res.redirect('/event/view/' + req.params.event_id);
+					}
+				});
 
-			req.flash('succ', 'Invitee added');
-			res.redirect('/event/view/' + req.params.event_id);
+				req.flash('succ', 'Invitee added');
+				res.redirect('/event/view/' + req.params.event_id);
+			}
 		}
 	});
 });

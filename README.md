@@ -87,6 +87,12 @@ Once app server and mongoDB server running:
 - To view the menu, click the menu's name here or in the event view or edit page
 - Click the back link to return to the edit screen of the event
 
+### Feature 10: 'I want to see the invite list'
+- Create a new event or view an existing event
+- The invite list is displayed on this screen
+- To add an invitee, type their email into the input labelled 'Add new invite' and press the add button
+- To remove an invitee, press the 'delete' button beside their email
+
 # Errors
 ### Port already in use
 Following commands work in 'git bash' terminal
