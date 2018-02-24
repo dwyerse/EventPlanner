@@ -34,6 +34,16 @@ router.get('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	});
 });
 
+router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+
+		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
+	});
+});
+
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
