@@ -1,20 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
+var userMapper = require('../mappers/userMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
+const EVENT_SUB_PREFIX = 'Event_';
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
+	var isSubscribed = req.user.subscriptions.includes(EVENT_SUB_PREFIX + req.params.event_id);
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
 		}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult});
+			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed});
 		});
 	});
 });
@@ -106,7 +109,7 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 		var filename;
 		var filepath = path.join(__dirname, '../menus');
 		[menuId,filepath,filename] = getNewFilename(filepath, eventId);
-		
+
 		let uploadedFile = req.files.uploadedFile;
 		if(uploadedFile.mimetype!=='application/pdf'){
 			req.flash('uploadMessage', 'Uploaded file must be in pdf format');
@@ -127,6 +130,22 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 		}
 	}
 });
+
+router.post('/subscribe', isLoggedIn, isAdminUser, function(req, res){
+	if(req.body.event_id){
+		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
+		userMapper.updateUserSubs(req.user.email, newSub, function(err,updatedUser){
+			if(err || !updatedUser) {
+				req.flash('err', 'Unable to subscribe to this event');
+			} else {
+				req.flash('succ', 'Succesfully subscribed to this event');
+				res.redirect('/event/view/'+req.body.event_id);
+			}
+		});
+	}
+});
+
+
 
 function getNewFilename(filepath, eventId){
 	var count = 0;

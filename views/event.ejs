@@ -18,6 +18,12 @@
 		<% } %>
 		<br>
 		<h2 style="word-break: break-all;" > <%= result.title %> </h2>
+		<% if(!isSubscribed) { %>
+		<form action="/event/subscribe" method="post" id='subForm'>
+			<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
+			<input type="hidden" name="event_id" value=<%=result.event_id%> />
+		</form>
+		<% }%>
 		<br>
 		<div class="form-group col-md-6">
 			<h4>Location</h4>
@@ -39,11 +45,12 @@
 						     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
 					   </tr>
 					<% } %>
-				</table> 
-			
-		</div>
-		<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+				</table>
 
+		</div>
+		<div class="form-group col-md-6">
+			<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+		</div>
 	</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

@@ -13,7 +13,7 @@ const TESTUSER= {
 };
 const NEWEVENTS_SUB = 'Event_new';
 
-describe.only('userMapper testing suite', function() {
+describe('userMapper testing suite', function() {
 	before(function(){
 		mongoose.connect(APP_DB);
 	});
