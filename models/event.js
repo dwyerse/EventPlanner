@@ -11,7 +11,9 @@ eventSchema.add({
 	creators:[{ type: Schema.Types.ObjectId, ref: 'User' }],
 	invitees:[{
 		email: String,
-		state: String
+		state: String,
+		accessRequirements: String,
+		dietaryRestrictions: String
 	}]
 });
 
