@@ -21,15 +21,22 @@
 		<br>
 
 		<div class="form-group col-md-6">
-			<h5>Guests:</h5>
 				<table>
-					<% for(var i=0; i < result.invitees.length; i++) { %>
-					   <tr>
-						     <td>Guest Email: <%= invitees[i].email %></td>
-						     <td>Status: <%= invitees[i].state %></td>
-						     <td>Access Requirements: <%= invitees[i].accessRequirements %></td>
-						     <td>Dietary Restrictions: <%= invitees[i].dietaryRestrictions %></td>
-					   </tr>
+					<% if (result.invitees.length > 0) {
+							for(var i=0; i < result.invitees.length; i++) { %>
+					   		<tr>
+						    	<td>Guest Email: <%= invitees[i].email %></td>
+						    	<td>Status: <%= invitees[i].state %></td>
+						    	<td>Access Requirements: <%= invitees[i].accessRequirements %></td>
+						    	<td>Dietary Restrictions: <%= invitees[i].dietaryRestrictions %></td>
+					   		</tr>
+						<% 	} 
+
+						}
+						else
+						{ %>
+
+						<h5>There are currently no guests registered for the event.</h5>
 					<% } %>
 				</table>
 
