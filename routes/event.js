@@ -39,8 +39,8 @@ router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-		
-		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult});
+
+		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
 	});
 });
 
