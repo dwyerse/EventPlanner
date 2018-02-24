@@ -90,8 +90,8 @@ describe('userMapper testing suite', function() {
 		});
 	});
 
-	it('should update user subscriptions successfully', function(done) {
-		mapper.updateUserSubs(TESTUSER.email, 'newSub', function(err,res) {
+	it('should subscribe user successfully', function(done) {
+		mapper.updateUserSubs(TESTUSER.email, 'newSub', true, function(err,res) {
 			assert.equal(err,null);
 			assert.equal(res.email,TESTUSER.email);
 			assert.equal(res.subscriptions.includes('newSub'),true);
@@ -99,8 +99,17 @@ describe('userMapper testing suite', function() {
 		});
 	});
 
+	it('should subscribe user successfully', function(done) {
+		mapper.updateUserSubs(TESTUSER.email, 'newSub', false, function(err,res) {
+			assert.equal(err,null);
+			assert.equal(res.email,TESTUSER.email);
+			assert.equal(res.subscriptions.includes('newSub'),false);
+			done();
+		});
+	});
+
 	it('should not update user subscriptions successfully', function(done) {
-		mapper.updateUserSubs('invalidEmail', 'newSub', function(err,res) {
+		mapper.updateUserSubs('invalidEmail', 'newSub', true, function(err,res) {
 			assert.equal(err,null);
 			assert.equal(res,null);
 			done();

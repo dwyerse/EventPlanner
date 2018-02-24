@@ -71,11 +71,13 @@ function addAdminUser(callback){
 	});
 }
 
-function updateUserSubs(email, newSub, callback) {
+function updateUserSubs(email, newSub, isSub, callback) {
 	if(newSub){
-		User.findOneAndUpdate({email:email}, {$push: {subscriptions: newSub}}, {new:true},function(err,res){
+		var operator = isSub?  {$push: {subscriptions: newSub}} : {$pull: {subscriptions: newSub}};
+		User.findOneAndUpdate({email:email}, operator, {new:true},function(err,res){
 			return callback(err,res);
 		});
 	}
 }
+
 module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser,updateUserSubs};

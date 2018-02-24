@@ -131,10 +131,24 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 	}
 });
 
+router.post('/unsubscribe', isLoggedIn, isAdminUser, function(req, res){
+	if(req.body.event_id){
+		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
+		userMapper.updateUserSubs(req.user.email, newSub,false, function(err,updatedUser){
+			if(err || !updatedUser) {
+				req.flash('err', 'Unable to unsubscribe to this event');
+			} else {
+				req.flash('succ', 'Succesfully unsubscribed to this event');
+				res.redirect('/event/view/'+req.body.event_id);
+			}
+		});
+	}
+});
+
 router.post('/subscribe', isLoggedIn, isAdminUser, function(req, res){
 	if(req.body.event_id){
 		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
-		userMapper.updateUserSubs(req.user.email, newSub, function(err,updatedUser){
+		userMapper.updateUserSubs(req.user.email, newSub,true, function(err,updatedUser){
 			if(err || !updatedUser) {
 				req.flash('err', 'Unable to subscribe to this event');
 			} else {

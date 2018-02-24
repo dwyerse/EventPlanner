@@ -23,7 +23,12 @@
 			<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
 			<input type="hidden" name="event_id" value=<%=result.event_id%> />
 		</form>
-		<% }%>
+		<% } else { %>
+			<form action="/event/unsubscribe" method="post" id='unsubForm'>
+				<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
+				<input type="hidden" name="event_id" value=<%=result.event_id%> />
+			</form>
+		<% } %>
 		<br>
 		<div class="form-group col-md-6">
 			<h4>Location</h4>
