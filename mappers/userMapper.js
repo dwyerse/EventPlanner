@@ -4,7 +4,8 @@ const ADMINUSER= {
 	'email' : 'admin@eventplanner',
 	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
 	'type' : 'admin',
-	'salt' : 'a548ce51589fff7a'
+	'salt' : 'a548ce51589fff7a',
+	'subscriptions' : []
 };
 
 function allUsers(callback){
@@ -13,7 +14,7 @@ function allUsers(callback){
 	});
 }
 
-function addUser(name,email,password,type,salt,callback){
+function addUser(name,email,password,type,salt,subscriptions,callback){
 	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt});
 	newUser.save(function (err,product) {
 		return callback(err,product);
@@ -39,18 +40,17 @@ function findUserByEmail(email,callback){
 }
 
 function updateUserByEmail(email,userObj,callback){
-
 	User.findOne({ email:email }, function(err,res){
 		res.name = userObj.name;
 		res.email = userObj.email;
 		res.type = userObj.type;
 		res.password = userObj.password;
 		res.salt = userObj.salt;
+		res.subscriptions = userObj.subscriptions;
 		res.save(function (err, updatedUser) {
 			return callback(err,updatedUser);
 		});
 	});
-
 }
 
 function deleteAllUsers(callback){
@@ -70,4 +70,12 @@ function addAdminUser(callback){
 		callback(err);
 	});
 }
-module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser};
+
+function updateUserSubs(email, newSub, callback) {
+	if(newSub){
+		User.findOneAndUpdate({email:email}, {$push: {subscriptions: newSub}}, {new:true},function(err,res){
+			return callback(err,res);
+		});
+	}
+}
+module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser,updateUserSubs};

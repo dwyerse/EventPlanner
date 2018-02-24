@@ -8,8 +8,11 @@ const TESTUSER= {
 	'email' : 'test@eventplanner',
 	'password' : 'password',
 	'type' : 'admin',
-	'salt' : 'salt'
+	'salt' : 'salt',
+	'subscriptions' : []
 };
+const NEWEVENTS_SUB = 'newEvents';
+
 describe('userMapper testing suite', function() {
 	before(function(){
 		mongoose.connect(APP_DB);
@@ -31,7 +34,7 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should add user to the database without error', function(done) {
-		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, function(err,res){
+		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, TESTUSER.subscriptions, function(err,res){
 			assert.equal(err,null);
 			assert.equal(res.name,TESTUSER.name);
 			assert.equal(res.email,TESTUSER.email);
@@ -40,14 +43,14 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should throw error if email is not unique', function(done) {
-		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, function(err){
+		mapper.addUser(TESTUSER.name,TESTUSER.email,TESTUSER.password,TESTUSER.type,TESTUSER.salt, TESTUSER.subscriptions,function(err){
 			assert.notEqual(err,null);
 			done();
 		});
 	});
 
 	it('should return an error if a required field is empty ', function(done) {
-		mapper.addUser(null,'email@email.ie','password','admin','fakesalt',function(err){
+		mapper.addUser(null,'email@email.ie','password','admin','fakesalt',[],function(err){
 			assert.notEqual(err,null);
 			done();
 		});
@@ -77,11 +80,29 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should update user', function(done) {
-		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',salt:'newfakesalt'});
+		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',salt:'newfakesalt', subscriptions:[NEWEVENTS_SUB]});
 		mapper.updateUserByEmail(TESTUSER.email,userObj,function(err,res){
 			assert.equal(userObj.name,res.name);
 			assert.equal(userObj.email,res.email);
 			assert.equal(userObj.password,res.password);
+			assert.equal(userObj.subscriptions[0],res.subscriptions[0]);
+			done();
+		});
+	});
+
+	it('should update user subscriptions successfully', function(done) {
+		mapper.updateUserSubs(TESTUSER.email, 'newSub', function(err,res) {
+			assert.equal(err,null);
+			assert.equal(res.email,TESTUSER.email);
+			assert.equal(res.subscriptions.includes('newSub'),true);
+			done();
+		});
+	});
+
+	it('should not update user subscriptions successfully', function(done) {
+		mapper.updateUserSubs('invalidEmail', 'newSub', function(err,res) {
+			assert.equal(err,null);
+			assert.equal(res,null);
 			done();
 		});
 	});
