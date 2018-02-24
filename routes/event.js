@@ -13,8 +13,10 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		if(err){
 			res.send(err);
 		}
+		var isAdmin=false;
+		if(req.user.type=='admin'){isAdmin=true;}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult});
+			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isAdmin});
 		});
 	});
 });

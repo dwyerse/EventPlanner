@@ -19,15 +19,15 @@
 	<table class="table table-sm">
 		<thead>
 			<th>Email</th>
-			<th>Contact Information</th>
+			<th>Access Requirements</th>
 			<th>Dietary Requirements</th>
 		</thead>
 		<tbody>
 			<% for(var i=0; i < attending.length; i++) { %>
 			<tr>
 				<td><%=attending[i].email%></td>
-				<td>None</td>
 				<td><%=attending[i].accessRequirements%></td>
+				<td><%=attending[i].dietaryRestrictions%></td>
 			</tr>
 			<% } %>
 		</tbody>
