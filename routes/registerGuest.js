@@ -40,20 +40,37 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					} else if (err) {
 						req.flash('err', err);
 					} else {
+						var alreadyRegistered = false;
 
-						result.invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
-
-						eventMapper.updateEventDetailsBy_event_id(result.event_id, result, function(error,result) {
-							if (!result) {
-								req.flash('err', 'Event not updated');
-							} else if (error) {
-								req.flash('err', error);
-							} else {
-								req.flash('succ', 'Succesfully registered guest');
-								return res.redirect('/event/view/'+ result.event_id);
+						for (var i = 0; i < result.invitees.length; i++)
+						{
+							if (result.invitees[i].email === guestEmail)
+							{
+								alreadyRegistered = true;
 							}
-							res.redirect('/event/view/' + req.params.event_id);
-						});
+						}
+
+						if (!alreadyRegistered)
+						{
+							result.invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
+
+							eventMapper.updateEventBy_event_id(result.event_id, result, function(error,result) {
+								if (!result) {
+									req.flash('err', 'Event not updated');
+								} else if (error) {
+									req.flash('err', error);
+								} else {
+									req.flash('succ', 'Succesfully registered guest');
+									return res.redirect('/event/view/'+ result.event_id);
+								}
+								res.redirect('/event/view/' + req.params.event_id);
+							});
+						}
+						else
+						{
+							req.flash('err', 'Guest has already been registered');
+							res.redirect('/register/guest/' + req.params.event_id);
+						}
 				
 					}
 				});
