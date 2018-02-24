@@ -77,7 +77,6 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 });
 
 //Attendee Report
-
 router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
@@ -85,7 +84,7 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 		}
 		var attending = [];
 		for (var i = 0; i < result.invitees.length; i++) {
-			if(result.invitees[i].state=='accepted'){
+			if(result.invitees[i].state=='accepted'||result.invitees[i].state=='attending'){
 				attending.push(result.invitees[i]);
 			}
 		}
