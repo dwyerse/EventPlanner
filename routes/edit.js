@@ -16,8 +16,6 @@ router.get('/password', isLoggedIn, function(req, res) {
 	res.render('changePassword', {err: req.flash('err'),succ: req.flash('succ')});
 });
 
-//Handle POST requests
-//Need to replace exampleUser here with req.user
 router.post('/password', isLoggedIn, function(req, res) {
 	if (req.body.inputPassword1 == req.body.inputPassword2) {
 		var {hash, salt} = hashing.createHash(req.body.inputPassword1);

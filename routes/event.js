@@ -10,6 +10,7 @@ var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
+const NEWEVENTS_SUB = 'Event_new';
 var mailer = require('../config/mailer');
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
@@ -51,6 +52,7 @@ router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully created event');
+					sendCreateNotfication(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/create');
@@ -240,6 +242,14 @@ router.post('/subscribe', isLoggedIn, function(req, res){
 		});
 	}
 });
+
+function sendCreateNotfication(event){
+	userMapper.findSubscribedUsers(NEWEVENTS_SUB, function(err,subEmails) {
+		if(!err){
+			return mailer.sendEventNotification(subEmails, event, 'created');
+		}
+	});
+}
 
 function sendUpdateEmail(event) {
 	var sub = EVENT_SUB_PREFIX + event.event_id;

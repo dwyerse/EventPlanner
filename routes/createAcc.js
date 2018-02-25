@@ -25,7 +25,7 @@ router.post('/admin', function(req,res){
 				} else if (error) {
 					req.flash('err', error);
 				} else {
-					req.flash('succ', 'Successfully created new admin account!');
+					req.flash('succ', 'Successfully created new account!');
 				}
 				res.redirect('/login');
 			});
