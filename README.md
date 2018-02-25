@@ -75,6 +75,18 @@ Once app server and mongoDB server running:
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
 
+### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
+- Login as an administrator user
+- Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
+- Point browser to http://localhost:3000/event/edit/0
+- Click Register Guest button
+- Fill in the email of a user account which has not been registered for the event
+- Fill in the access requirements and dietary restrictions fields
+- Click Register Guest button on this page
+- A confirmation message should appear indicating that the user has been registered as a guest for this event.
+
+
+
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
 - Click Edit button
