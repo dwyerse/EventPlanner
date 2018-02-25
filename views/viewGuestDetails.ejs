@@ -20,22 +20,23 @@
 		<h2 style="word-break: break-all;">Guest Details</h2>
 		<br>
 
-		<div class="form-group col-md-6">
+		<div class="form-group col-md-12">
 				<table>
 					<% if (result.invitees.length > 0) {
-							for(var i=0; i < result.invitees.length; i++) { %>
+							for (var i=0; i < result.invitees.length; i++) { %>
 					   		<tr>
-						    	<td>Guest Email: <%= invitees[i].email %></td>
-						    	<td>Status: <%= invitees[i].state %></td>
-						    	<td>Access Requirements: <%= invitees[i].accessRequirements %></td>
-						    	<td>Dietary Restrictions: <%= invitees[i].dietaryRestrictions %></td>
+						    	<td style="padding-right:70px;"><strong>Guest Email: </strong><%= result.invitees[i].email %></td>
+						    	<td style="padding-right:70px;"><strong>Status: </strong><%= result.invitees[i].state %></td>
+						    	<td style="padding-right:70px;"><strong>Access Requirements: </strong><%= result.invitees[i].accessRequirements %></td>
+						    	<td><strong>Dietary Restrictions: </strong><%= result.invitees[i].dietaryRestrictions %></td>
+						    	
 					   		</tr>
 						<% 	} 
 
 						}
 						else
 						{ %>
-
+<strong>
 						<h5>There are currently no guests registered for the event.</h5>
 					<% } %>
 				</table>
