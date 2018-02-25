@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
-var userMapper = require('../mappers/userMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
+var userMapper = require('../mappers/userMapper');
+var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
@@ -17,8 +18,10 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		if(err){
 			res.send(err);
 		}
+		var isAdmin=false;
+		if(req.user.type=='admin'){isAdmin=true;}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed});
+			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin});
 		});
 	});
 });
@@ -78,6 +81,84 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/edit' + req.params.event_id);
 	}
+});
+
+//Attendee Report
+router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+		userMapper.allUsers(function(error,userResult){
+			var attending = [];
+			var names = [];
+			for (var i = 0; i < result.invitees.length; i++) {
+				if(result.invitees[i].state=='accepted'||result.invitees[i].state=='attending'){
+					for (var j = 0; j < userResult.length; j++) {
+						if(userResult[j].email==result.invitees[i].email){
+							names.push(userResult[j].name);
+						}
+					}
+					attending.push(result.invitees[i]);
+				}
+			}
+			res.render('attendeeReport', {attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
+		});
+	});
+});
+
+//Add invitee
+router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
+		if(!req.body.email){
+			res.redirect('/event/view/' + req.params.event_id);
+		}
+		else{
+			var emailAlreadyExists = false;
+			for (var i = 0; i < result.invitees.length; i++) {
+				if(req.body.email==result.invitees[i].email){
+					emailAlreadyExists = true;
+					break;
+				}
+			}
+			if(emailAlreadyExists){
+				req.flash('err', 'Invitee failed to be added: invitee already exists');
+				res.redirect('/event/view/' + req.params.event_id);
+			}
+			else{
+
+				var newInvitees = result.invitees;
+				newInvitees.push({email: req.body.email, state: 'pending'});
+				inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
+					if(err){
+						req.flash('err', 'Invitee failed to be added');
+					}
+				});
+				req.flash('succ', 'Invitee added');
+				res.redirect('/event/view/' + req.params.event_id);
+			}
+		}
+	});
+});
+
+//Remove invitee
+router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
+
+		var newInvitees = [];
+		for (var i = 0; i < result.invitees.length; i++) {
+			if(req.body.inviteeId!=i){
+				newInvitees.push(result.invitees[i]);
+			}
+		}
+		inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
+			if(err){
+				req.flash('err', 'Invitee failed to be removed');
+			}
+		});
+		req.flash('succ', 'Invitee removed');
+		res.redirect('/event/view/' + req.params.event_id);
+	});
 });
 
 
