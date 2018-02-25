@@ -15,12 +15,25 @@
 	<div class="alert alert-success" role="alert">
 		<%= succ %>
 	</div>
+
 	<% } %>
 	<br>
-	<h2 style="word-break: break-all;" > <%= result.title %> </h2>
-	<br>
+
 	<div class="row">
 		<div class="col-sm">
+			<h2 style="word-break: break-all;" > <%= result.title %> </h2>
+			<% if(!isSubscribed) { %>
+			<form action="/event/subscribe" method="post" id='subForm'>
+				<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
+				<input type="hidden" name="event_id" value=<%=result.event_id%> />
+			</form>
+			<% } else { %>
+			<form action="/event/unsubscribe" method="post" id='unsubForm'>
+				<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
+				<input type="hidden" name="event_id" value=<%=result.event_id%> />
+			</form>
+			<% } %>
+			<br>
 			<div class="form-group col-md-6">
 				<h4>Location</h4>
 				<label style="word-break: break-all;"><%= result.location %></label>
@@ -84,7 +97,9 @@
 		<%}%>
 	</div>
 	<%if(isAdmin){%>
-	<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+	<div class="form-group col-md-6">
+		<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+	</div>
 	<%}%>
 
 </body>

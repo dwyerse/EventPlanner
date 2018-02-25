@@ -3,8 +3,12 @@ var router = express.Router();
 var userMapper = require('../mappers/userMapper');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var hashing = require('../config/hashing');
+const NEWEVENTS_SUB = 'Event_new';
 
 router.get('/account',isLoggedIn, function(req, res) {
+	if(req.user.subscriptions.includes(NEWEVENTS_SUB)){
+		req.user.subscribed = true;
+	}
 	res.render('editAcc', { user: req.user,err: req.flash('err'),succ: req.flash('succ')});
 });
 
@@ -17,7 +21,9 @@ router.get('/password', isLoggedIn, function(req, res) {
 router.post('/password', isLoggedIn, function(req, res) {
 	if (req.body.inputPassword1 == req.body.inputPassword2) {
 		var {hash, salt} = hashing.createHash(req.body.inputPassword1);
-		var updatedUser = {name: req.user.name, email: req.user.email, password:hash, salt:salt};
+		var updatedUser = req.user;
+		updatedUser.password= hash;
+		updatedUser.salt =salt;
 		userMapper.updateUserByEmail(req.user.email, updatedUser, function(error,result) {
 			if (!result) {
 				req.flash('err', 'User not found');
@@ -33,17 +39,23 @@ router.post('/password', isLoggedIn, function(req, res) {
 		res.redirect('/edit/password');
 	}
 });
-//Need to replace password string with req.user.password
+
 router.post('/account', isLoggedIn, function(req, res) {
 	if(validUpdateParams(req.body)){
-		var updatedUser =  {name: req.body.inputName, email: req.body.inputEmail, password:req.user.password, salt:req.user.salt};
+		if(req.body.subscribed && req.body.subscribed=='on'){
+			req.user.subscriptions.push(NEWEVENTS_SUB);
+		} else { //Remove new event subscription if subscribed
+			req.user.subscriptions=req.user.subscriptions.filter(sub => sub !== NEWEVENTS_SUB);
+		}
+		var updatedUser = req.user;
+		updatedUser.name = req.body.inputName;
+		updatedUser.subscriptions = req.user.subscriptions;
 		userMapper.updateUserByEmail(req.user.email, updatedUser, function(error,result) {
-			if (!result) {
-				req.flash('err', 'User not found');
-			} else if (error) {
+			if(error){
 				req.flash('err', error);
+			} else if (!result) {
+				req.flash('err', 'User not found');
 			} else {
-				//We need to update the passport stored user here with 'result'
 				req.flash('succ', 'Successfully updated account!');
 			}
 			res.redirect('/edit/account');
