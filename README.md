@@ -87,6 +87,17 @@ Once app server and mongoDB server running:
 - To view the menu, click the menu's name here or in the event view or edit page
 - Click the back link to return to the edit screen of the event
 
+### Feature 30: 'I want to see dietary requirements and access requirements of attendees so I can provide details to catering'
+- Login as an administrator user
+- Create a new event or view an existing event
+- Click View Guest Details button on the view page for this event
+- If guests have been registered for this event their details will be listed. Press Go Back button to return to the event view page
+- If no guests have been registered for this event, a message will be displayed indicating this.
+- Register new guest(s) for the event as per the instructions for Feature 13
+- Return to the view page for this event
+- Click View Guest Details button
+- Newly registered guests and their access requirements, dietary requirements should now be displayed
+
 # Errors
 ### Port already in use
 Following commands work in 'git bash' terminal
