@@ -71,8 +71,16 @@ function addAdminUser(callback){
 	});
 }
 
+function findSubscribedUsers(sub, callback) {
+	User.find({subscriptions:sub}, 'email', function(err,users) {
+		var emails = users.map((user) => {return user.email;});
+		return callback(err,emails);
+	});
+}
+
 function updateUserSubs(email, newSub, isSub, callback) {
 	if(newSub){
+		//If subscribe we want to add. If unsub then want to remove from sub array
 		var operator = isSub?  {$push: {subscriptions: newSub}} : {$pull: {subscriptions: newSub}};
 		User.findOneAndUpdate({email:email}, operator, {new:true},function(err,res){
 			return callback(err,res);
@@ -80,4 +88,4 @@ function updateUserSubs(email, newSub, isSub, callback) {
 	}
 }
 
-module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser,updateUserSubs};
+module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser,findSubscribedUsers,updateUserSubs};

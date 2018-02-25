@@ -55,10 +55,27 @@
 							     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
 							   </tr>
 							<% } %>
-						</table> 
+						</table>
 					</div>
 			</div>
-			<button type="submit" class="btn btn-primary">Confirm</button>
+			<a href="#confirmModal" class="btn btn-primary" data-toggle="modal">Confirm</a>
+			<div id="confirmModal" class="modal fade">
+				<div class="modal-dialog modal-confirm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Confirm Event Update</h4>
+			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">
+							<p>An email will be sent to all subscribed users.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary">Confirm</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</form>
 
 	</body>

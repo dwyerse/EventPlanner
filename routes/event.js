@@ -9,6 +9,7 @@ var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
+var mailer = require('../config/mailer');
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
 	var isSubscribed = req.user.subscriptions.includes(EVENT_SUB_PREFIX + req.params.event_id);
@@ -60,7 +61,6 @@ router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		var eventObj = new EventModel({title:req.body.title,location:req.body.location,date:req.body.date,description:req.body.description,event_id:req.params.event_id,creators:[],invitees:[]});
-		//We corrupt the invitees and creator array here by resetting it to empty
 		eventMapper.updateEventDetailsBy_event_id(req.params.event_id,eventObj,
 			function(error,result) {
 				if (!result) {
@@ -69,6 +69,7 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully updated event');
+					sendUpdateEmail(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/edit' + req.params.event_id);
@@ -159,7 +160,14 @@ router.post('/subscribe', isLoggedIn, isAdminUser, function(req, res){
 	}
 });
 
-
+function sendUpdateEmail(event) {
+	var sub = EVENT_SUB_PREFIX + event.event_id;
+	userMapper.findSubscribedUsers(sub, function(err , emails){
+		if(!err && emails && emails.length>0){
+			mailer.sendEventNotification(emails, event, 'updated');
+		}
+	});
+}
 
 function getNewFilename(filepath, eventId){
 	var count = 0;

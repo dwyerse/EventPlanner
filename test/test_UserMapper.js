@@ -99,7 +99,15 @@ describe('userMapper testing suite', function() {
 		});
 	});
 
-	it('should subscribe user successfully', function(done) {
+	it('should find subscribed users successfully', function(done) {
+		mapper.findSubscribedUsers('newSub', function(err,res) {
+			assert.equal(err,null);
+			assert.equal(res.includes(TESTUSER.email),true);
+			done();
+		});
+	});
+
+	it('should unsubscribe user successfully', function(done) {
 		mapper.updateUserSubs(TESTUSER.email, 'newSub', false, function(err,res) {
 			assert.equal(err,null);
 			assert.equal(res.email,TESTUSER.email);
