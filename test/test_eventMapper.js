@@ -62,6 +62,17 @@ describe('eventMapper testing suite', function() {
 		});
 	});
 
+	it('should update invitee list', function(done) {
+		
+		var newInvitees = [{email:'updated@email.com', state:'accepted'},{email:'updated2@email.com', state:'accepted'}];
+
+		mapper.updateInviteeList(testEventId,newInvitees,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.invitees[0].email,'updated@email.com');
+			done();
+		});
+	});
+
 	it('should find updated event details by event_id', function(done) {
 		mapper.findEventBy_event_id(testEventId,function(err,res){
 			assert.equal(err,null);
