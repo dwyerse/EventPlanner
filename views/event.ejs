@@ -1,62 +1,111 @@
 <head>
-		<title><%= result.name %></title>
-		<meta charset="utf-8">
-	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	</head>
-	<body class="container">
-		<% if(err && err.length > 0) { %>
-			<div class="alert alert-danger" role="alert">
-				Error in details provided: <%= err %>
-			</div>
-		<% } %>
-		<% if (succ && succ.length > 0) { %>
-			<div class="alert alert-success" role="alert">
-				<%= succ %>
-			</div>
-		<% } %>
-		<br>
-		<h2 style="word-break: break-all;" > <%= result.title %> </h2>
-		<% if(!isSubscribed) { %>
-		<form action="/event/subscribe" method="post" id='subForm'>
-			<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
-			<input type="hidden" name="event_id" value=<%=result.event_id%> />
-		</form>
-		<% } else { %>
+	<title><%= result.name %></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="container">
+	<% if(err && err.length > 0) { %>
+	<div class="alert alert-danger" role="alert">
+		Error in details provided: <%= err %>
+	</div>
+	<% } %>
+	<% if (succ && succ.length > 0) { %>
+	<div class="alert alert-success" role="alert">
+		<%= succ %>
+	</div>
+
+	<% } %>
+	<br>
+
+	<div class="row">
+		<div class="col-sm">
+			<h2 style="word-break: break-all;" > <%= result.title %> </h2>
+			<% if(!isSubscribed) { %>
+			<form action="/event/subscribe" method="post" id='subForm'>
+				<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
+				<input type="hidden" name="event_id" value=<%=result.event_id%> />
+			</form>
+			<% } else { %>
 			<form action="/event/unsubscribe" method="post" id='unsubForm'>
 				<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
 				<input type="hidden" name="event_id" value=<%=result.event_id%> />
 			</form>
-		<% } %>
-		<br>
-		<div class="form-group col-md-6">
-			<h4>Location</h4>
-			<label style="word-break: break-all;"><%= result.location %></label>
-		</div>
-		<div class="form-group col-md-6">
-			<h4>Date</h4>
-			<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
-		</div>
-		<div class="form-group col-md-6">
-			<h4>Description</h4>
-			<div style="word-break: break-all;"><%= result.description %></div>
-		</div>
-		<div class="form-group col-md-6">
-			<h5>Menus:</h5>
+			<% } %>
+			<br>
+			<div class="form-group col-md-6">
+				<h4>Location</h4>
+				<label style="word-break: break-all;"><%= result.location %></label>
+			</div>
+			<div class="form-group col-md-6">
+				<h4>Date</h4>
+				<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
+			</div>
+			<div class="form-group col-md-6">
+				<h4>Description</h4>
+				<div style="word-break: break-all;"><%= result.description %></div>
+			</div>
+			<div class="form-group col-md-6">
+				<h5>Menus:</h5>
 				<table>
 					<% for(var i=0; i < menus.length; i++) { %>
-					   <tr>
-						     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
-					   </tr>
+					<tr>
+						<td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
+					</tr>
 					<% } %>
-				</table>
+				</table> 
 
+			</div>
 		</div>
-		<div class="form-group col-md-6">
-			<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+		<%if(isAdmin){%>
+		<div class="col-sm">
+			<h5>
+				Invite List 
+				<span class="float-right">
+					<a class="btn btn-default" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
+				</span>
+			</h5>
+			<br>
+			<form method="post" action="<%=result.event_id%>/addInvitee" class="inline">
+				<div class="input-group">
+					<input type="email" name="email" class="form-control" placeholder="Add new invite...">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Add</button>
+					</span>
+				</div>
+			</form>
+			<table class="table table-sm">
+				<tbody>
+					<% for(var i=0; i < result.invitees.length; i++) { %>
+					<tr>
+						<td><%=result.invitees[i].email%></td>
+						<td><%=result.invitees[i].state%></td>
+						<td>
+							<form method="post" action="<%=result.event_id%>/removeInvitee" class="inline">
+								<input type="hidden" name="inviteeId" value="<%=i%>">
+								<button type="submit" name="submitInvitee">
+									Delete
+								</button>
+							</form>
+						</td>
+					</tr>
+					<% } %>
+				</tbody>
+			</table>
 		</div>
-	</body>
+
+		<a href="/event/guests/<%=result.event_id%>"><button class="btn btn-primary">View Guest Details</button> </a>
+
+		<%}%>
+	</div>
+	<%if(isAdmin){%>
+	<div class="form-group col-md-6">
+		<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+	</div>
+	<%}%>
+
+</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
