@@ -134,7 +134,7 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 						req.flash('err', 'Invitee failed to be added');
 					}
 				});
-				mailer.sendInvitation([req.body.email],result,function(err,res){
+				mailer.sendInvitation([req.body.email],result,function(err){
 					if(err){
 						req.flash('err', 'Email not sent');
 					}
