@@ -75,7 +75,6 @@ Once app server and mongoDB server running:
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
 
-<<<<<<< HEAD
 ### Feature 2: 'I want to be able to give admin access to other people'
 - Login as non-admin user created from testing previous feature
 - Click Grant Admin Access button
@@ -91,7 +90,7 @@ Once app server and mongoDB server running:
 - Login as user that was just granted admin access
 - Click Grant Admin Access button
 - The user account will now be allowed to proceed to the grant admin access page because it now has admin access
-=======
+
 ### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
 - Login as an administrator user
 - Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
@@ -101,9 +100,6 @@ Once app server and mongoDB server running:
 - Fill in the access requirements and dietary restrictions fields
 - Click Register Guest button on this page
 - A confirmation message should appear indicating that the user has been registered as a guest for this event.
-
->>>>>>> b01a3aa772d8d87aaed9540a10db9546ec980a8b
-
 
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
