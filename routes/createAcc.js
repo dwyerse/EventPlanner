@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var userMapper = require('../mappers/userMapper');
 var hashing = require('../config/hashing');
+const NEWEVENTS_SUB = 'Event_new';
 
 /* GET create account page. */
 router.get('/admin', function(req, res) {
@@ -17,8 +18,8 @@ router.post('/admin', function(req,res){
 			var {hash, salt} = hashing.createHash(req.body.inputPassword);
 
 			var userType = 'user';
-
-			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, function(error, result) {
+			var subscriptions = (req.body.subscribed && req.body.subscribed=='on')? [NEWEVENTS_SUB]:[];
+			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, subscriptions, function(error, result) {
 				if (!result) {
 					req.flash('err', 'User could not be created');
 				} else if (error) {
