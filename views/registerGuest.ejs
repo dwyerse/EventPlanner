@@ -1,5 +1,5 @@
 <head>
-		<title><%= result.name %></title>
+		<title>Register Guest for Event</title>
 		<meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- Bootstrap CSS -->
@@ -7,6 +7,7 @@
 	</head>
 	<body class="container">
 		<% if(err && err.length > 0) { %>
+			<% console.log(err) %>
 			<div class="alert alert-danger" role="alert">
 				Error in details provided: <%= err %>
 			</div>
@@ -17,46 +18,31 @@
 			</div>
 		<% } %>
 		<br>
-		<h2 style="word-break: break-all;" > <%= result.title %> </h2>
-		<% if(!isSubscribed) { %>
-		<form action="/event/subscribe" method="post" id='subForm'>
-			<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
-			<input type="hidden" name="event_id" value=<%=result.event_id%> />
-		</form>
-		<% } else { %>
-			<form action="/event/unsubscribe" method="post" id='unsubForm'>
-				<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
-				<input type="hidden" name="event_id" value=<%=result.event_id%> />
-			</form>
-		<% } %>
+		<h2> Register Guest for Event </h2>
 		<br>
-		<div class="form-group col-md-6">
-			<h4>Location</h4>
-			<label style="word-break: break-all;"><%= result.location %></label>
-		</div>
-		<div class="form-group col-md-6">
-			<h4>Date</h4>
-			<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
-		</div>
-		<div class="form-group col-md-6">
-			<h4>Description</h4>
-			<div style="word-break: break-all;"><%= result.description %></div>
-		</div>
-		<div class="form-group col-md-6">
-			<h5>Menus:</h5>
-				<table>
-					<% for(var i=0; i < menus.length; i++) { %>
-					   <tr>
-						     <td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
-					   </tr>
-					<% } %>
-				</table> 
+		<form  action="/register/guest/<%= result.event_id %>" method="post" id='form'>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="guestEmail">Email</label>
+					<input type="email" class="form-control" name="guestEmail" value='' required>
+				</div>
+			</div>
+			<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="accessRequirements">Access Requirements</label>
+						<textarea type="name" class="form-control" name="accessRequirements" rows="5" required></textarea>
+					</div>
+			</div>
+
+			<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="dietaryRestrictions">Dietary Restrictions</label>
+						<textarea type="name" class="form-control" name="dietaryRestrictions" rows="5" required></textarea>
+					</div>
+			</div>
 			
-		</div>
-		
-		<div class="form-group col-md-6">
-			<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
-		</div>
+			<button type="submit" class="btn btn-primary">Register Guest</button>
+		</form>
 	</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

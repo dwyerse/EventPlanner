@@ -1,20 +1,24 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
+var userMapper = require('../mappers/userMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
+const EVENT_SUB_PREFIX = 'Event_';
+var mailer = require('../config/mailer');
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
+	var isSubscribed = req.user.subscriptions.includes(EVENT_SUB_PREFIX + req.params.event_id);
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
 		}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult});
+			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed});
 		});
 	});
 });
@@ -67,7 +71,6 @@ router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		var eventObj = new EventModel({title:req.body.title,location:req.body.location,date:req.body.date,description:req.body.description,event_id:req.params.event_id,creators:[],invitees:[]});
-		//We corrupt the invitees and creator array here by resetting it to empty
 		eventMapper.updateEventDetailsBy_event_id(req.params.event_id,eventObj,
 			function(error,result) {
 				if (!result) {
@@ -76,6 +79,7 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully updated event');
+					sendUpdateEmail(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/edit' + req.params.event_id);
@@ -116,7 +120,7 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 		var filename;
 		var filepath = path.join(__dirname, '../menus');
 		[menuId,filepath,filename] = getNewFilename(filepath, eventId);
-		
+
 		let uploadedFile = req.files.uploadedFile;
 		if(uploadedFile.mimetype!=='application/pdf'){
 			req.flash('uploadMessage', 'Uploaded file must be in pdf format');
@@ -137,6 +141,43 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 		}
 	}
 });
+
+router.post('/unsubscribe', isLoggedIn, function(req, res){
+	if(req.body.event_id){
+		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
+		userMapper.updateUserSubs(req.user.email, newSub,false, function(err,updatedUser){
+			if(err || !updatedUser) {
+				req.flash('err', 'Unable to unsubscribe to this event');
+			} else {
+				req.flash('succ', 'Succesfully unsubscribed to this event');
+				res.redirect('/event/view/'+req.body.event_id);
+			}
+		});
+	}
+});
+
+router.post('/subscribe', isLoggedIn, function(req, res){
+	if(req.body.event_id){
+		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
+		userMapper.updateUserSubs(req.user.email, newSub,true, function(err,updatedUser){
+			if(err || !updatedUser) {
+				req.flash('err', 'Unable to subscribe to this event');
+			} else {
+				req.flash('succ', 'Succesfully subscribed to this event');
+				res.redirect('/event/view/'+req.body.event_id);
+			}
+		});
+	}
+});
+
+function sendUpdateEmail(event) {
+	var sub = EVENT_SUB_PREFIX + event.event_id;
+	userMapper.findSubscribedUsers(sub, function(err , emails){
+		if(!err && emails && emails.length>0){
+			mailer.sendEventNotification(emails, event, 'updated');
+		}
+	});
+}
 
 function getNewFilename(filepath, eventId){
 	var count = 0;
