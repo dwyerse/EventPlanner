@@ -93,6 +93,52 @@ Once app server and mongoDB server running:
 - To add an invitee, type their email into the input labelled 'Add new invite' and press the add button
 - To remove an invitee, press the 'delete' button beside their email
 
+### Feature 11: 'I want to see guest contact details'
+- Create a new event or view an existing event
+- Add an invitee to the invite list
+- Invitee's contact email is displayed on the invite list
+
+If the invitee is registered for the event, the invitee's name and email are displayed in the attendee report. 
+To view this:
+- Register the invitee
+- From event view page, click the 'View Attendee Report' link
+- Details about all attendees are displayed here
+
+### Feature 12: 'I need to be able to manage the responses so I can know who is attending'
+This feature describes the viewing, removal, and confirmation of user responses.
+
+To view responses:
+- Create a new event or view an existing event
+- Add an invitee to the invite list
+- Responses are listed in the invite list displayed
+- Invites are labelled as 'pending' or 'attending'
+- Invitee that was just added should have value 'pending'
+
+To view only those attending, you can view the attendee report:
+- Register the invitee just added
+- From event view page, click the 'View Attendee Report' link
+- Details about all attendees are displayed here
+
+To remove an invite (for example if an invitee has responded that they are not attending and
+you wish to remove them from the list):
+
+- Create a new event or view an existing event
+- Add an invitee to the invite list
+- Press the 'delete' button to remove the invite
+
+To confirm an invitee's attendance
+- Add an invitee to the invite list
+- Register the invitee
+- The invitee is now listed in the invite list as 'accepted'
+- This invitee will now also be listed in the attendee report
+
+### Feature 24: 'I want to be able to see a report of who is attending an event'
+- Create a new event or view an existing event
+- Add an invitee to the invite list
+- Register the invitee just added
+- From event view page, click the 'View Attendee Report' link
+- Details including the guest's name, email, and access/dietary restrictions are listed here
+
 # Errors
 ### Port already in use
 Following commands work in 'git bash' terminal

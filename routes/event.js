@@ -3,6 +3,8 @@ var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
+var userMapper = require('../mappers/userMapper');
+var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
@@ -84,13 +86,21 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 		if(err){
 			res.send(err);
 		}
-		var attending = [];
-		for (var i = 0; i < result.invitees.length; i++) {
-			if(result.invitees[i].state=='accepted'||result.invitees[i].state=='attending'){
-				attending.push(result.invitees[i]);
+		userMapper.allUsers(function(error,userResult){
+			var attending = [];
+			var names = [];
+			for (var i = 0; i < result.invitees.length; i++) {
+				if(result.invitees[i].state=='accepted'||result.invitees[i].state=='attending'){
+					for (var j = 0; j < userResult.length; j++) {
+						if(userResult[j].email==result.invitees[i].email){
+							names.push(userResult[j].name);
+						}
+					}
+					attending.push(result.invitees[i]);
+				}
 			}
-		}
-		res.render('attendeeReport', {attending, err: req.flash('err'), succ: req.flash('succ')});
+			res.render('attendeeReport', {attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
+		});
 	});
 });
 
@@ -113,18 +123,14 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 				res.redirect('/event/view/' + req.params.event_id);
 			}
 			else{
+
 				var newInvitees = result.invitees;
-				newInvitees.push({email:req.body.email,state:'pending'});
-				var newEvent = new EventModel({title:result.title,location:result.location,date:result.date,
-					description:result.description, event_id:result.event_id,creators:result.creators,
-					invitees:newInvitees});
-				eventMapper.updateEventBy_event_id(req.params.event_id,newEvent,function(err,res){
+				newInvitees.push({email: req.body.email, state: 'pending'});
+				inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
 					if(err){
 						req.flash('err', 'Invitee failed to be added');
-						res.redirect('/event/view/' + req.params.event_id);
 					}
 				});
-
 				req.flash('succ', 'Invitee added');
 				res.redirect('/event/view/' + req.params.event_id);
 			}
@@ -142,18 +148,14 @@ router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(re
 				newInvitees.push(result.invitees[i]);
 			}
 		}
-		var newEvent = new EventModel({title:result.title,location:result.location,date:result.date,
-			description:result.description, event_id:result.event_id,creators:result.creators,
-			invitees:newInvitees});
-		eventMapper.updateEventBy_event_id(req.params.event_id,newEvent,function(err,res){
+		inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
 			if(err){
 				req.flash('err', 'Invitee failed to be removed');
-				res.redirect('/event/view/' + req.params.event_id);
 			}
 		});
+		req.flash('succ', 'Invitee removed');
+		res.redirect('/event/view/' + req.params.event_id);
 	});
-	req.flash('succ', 'Invitee removed');
-	res.redirect('/event/view/' + req.params.event_id);
 });
 
 

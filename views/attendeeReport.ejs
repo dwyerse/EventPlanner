@@ -18,6 +18,7 @@
 	<% } %>
 	<table class="table table-sm">
 		<thead>
+			<th>Name</th>
 			<th>Email</th>
 			<th>Access Requirements</th>
 			<th>Dietary Requirements</th>
@@ -25,6 +26,7 @@
 		<tbody>
 			<% for(var i=0; i < attending.length; i++) { %>
 			<tr>
+				<td><%=names[i]%></td>
 				<td><%=attending[i].email%></td>
 				<td><%=attending[i].accessRequirements%></td>
 				<td><%=attending[i].dietaryRestrictions%></td>
