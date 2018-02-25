@@ -88,19 +88,21 @@ Once app server and mongoDB server running:
 - Click the back link to return to the edit screen of the event
 
 ### Feature 10: 'I want to see the invite list'
+- Log in as administrator
 - Create a new event or view an existing event
 - The invite list is displayed on this screen
 - To add an invitee, type their email into the input labelled 'Add new invite' and press the add button
 - To remove an invitee, press the 'delete' button beside their email
 
 ### Feature 11: 'I want to see guest contact details'
+- Log in as administrator
 - Create a new event or view an existing event
 - Add an invitee to the invite list
 - Invitee's contact email is displayed on the invite list
 
 If the invitee is registered for the event, the invitee's name and email are displayed in the attendee report. 
 To view this:
-- Register the invitee
+- Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
 - Details about all attendees are displayed here
 
@@ -108,6 +110,7 @@ To view this:
 This feature describes the viewing, removal, and confirmation of user responses.
 
 To view responses:
+- Log in as administrator
 - Create a new event or view an existing event
 - Add an invitee to the invite list
 - Responses are listed in the invite list displayed
@@ -115,7 +118,7 @@ To view responses:
 - Invitee that was just added should have value 'pending'
 
 To view only those attending, you can view the attendee report:
-- Register the invitee just added
+- Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
 - Details about all attendees are displayed here
 
@@ -128,14 +131,15 @@ you wish to remove them from the list):
 
 To confirm an invitee's attendance
 - Add an invitee to the invite list
-- Register the invitee
+- Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - The invitee is now listed in the invite list as 'accepted'
 - This invitee will now also be listed in the attendee report
 
 ### Feature 24: 'I want to be able to see a report of who is attending an event'
+
 - Create a new event or view an existing event
 - Add an invitee to the invite list
-- Register the invitee just added
+- Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
 - Details including the guest's name, email, and access/dietary restrictions are listed here
 
