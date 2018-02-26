@@ -33,6 +33,8 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 			} else if (err) {
 				req.flash('err', err);
 			} else {
+				var user = result;
+
 				eventMapper.findEventBy_event_id(currentEventId, function(err, result) {
 					if (!result) {
 						req.flash('err', 'Event not found');
@@ -72,8 +74,28 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 									req.flash('err', error);
 								} else {
 									req.flash('succ', 'Succesfully registered guest');
-									return res.redirect('/event/view/'+ result.event_id);
+
+									
+									user.eventsAttended.push(result.event_id);
+
+									//console.log(user);
+									//console.log(user.eventsAttended);
+
+									userMapper.updateUserByEmail(user.email, user, function(err, result) {
+										if (!result) {
+											req.flash('err', 'User not found');
+										} else if (error) {
+											req.flash('err', error);
+										} else {
+											req.flash('succ', 'Successfully changed password!');
+										}
+										//res.redirect('/event/view' + req.params.event_id);
+
+									});
+
+									//return res.redirect('/event/view/'+ result.event_id);
 								}
+
 								res.redirect('/event/view/' + req.params.event_id);
 							});
 						}

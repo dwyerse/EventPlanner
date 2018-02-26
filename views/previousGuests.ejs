@@ -26,6 +26,9 @@
 					   		<tr>
 					   			<td style="padding-right:70px;"><strong>Guest Name: </strong><%= result[i].name %></td>
 						    	<td style="padding-right:70px;"><strong>Guest Email: </strong><%= result[i].email %></td>
+						    	<td style="padding-right:70px;"><strong>Events Attended: </strong><% for (var j=0; j < result[i].eventsAttended.length; j++) { %> Event id: <%= result[i].eventsAttended[j] %><% } %></td>
+
+						    	
 						    	
 					   		</tr>
 					<%}%>

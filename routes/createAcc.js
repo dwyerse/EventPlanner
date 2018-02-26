@@ -17,8 +17,9 @@ router.post('/admin', function(req,res){
 			var {hash, salt} = hashing.createHash(req.body.inputPassword);
 
 			var userType = 'user';
+			var eventsAttended = [];
 
-			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, function(error, result) {
+			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType,  eventsAttended, salt, function(error, result) {
 				if (!result) {
 					req.flash('err', 'User could not be created');
 				} else if (error) {
