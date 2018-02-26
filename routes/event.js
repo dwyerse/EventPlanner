@@ -265,6 +265,7 @@ function sendCreateNotfication(event){
 			return mailer.sendEventNotification(subEmails, event, 'created');
 		}
 	});
+}
 
 router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
 	getRecipientEmails(req.body.select, req.body.event_id, function(err,emails) {
