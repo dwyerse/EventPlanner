@@ -42,6 +42,16 @@ router.get('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	});
 });
 
+router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+
+		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
+	});
+});
+
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
@@ -134,6 +144,11 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 				inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
 					if(err){
 						req.flash('err', 'Invitee failed to be added');
+					}
+				});
+				mailer.sendInvitation([req.body.email],result,function(err){
+					if(err){
+						req.flash('err', 'Email not sent');
 					}
 				});
 				req.flash('succ', 'Invitee added');
@@ -243,12 +258,37 @@ router.post('/subscribe', isLoggedIn, function(req, res){
 	}
 });
 
+
 function sendCreateNotfication(event){
 	userMapper.findSubscribedUsers(NEWEVENTS_SUB, function(err,subEmails) {
 		if(!err){
 			return mailer.sendEventNotification(subEmails, event, 'created');
 		}
 	});
+
+router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
+	getRecipientEmails(req.body.select, req.body.event_id, function(err,emails) {
+		if(err){
+			req.flash('err', err);
+		}
+		else if(emails && emails.length>0){
+			req.flash('succ', 'Successfully sent email');
+			mailer.sendMail([], emails, req.body.subject, req.body.message);
+		}
+		res.redirect('/event/view/'+req.body.event_id);
+	});
+});
+
+function getRecipientEmails(select, event_id, callback){
+	if(select == 'attendees'){
+		eventMapper.findAttendeeEmails(event_id, function(err, attendees){
+			callback(err,attendees);
+		});
+	} else if(select == 'invitees') {
+		eventMapper.findInviteeEmails(event_id, function(err,invitees){
+			callback(err,invitees);
+		});
+	}
 }
 
 function sendUpdateEmail(event) {

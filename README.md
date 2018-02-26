@@ -75,6 +75,32 @@ Once app server and mongoDB server running:
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
 
+### Feature 2: 'I want to be able to give admin access to other people'
+- Login as non-admin user created from testing previous feature
+- Click Grant Admin Access button
+- This user account will not be allowed to proceed to grant admin access page because it currently lacks admin access
+- Return to homepage
+- Login as administrator user - email: admin@eventplanner password: cs4098
+- Click Grant Admin Access button
+- This account will be allowed to proceed to grant admin access page because it has admin access
+- Enter email of non-admin user account created from testing previous feature
+- Click Grant button
+- Confirmation of successfully granted admin access should appear
+- Return to Homepage
+- Login as user that was just granted admin access
+- Click Grant Admin Access button
+- The user account will now be allowed to proceed to the grant admin access page because it now has admin access
+
+### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
+- Login as an administrator user
+- Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
+- Point browser to http://localhost:3000/event/edit/0
+- Click Register Guest button
+- Fill in the email of a user account which has not been registered for the event
+- Fill in the access requirements and dietary restrictions fields
+- Click Register Guest button on this page
+- A confirmation message should appear indicating that the user has been registered as a guest for this event.
+
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
 - Click Edit button
@@ -86,6 +112,17 @@ Once app server and mongoDB server running:
 - The menu should appear uder the Current menus for this event header
 - To view the menu, click the menu's name here or in the event view or edit page
 - Click the back link to return to the edit screen of the event
+
+### Feature 30: 'I want to see dietary requirements and access requirements of attendees so I can provide details to catering'
+- Login as an administrator user
+- Create a new event or view an existing event
+- Click View Guest Details button on the view page for this event
+- If guests have been registered for this event their details will be listed. Press Go Back button to return to the event view page
+- If instead no guests had been registered for this event, a message will be displayed indicating this.
+- Register new guest(s) for the event as per the instructions for Feature 13
+- Return to the view page for this event
+- Click View Guest Details button
+- Newly registered guests and their access requirements, dietary requirements should now be displayed
 
 ### Feature 10: 'I want to see the invite list'
 - Log in as administrator
@@ -149,6 +186,7 @@ To confirm an invitee's attendance
 - Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
 - Details including the guest's name, email, and access/dietary restrictions are listed here
+
 
 # Errors
 ### Port already in use

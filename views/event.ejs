@@ -21,11 +21,18 @@
 
 	<div class="row">
 		<div class="col-sm">
-			<h2 style="word-break: break-all;" > <%= result.title %> </h2>
+			<h2 style="word-break: break-all; " > <%= result.title %> </h2>
+			<br>
+			<%if(isAdmin){%>
+				<div class="col-sm" style="margin-bottom:5px;">
+				<a href="#contactModal" class="btn btn-info btn-sm" data-toggle="modal">Contact Users</a>
+			</div>
+			<%}%>
+			<div class="col-sm">
 			<% if(!isSubscribed) { %>
 			<form action="/event/subscribe" method="post" id='subForm'>
-				<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
 				<input type="hidden" name="event_id" value=<%=result.event_id%> />
+				<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
 			</form>
 			<% } else { %>
 			<form action="/event/unsubscribe" method="post" id='unsubForm'>
@@ -33,6 +40,7 @@
 				<input type="hidden" name="event_id" value=<%=result.event_id%> />
 			</form>
 			<% } %>
+		</div>
 			<br>
 			<div class="form-group col-md-6">
 				<h4>Location</h4>
@@ -54,14 +62,14 @@
 						<td><a href='/event/viewMenu/<%= menus[i].filename %>'> <%= menus[i].menuName %></a></td>
 					</tr>
 					<% } %>
-				</table> 
+				</table>
 
 			</div>
 		</div>
 		<%if(isAdmin){%>
 		<div class="col-sm">
 			<h5>
-				Invite List 
+				Invite List
 				<span class="float-right">
 					<a class="btn btn-default" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
 				</span>
@@ -94,6 +102,7 @@
 				</tbody>
 			</table>
 		</div>
+		<a href="/event/guests/<%=result.event_id%>"><button class="btn btn-primary">View Guest Details</button> </a>
 		<%}%>
 	</div>
 	<%if(isAdmin){%>
@@ -101,6 +110,40 @@
 		<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
 	</div>
 	<%}%>
+	<div id="contactModal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Contact Users</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<form action="/event/contact" method="post" id='form'>
+					<input type="hidden" name="event_id" value=<%=result.event_id%> />
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="select">Recipients</label>
+							<select class="custom-select" name="select">
+							  <option selected value="attendees">Attending Guests</option>
+							  <option value="invitees">Invited Guests</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="subject">Subject</label>
+							<input type="text" class="form-control" name="subject" value="" required/>
+						</div>
+						<div class="form-group">
+	            <label for="message-text" class="col-form-label">Message:</label>
+	            <textarea class="form-control" id="message" name="message" rows=6 required></textarea>
+	          </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Send Mail</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
