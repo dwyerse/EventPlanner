@@ -83,7 +83,6 @@ Once app server and mongoDB server running:
 - Enter email of non-admin user account
 - Click Grant button
 - Confirmation of successfully granted admin access should appear
-- Return to Homepage
 - Login as user that was just granted admin access
 - Click Grant Admin Access button
 - The user account can go to the grant admin access page because it now has admin access
@@ -122,15 +121,15 @@ Once app server and mongoDB server running:
 
 ### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
 - Login as an administrator user
-- Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
-- Go to the event edit page (e.g. http://localhost:3000/event/edit/0)
+- Create a new event or view an existing event
+- Click edit button for event
 - Click Register Guest button
 - Fill in the email of a user account which has not been registered for the event
 - Fill in the access requirements and dietary restrictions fields
 - Click Register Guest button on this page
 - A confirmation message should appear indicating that the user has been registered as a guest for this event.
 
-### Feature 6: 'Keep track of possible/previous guests'
+### Feature 6: 'Keep track of possibCreate a new event or view an existing eventle/previous guests'
 - Login as an administrator user
 - Click View Previous Guests button
 - If there are guests who have previously attended an event, their names, emails, and the ids and titles of the events they have attended will be displayed as a list
@@ -148,17 +147,6 @@ Once app server and mongoDB server running:
 - To view the menu, click the menu's name here or in the event view or edit page
 - Click the back link to return to the edit screen of the event
 
-### Feature 30: 'I want to see dietary requirements and access requirements of attendees so I can provide details to catering'
-- Login as an administrator user
-- Create a new event or view an existing event
-- Click View Guest Details button on the view page for this event
-- If guests have been invited to this event their details will be listed. Press Go Back button to return to the event view page
-- If instead no guests had been registered for this event, a message will be displayed indicating this.
-- Register new guest(s) for the event as per the instructions for Feature 13
-- Return to the view page for this event
-- Click View Guest Details button
-- Newly registered guests and their access requirements, dietary requirements should now be displayed
-
 ### Feature 10: 'I want to see the invite list'
 - Log in as administrator
 - Create a new event or view an existing event
@@ -172,7 +160,7 @@ Once app server and mongoDB server running:
 - Add an invitee to the invite list
 - Invitee's contact email is displayed on the invite list
 
-If the invitee is registered for the event, the invitee's name and email are displayed in the attendee report.
+If the invitee has RSVP'd as attending, the invitee's name and email are displayed in the attendee report.
 To view this:
 - Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
@@ -206,6 +194,13 @@ To confirm an invitee's attendance
 - Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - The invitee is now listed in the invite list as 'Attending'
 - This invitee will now also be listed in the attendee report
+
+### Feature 30: 'I want to see dietary requirements and access requirements of attendees so I can provide details to catering'
+- Login as an administrator user
+- Create a new event or view an existing event
+- Click View Guest Details button on the view page for this event
+- If guests have been invited to this event their details will be listed. Press Go Back button to return to the event view page
+- If instead no guests had been registered for this event, a message will be displayed indicating this.
 
 ### Feature 17: 'Send out emails automatically when an event is created'
 - Log in to an admin account that is subscribed for new event notifications
