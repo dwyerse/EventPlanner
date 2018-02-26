@@ -53,6 +53,8 @@ npm run-script selenium-test
 ```
 # Testing implemented features
 
+- There is an admin user automatically added to the database, the following is their credentials: email: eventplanner.gp@gmail.com password: cs4098
+
 ### Feature 1: 'I want to be able to create account'
 Once app server and mongoDB server running:
 - Point browser to http://localhost:3000
@@ -75,20 +77,16 @@ Once app server and mongoDB server running:
 - Enter new password and submit
 - Observe a success message on the page
 ### Feature 2: 'I want to be able to give admin access to other people'
-- Login as non-admin user created from testing previous feature
+- Login as administrator user 
 - Click Grant Admin Access button
-- This user account will not be allowed to proceed to grant admin access page because it currently lacks admin access
-- Return to homepage
-- Login as administrator user - email: admin@eventplanner password: cs4098
-- Click Grant Admin Access button
-- This account will be allowed to proceed to grant admin access page because it has admin access
-- Enter email of non-admin user account created from testing previous feature
+- This account will proceed to grant admin access page
+- Enter email of non-admin user account
 - Click Grant button
 - Confirmation of successfully granted admin access should appear
 - Return to Homepage
 - Login as user that was just granted admin access
 - Click Grant Admin Access button
-- The user account will now be allowed to proceed to the grant admin access page because it now has admin access
+- The user account can go to the grant admin access page because it now has admin access
 
 ### Feature 4: I would like to be able to create an event e.g. a dinner
 - Login as an administrator user
