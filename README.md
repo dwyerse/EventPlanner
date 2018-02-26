@@ -41,16 +41,6 @@ Unit test files found in ./test
 ```
 npm test
 ```
-### Run the Selenium Tests
-Note: this must be done every time you wish to test. To launch selenium standalone server:
-```
-npm run-script selenium-start
-```
-Selenium test files found in ./seleniumTest
-<br>In a new terminal (in EventPlanner folder):
-```
-npm run-script selenium-test
-```
 # Testing implemented features
 
 - There is an admin user automatically added to the database, the following is their credentials: email: eventplanner.gp@gmail.com password: cs4098
