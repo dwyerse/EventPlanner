@@ -1,0 +1,55 @@
+<head>
+		<title>Guest Details</title>
+		<meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<body class="container">
+		<% if(err && err.length > 0) { %>
+			<div class="alert alert-danger" role="alert">
+				Error in details provided: <%= err %>
+			</div>
+		<% } %>
+		<% if (succ && succ.length > 0) { %>
+			<div class="alert alert-success" role="alert">
+				<%= succ %>
+			</div>
+		<% } %>
+		<br>
+		<h2 style="word-break: break-all;">Guest Details</h2>
+		<br>
+
+		<div class="form-group col-md-12">
+				<table>
+					<% if (result.invitees.length > 0) {
+							for (var i=0; i < result.invitees.length; i++) { %>
+					   		<tr>
+						    	<td style="padding-right:70px;"><strong>Guest Email: </strong><%= result.invitees[i].email %></td>
+						    	<td style="padding-right:70px;"><strong>Status: </strong><%= result.invitees[i].state %></td>
+						    	<td style="padding-right:70px;"><strong>Access Requirements: </strong><%= result.invitees[i].accessRequirements %></td>
+						    	<td><strong>Dietary Restrictions: </strong><%= result.invitees[i].dietaryRestrictions %></td>
+						    	
+					   		</tr>
+						<% 	} 
+
+						}
+						else
+						{ %>
+<strong>
+						<h5>There are currently no guests registered for the event.</h5>
+					<% } %>
+				</table>
+
+		</div>
+
+		<a href="/event/view/<%=result.event_id%>"><button class="btn btn-primary">Go Back</button> </a>
+
+	</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+<script> $("#datepicker").datepicker(); </script>

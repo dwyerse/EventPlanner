@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon app.js",
     "test": "mocha --exit",
-    "lint": "eslint ./",
+    "lint": "eslint ./ --fix",
     "selenium-test": "wdio",
     "selenium-install": "./node_modules/.bin/selenium-standalone install",
     "selenium-start": "./node_modules/.bin/selenium-standalone start"

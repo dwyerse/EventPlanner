@@ -23,7 +23,7 @@
 	  <div class="form-row">
 	    <div class="form-group col-md-6">
 	      <label for="inputEmail">Email</label>
-	      <input type="email" class="form-control" name="inputEmail" value= <%= user.email %>>
+	      <input type="email" class="form-control" name="inputEmail" value= <%= user.email %> readonly>
 	    </div>
 	  </div>
 	  <div class="form-row">
@@ -35,9 +35,9 @@
 	  <div class="form-group">
 	    <div class="form-check">
 				<% if(user.subscribed) { %>
-	      <input class="form-check-input" type="checkbox" name="subscribeCheck" checked>
+	      <input class="form-check-input" type="checkbox" name="subscribed" id="subscribeCheckbox" checked>
 				<%	} else { %>
-				<input class="form-check-input" type="checkbox" name="subscribeCheck">
+				<input class="form-check-input" type="checkbox" name="subscribed" id="subscribeCheckbox">
 				<% }%>
 				<label class="form-check-label" for="subscribeCheck">
 	        Subscribe to notifications
@@ -46,7 +46,38 @@
 	  </div>
 	  <button type="submit" class="btn btn-primary">Confirm</button>
 	</form>
+	<!-- Modal HTML -->
+	<div id="confirmModal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Confirm notifications</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<p>You will receive emails for all new events.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" data-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+$(function()
+{
+  $('#subscribeCheckbox').click(function()
+        {
+            if ($('#subscribeCheckbox').is(":checked")) {
+                $('#confirmModal').modal('show');
+            } else {
+                $('#confirmModal').modal('hide');
+            }
+        });
+});
+</script>

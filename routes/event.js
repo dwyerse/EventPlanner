@@ -3,18 +3,26 @@ var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
+var userMapper = require('../mappers/userMapper');
+var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
+const EVENT_SUB_PREFIX = 'Event_';
+const NEWEVENTS_SUB = 'Event_new';
+var mailer = require('../config/mailer');
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
+	var isSubscribed = req.user.subscriptions.includes(EVENT_SUB_PREFIX + req.params.event_id);
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
 			res.send(err);
 		}
+		var isAdmin=false;
+		if(req.user.type=='admin'){isAdmin=true;}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult});
+			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin});
 		});
 	});
 });
@@ -34,6 +42,16 @@ router.get('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	});
 });
 
+router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+
+		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
+	});
+});
+
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
@@ -44,6 +62,7 @@ router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully created event');
+					sendCreateNotfication(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/create');
@@ -57,7 +76,6 @@ router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
 		var eventObj = new EventModel({title:req.body.title,location:req.body.location,date:req.body.date,description:req.body.description,event_id:req.params.event_id,creators:[],invitees:[]});
-		//We corrupt the invitees and creator array here by resetting it to empty
 		eventMapper.updateEventDetailsBy_event_id(req.params.event_id,eventObj,
 			function(error,result) {
 				if (!result) {
@@ -66,6 +84,7 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					req.flash('err', error);
 				} else{
 					req.flash('succ', 'Succesfully updated event');
+					sendUpdateEmail(result);
 					return res.redirect('/event/view/'+ result.event_id);
 				}
 				res.redirect('/event/edit' + req.params.event_id);
@@ -74,6 +93,89 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/edit' + req.params.event_id);
 	}
+});
+
+//Attendee Report
+router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+		userMapper.allUsers(function(error,userResult){
+			var attending = [];
+			var names = [];
+			for (var i = 0; i < result.invitees.length; i++) {
+				if(result.invitees[i].state=='accepted'||result.invitees[i].state=='attending'){
+					for (var j = 0; j < userResult.length; j++) {
+						if(userResult[j].email==result.invitees[i].email){
+							names.push(userResult[j].name);
+						}
+					}
+					attending.push(result.invitees[i]);
+				}
+			}
+			res.render('attendeeReport', {attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
+		});
+	});
+});
+
+//Add invitee
+router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
+		if(!req.body.email){
+			res.redirect('/event/view/' + req.params.event_id);
+		}
+		else{
+			var emailAlreadyExists = false;
+			for (var i = 0; i < result.invitees.length; i++) {
+				if(req.body.email==result.invitees[i].email){
+					emailAlreadyExists = true;
+					break;
+				}
+			}
+			if(emailAlreadyExists){
+				req.flash('err', 'Invitee failed to be added: invitee already exists');
+				res.redirect('/event/view/' + req.params.event_id);
+			}
+			else{
+
+				var newInvitees = result.invitees;
+				newInvitees.push({email: req.body.email, state: 'pending'});
+				inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
+					if(err){
+						req.flash('err', 'Invitee failed to be added');
+					}
+				});
+				mailer.sendInvitation([req.body.email],result,function(err){
+					if(err){
+						req.flash('err', 'Email not sent');
+					}
+				});
+				req.flash('succ', 'Invitee added');
+				res.redirect('/event/view/' + req.params.event_id);
+			}
+		}
+	});
+});
+
+//Remove invitee
+router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
+
+		var newInvitees = [];
+		for (var i = 0; i < result.invitees.length; i++) {
+			if(req.body.inviteeId!=i){
+				newInvitees.push(result.invitees[i]);
+			}
+		}
+		inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
+			if(err){
+				req.flash('err', 'Invitee failed to be removed');
+			}
+		});
+		req.flash('succ', 'Invitee removed');
+		res.redirect('/event/view/' + req.params.event_id);
+	});
 });
 
 
@@ -106,7 +208,7 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 		var filename;
 		var filepath = path.join(__dirname, '../menus');
 		[menuId,filepath,filename] = getNewFilename(filepath, eventId);
-		
+
 		let uploadedFile = req.files.uploadedFile;
 		if(uploadedFile.mimetype!=='application/pdf'){
 			req.flash('uploadMessage', 'Uploaded file must be in pdf format');
@@ -127,6 +229,77 @@ router.post('/edit/:event_id/addMenu/upload', isLoggedIn,function(req, res) {
 		}
 	}
 });
+
+router.post('/unsubscribe', isLoggedIn, function(req, res){
+	if(req.body.event_id){
+		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
+		userMapper.updateUserSubs(req.user.email, newSub,false, function(err,updatedUser){
+			if(err || !updatedUser) {
+				req.flash('err', 'Unable to unsubscribe to this event');
+			} else {
+				req.flash('succ', 'Succesfully unsubscribed to this event');
+				res.redirect('/event/view/'+req.body.event_id);
+			}
+		});
+	}
+});
+
+router.post('/subscribe', isLoggedIn, function(req, res){
+	if(req.body.event_id){
+		var newSub = EVENT_SUB_PREFIX + req.body.event_id;
+		userMapper.updateUserSubs(req.user.email, newSub,true, function(err,updatedUser){
+			if(err || !updatedUser) {
+				req.flash('err', 'Unable to subscribe to this event');
+			} else {
+				req.flash('succ', 'Succesfully subscribed to this event');
+				res.redirect('/event/view/'+req.body.event_id);
+			}
+		});
+	}
+});
+
+
+function sendCreateNotfication(event){
+	userMapper.findSubscribedUsers(NEWEVENTS_SUB, function(err,subEmails) {
+		if(!err){
+			return mailer.sendEventNotification(subEmails, event, 'created');
+		}
+	});
+}
+
+router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
+	getRecipientEmails(req.body.select, req.body.event_id, function(err,emails) {
+		if(err){
+			req.flash('err', err);
+		}
+		else if(emails && emails.length>0){
+			req.flash('succ', 'Successfully sent email');
+			mailer.sendMail([], emails, req.body.subject, req.body.message);
+		}
+		res.redirect('/event/view/'+req.body.event_id);
+	});
+});
+
+function getRecipientEmails(select, event_id, callback){
+	if(select == 'attendees'){
+		eventMapper.findAttendeeEmails(event_id, function(err, attendees){
+			callback(err,attendees);
+		});
+	} else if(select == 'invitees') {
+		eventMapper.findInviteeEmails(event_id, function(err,invitees){
+			callback(err,invitees);
+		});
+	}
+}
+
+function sendUpdateEmail(event) {
+	var sub = EVENT_SUB_PREFIX + event.event_id;
+	userMapper.findSubscribedUsers(sub, function(err , emails){
+		if(!err && emails && emails.length>0){
+			mailer.sendEventNotification(emails, event, 'updated');
+		}
+	});
+}
 
 function getNewFilename(filepath, eventId){
 	var count = 0;
