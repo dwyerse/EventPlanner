@@ -4,7 +4,7 @@ var mapper = require('../mappers/eventMapper');
 var userMapper = require('../mappers/userMapper');
 var mongoose = require('mongoose');
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
-const ADMIN_EMAIL = 'admin@eventplanner';
+const ADMIN_EMAIL = 'eventplanner.gp@gmail.com';
 const testInvitees = [{email:'test@email.com', state:'pending'},{email:'test2@email.com', state:'accepted'}];
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
