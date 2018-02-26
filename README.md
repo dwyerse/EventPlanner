@@ -63,8 +63,8 @@ Once app server and mongoDB server running:
 - Enter credentials of previously created account
 - Click login
 - Dashboard with user credentials show should appear.
-- Point browser to http://localhost:3000/edit/account to change account details
-- Point browser to http://localhost:3000/edit/password to change password
+- Click Edit Account button to change account details
+- Return Dashboard, click Change Password button to change password
 
 ### Feature 2: 'I want to be able to give admin access to other people'
 - Login as non-admin user created from testing previous feature
@@ -117,7 +117,7 @@ Once app server and mongoDB server running:
 ### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
 - Login as an administrator user
 - Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
-- Point browser to http://localhost:3000/event/edit/0
+- Go to the event edit page (e.g. http://localhost:3000/event/edit/0)
 - Click Register Guest button
 - Fill in the email of a user account which has not been registered for the event
 - Fill in the access requirements and dietary restrictions fields
