@@ -75,7 +75,7 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 								} else {
 									req.flash('succ', 'Succesfully registered guest');
 
-									user.eventsAttended.push(result.event_id);
+									user.eventsAttended.push({event_id:result.event_id, event_title:result.title});
 
 									userMapper.updateUserByEmail(user.email, user, function(err, result) {
 										if (!result) {

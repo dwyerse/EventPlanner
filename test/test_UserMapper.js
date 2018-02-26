@@ -78,7 +78,7 @@ describe('userMapper testing suite', function() {
 	});
 
 	it('should update user', function(done) {
-		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',eventsAttended:[0],salt:'newfakesalt'});
+		var userObj = new User({name: 'UpdatedName',email: TESTUSER.email,password:'updatedPassword',type:'updatedadmin',eventsAttended:[0, 'Event Title'],salt:'newfakesalt'});
 		mapper.updateUserByEmail(TESTUSER.email,userObj,function(err,res){
 			assert.equal(userObj.name,res.name);
 			assert.equal(userObj.email,res.email);
