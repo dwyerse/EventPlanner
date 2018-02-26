@@ -11,8 +11,12 @@ router.get('/guests',isLoggedIn, isAdminUser, function(req, res) {
 		if(err){
 			res.send(err);
 		}
+		
+		var filteredResult = result.filter(function(user){
+			return (user.eventsAttended.length > 0);
+		});
 
-		res.render('previousGuests', {result,err: req.flash('err'),succ: req.flash('succ')});
+		res.render('previousGuests', {result: filteredResult,err: req.flash('err'),succ: req.flash('succ')});
 	});
 });
 

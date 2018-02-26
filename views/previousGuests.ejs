@@ -40,8 +40,7 @@
 			<div style="height: 350px; overflow-y:auto;">
 				<table class="table">
 					<tbody>
-						<%	for (var i=0; i < result.length; i++) { 
-							if (result[i].eventsAttended.length > 0) { %>
+						<%	for (var i=0; i < result.length; i++) { %>
 					   		<tr>
 					   			<td style="padding-right:70px;"><%= result[i].name %></td>
 						    	<td style="padding-right:70px;"><%= result[i].email %></td>
@@ -50,8 +49,7 @@
 						    	<td style="padding-right:70px;"><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_title %><br><% } %></td>
 						    	
 					   		</tr>
-						<%}
-						}%>
+						<%}%>
 					</tbody>
 						
 				</table>
