@@ -75,6 +75,12 @@ Once app server and mongoDB server running:
 - Point browser to http://localhost:3000/edit/account to change account details
 - Point browser to http://localhost:3000/edit/password to change password
 
+### Feature 6: 'Keep track of possible/previous guests'
+- Login as an administrator user
+- Click View Previous Guests button
+- If there are guests who have previously attended an event, their names, emails, and the ids of the events they have attended will be displayed as a list
+- Click Go Back button to return to the landing page
+
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
 - Click Edit button
