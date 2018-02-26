@@ -74,7 +74,6 @@ Once app server and mongoDB server running:
 - Click change password button
 - Enter new password and submit
 - Observe a success message on the page
-
 ### Feature 2: 'I want to be able to give admin access to other people'
 - Login as non-admin user created from testing previous feature
 - Click Grant Admin Access button
@@ -126,7 +125,7 @@ Once app server and mongoDB server running:
 ### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
 - Login as an administrator user
 - Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
-- Point browser to http://localhost:3000/event/edit/0
+- Go to the event edit page (e.g. http://localhost:3000/event/edit/0)
 - Click Register Guest button
 - Fill in the email of a user account which has not been registered for the event
 - Fill in the access requirements and dietary restrictions fields
