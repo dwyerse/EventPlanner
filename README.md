@@ -77,7 +77,7 @@ Once app server and mongoDB server running:
 - Enter new password and submit
 - Observe a success message on the page
 ### Feature 2: 'I want to be able to give admin access to other people'
-- Login as administrator user 
+- Login as administrator user
 - Click Grant Admin Access button
 - This will proceed to grant admin access page
 - Enter email of non-admin user account
@@ -101,7 +101,7 @@ Once app server and mongoDB server running:
 - Click confirm button
 - You will be redirected to the event page with updated details.
 
-### Feature 8/9: Send out inivitation(s)	
+### Feature 8/9: Send out inivitation(s)
 - Login as an administrator user
 - Create a new event or view an existing event
 - Add an invitee by typing their email into the input labelled 'Add new invite' and press the add button
@@ -114,7 +114,7 @@ Once app server and mongoDB server running:
 - A new invitee will appear in the list , the response field will say 'Pending'.
 - An email will be automatically sent to the inputted email address.
 - Open a new tab, and navigate to the inbox of the email address specified
-- Click on the link contained in the email 
+- Click on the link contained in the email
 - The options on the response page are 'Attending' or 'Not Attending', choose an option.
 - The page will update with the response
 - Refresh the event page, the user response field will have updated with the correct response.
@@ -211,14 +211,19 @@ To confirm an invitee's attendance
 - Go to inbox for email of subscribed admin account
 - Observe an email is present stating that an event with the title provided has been created
 
+### Feature 20: Subscribe to an event
+- Create or login to an Account
+- Create a new event or view an existing event
+- Click subscribe button on the event page
+
 ### Feature 20: 'I would like to email (legitimately) subscribed users'
+- Ensure a user account is subscribed to an event
 - Log in to an admin account
-- Go to an event page (eg localhost:3000/event/view/0)
-- Click subscribe button
-- Click edit button
-- Edit the event details and submit
-- Go to inbox for email of subscribed admin account
-- Observe an email is present stating that an event with the title provided has been updated
+- Go to an event page (eg localhost:3000/event/view/0) - Same event that the user is subscribed
+- Click Contact Users button
+- Choose to send email to subscribed users in the recipients dropdown. Complete the email details and send.
+- Go to inbox for email of subscribed user account
+- Observe an email is present matching the one previously sent
 
 ### Feature 21: 'I want to be able to contact attendees easily e.g. group emails'
 - Log in to an admin account
