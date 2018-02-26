@@ -34,16 +34,17 @@
 	<h4>RSVP</h4>
 	<% if(index==-1) {%>
 	<form action = "/invitationResponse/view/rsvp/<%=result.event_id%>/<%=userEmail%>" method = "post">
-		<input type="submit" class="btn btn-primary" name="response" value="Going" />   
-		<input type="submit" class="btn btn-primary" name="response" value="Not Going" /> 
+		<input type="submit" class="btn btn-primary" name="response" value="Attending" />   
+		<input type="submit" class="btn btn-primary" name="response" value="Not Attending" /> 
 	</form>
 	<% }else{%>
-		<h4>Response:  <%= result.invitees[index].state %></h4>
-
-		<h4>Change Response</h4>
+		<br>
+		<h5>Response:  <%= result.invitees[index].state %></h5>
+		<br>
+		<h5>Change Response</h5>
 		<form action = "/invitationResponse/view/rsvp/<%=result.event_id%>/<%=userEmail%>" method = "post">
-			<input type="submit" class="btn btn-primary" name="response" value="accepted" />   
-			<input type="submit" class="btn btn-primary" name="response" value="Not Going" /> 
+			<input type="submit" class="btn btn-primary" name="response" value="Attending" />   
+			<input type="submit" class="btn btn-primary" name="response" value="Not Attending" /> 
 		</form>
 	<% } %>
 </body>

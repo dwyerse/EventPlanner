@@ -182,8 +182,8 @@ To view responses:
 - Create a new event or view an existing event
 - Add an invitee to the invite list
 - Responses are listed in the invite list displayed
-- Invites are labelled as 'pending' or 'attending'
-- Invitee that was just added should have value 'pending'
+- Invites are labelled as 'Pending' or 'attending'
+- Invitee that was just added should have value 'Pending'
 
 To view only those attending, you can view the attendee report:
 - Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
@@ -200,7 +200,7 @@ you wish to remove them from the list):
 To confirm an invitee's attendance
 - Add an invitee to the invite list
 - Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
-- The invitee is now listed in the invite list as 'accepted'
+- The invitee is now listed in the invite list as 'Attending'
 - This invitee will now also be listed in the attendee report
 
 ### Feature 17: 'Send out emails automatically when an event is created'

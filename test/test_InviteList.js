@@ -1,7 +1,7 @@
 var assert = require('assert');
 var mapper = require('../mappers/eventMapper');
 var eventID;
-const testInvitees = [{email:'test@email.com', state:'pending'},{email:'test2@email.com', state:'accepted'}];
+const testInvitees = [{email:'test@email.com', state:'Pending'},{email:'test2@email.com', state:'Attending'}];
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
 	date:'01/01/2018',description:'test description',event_id:0,
@@ -23,7 +23,7 @@ describe('Invite list testing suite', function() {
 
 	it('Should be able to add invitee', function(done){
 		var newInvitees = TEST_EVENT.invitees;
-		newInvitees.push({email: 'new test', state: 'pending'});
+		newInvitees.push({email: 'new test', state: 'Pending'});
 		inviteList.updateInvitees(newInvitees,eventID,TEST_EVENT, function(error){
 			mapper.findEventBy_event_id(eventID,function(err,res){
 				assert.equal(error,null);
@@ -35,7 +35,7 @@ describe('Invite list testing suite', function() {
 		});
 	});
 	it('Should be able to remove invitee', function(done){
-		var newInvitees = [{email:'test@email.com', state:'pending'},{email:'test2@email.com', state:'accepted'}];
+		var newInvitees = [{email:'test@email.com', state:'Pending'},{email:'test2@email.com', state:'Attending'}];
 		inviteList.updateInvitees(newInvitees,eventID,TEST_EVENT, function(error){
 			mapper.findEventBy_event_id(eventID,function(err,res){
 				assert.equal(error,null);

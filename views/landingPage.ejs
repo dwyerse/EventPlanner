@@ -12,32 +12,37 @@
 <div class="container">
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <h1><span class="glyphicon glyphicon-user"></span> Profile Page</h1>
     </div>
 
     <div class="row">
         <div class="col-sm-6">
             <div class="well">
-                <h3><span class="fa fa-user"></span>Profile</h3>
+                <h3><span class="glyphicon glyphicon-user"></span> Profile</h3>
                 <% if (user) { %>
                     <p>
-                        <strong>id</strong>: <%= user._id %><br>
                         <strong>name</strong>: <%= user.name %><br>
                         <strong>email</strong>: <%= user.email %><br>
-                        <strong>password</strong>: <%= user.password %><br>
-                        <strong>type</strong>: <%= user.type %><br>
                     </p>
                 <% } %>
             </div>
+            <div id="buttons">
+                <a class="btn btn-primary" href="/edit/account" role="button">Edit Account</a>           
+                <a class="btn btn-primary" href="/edit/password" role="button">Change Password</a>
+            </div>
         </div>
-
+        <% if (user.type=='admin') { %>
         <div class="col-sm-6">
-            <h3>Actions</h3>
-            <br>
+            <h3>Actions</h3>         
             <div id="buttons">
                 <a class="btn btn-primary" href="/grant/admin" role="button" id='createBtn'>Grant Admin Access</a>
             </div>
+            <br>
+            <div id="buttons">
+                <a class="btn btn-primary" href="/event/create" role="button">Create Event</a>
+            </div>
         </div>
+        <% } %>
 
     </div>     
             
