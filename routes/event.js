@@ -289,6 +289,11 @@ function getRecipientEmails(select, event_id, callback){
 		eventMapper.findInviteeEmails(event_id, function(err,invitees){
 			callback(err,invitees);
 		});
+	} else if(select == 'subscribers'){
+		var sub = EVENT_SUB_PREFIX + event_id;
+		userMapper.findSubscribedUsers(sub, function(err , subscribers){
+			callback(err,subscribers);
+		});
 	}
 }
 
