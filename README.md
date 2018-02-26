@@ -52,19 +52,28 @@ Selenium test files found in ./seleniumTest
 npm run-script selenium-test
 ```
 # Testing implemented features
-### Feature 1: 'I want to be able to login (change password/details/create account) - *Not yet complete!*'
+
+### Feature 1: 'I want to be able to create account'
 Once app server and mongoDB server running:
-- Point browser to http:://localhost:3000
+- Point browser to http://localhost:3000
 - Click Create Account button
-- Enter all required fields
-- Click Create Account
-- Return to homepage
-- Click login buttons
-- Enter credentials of previously created account
-- Click login
-- Dashboard with user credentials show should appear.
-- Point browser to http://localhost:3000/edit/account to change account details
-- Point browser to http://localhost:3000/edit/password to change password
+- Enter all required fields in create account form
+- A success message will be displayed when you're redirected to login
+### Feature 1: 'I want to be able to login to an account'
+- Go to the homepage
+- Click login button
+- Enter credentials of account previously created or test admin user
+- Should be redirected to a landing page displaying the user's details
+### Feature 1: 'I want to be able to edit account details'
+- Login to an account
+- Click edit account button
+- Make intended changes and submit
+- Observe a success message on the edit page
+### Feature 1: 'I want to be able to change my password'
+- Login to an account
+- Click change password button
+- Enter new password and submit
+- Observe a success message on the page
 
 ### Feature 2: 'I want to be able to give admin access to other people'
 - Login as non-admin user created from testing previous feature
@@ -96,7 +105,7 @@ Once app server and mongoDB server running:
 - Click confirm button
 - You will be redirected to the event page with updated details.
 
-### Feature 9: Send out inivitation(s)	
+### Feature 8/9: Send out inivitation(s)	
 - Login as an administrator user
 - Create a new event or view an existing event
 - Add an invitee by typing their email into the input labelled 'Add new invite' and press the add button
@@ -196,11 +205,31 @@ To confirm an invitee's attendance
 - This invitee will now also be listed in the attendee report
 
 ### Feature 17: 'Send out emails automatically when an event is created'
-- Log in to the admin account (eventplanner.gp@gmail.com) with password provided
-- Create a new event
-- Ensure success message is displayed.
-- Go to gmail.com and log into admin gmail account (eventplanner.gp@gmail.com)
+- Log in to an admin account that is subscribed for new event notifications
+- Click Create Event button
+- Enter event details and confirm
+- Read and confirm the modal
+- Should be redirected to the event page
+- Go to inbox for email of subscribed admin account
 - Observe an email is present stating that an event with the title provided has been created
+
+### Feature 20: 'I would like to email (legitimately) subscribed users'
+- Log in to an admin account
+- Go to an event page (eg localhost:3000/event/view/0)
+- Click subscribe button
+- Click edit button
+- Edit the event details and submit
+- Go to inbox for email of subscribed admin account
+- Observe an email is present stating that an event with the title provided has been updated
+
+### Feature 21: 'I want to be able to contact attendees easily e.g. group emails'
+- Log in to an admin account
+- Go to an event page (eg localhost:3000/event/view/0)
+- Ensure this user is either invited or an attendee (Has RSVP'd as going) of this event
+- Click Contact Users button
+- Choose to either send email to invitee or attendee (Depending on your user). Complete the email details and send.
+- Go to inbox for email of subscribed admin account
+- Observe an email is present matching the one previously sent
 
 ### Feature 24: 'I want to be able to see a report of who is attending an event'
 
