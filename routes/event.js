@@ -106,10 +106,16 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 			var names = [];
 			for (var i = 0; i < result.invitees.length; i++) {
 				if(result.invitees[i].state=='Attending'||result.invitees[i].state=='Attending'){
+					var userExists = false;
 					for (var j = 0; j < userResult.length; j++) {
 						if(userResult[j].email==result.invitees[i].email){
+							userExists = true;
 							names.push(userResult[j].name);
+							break;
 						}
+					}
+					if(!userExists){
+						names.push("");
 					}
 					attending.push(result.invitees[i]);
 				}
