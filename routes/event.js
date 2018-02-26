@@ -251,6 +251,10 @@ router.post('/subscribe', isLoggedIn, function(req, res){
 	}
 });
 
+router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
+	res.redirect('/event/view/'+req.body.event_id);
+});
+
 function sendUpdateEmail(event) {
 	var sub = EVENT_SUB_PREFIX + event.event_id;
 	userMapper.findSubscribedUsers(sub, function(err , emails){

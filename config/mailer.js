@@ -36,10 +36,10 @@ function sendInvitation(mailingList, eventDetails, result) {
 		});
 	}
 }
-function sendMail(receipient,bccRecipients, subject, body, callback){
+function sendMail(recipient,bccRecipients, subject, body, callback){
 	let mailOptions = {
 		from: adminAcc,
-		to: receipient,
+		to: recipient,
 		bcc: bccRecipients,
 		subject: subject,
 		text: body
