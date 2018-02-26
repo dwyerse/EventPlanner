@@ -103,7 +103,7 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 			var attending = [];
 			var names = [];
 			for (var i = 0; i < result.invitees.length; i++) {
-				if(result.invitees[i].state=='accepted'||result.invitees[i].state=='attending'){
+				if(result.invitees[i].state=='Attending'||result.invitees[i].state=='Attending'){
 					for (var j = 0; j < userResult.length; j++) {
 						if(userResult[j].email==result.invitees[i].email){
 							names.push(userResult[j].name);
@@ -138,7 +138,7 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 			else{
 
 				var newInvitees = result.invitees;
-				newInvitees.push({email: req.body.email, state: 'pending'});
+				newInvitees.push({email: req.body.email, state: 'Pending'});
 				inviteList.updateInvitees(newInvitees,req.params.event_id,result, function(err){
 					if(err){
 						req.flash('err', 'Invitee failed to be added');

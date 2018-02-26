@@ -82,7 +82,7 @@ function findAttendees(event_id, callback){
 	EventModel.findOne({event_id:event_id}, 'invitees', function(err,event) {
 		var attendees;
 		if(!err){
-			attendees = event.invitees.filter((invitee) => {return invitee.state == 'accepted';});
+			attendees = event.invitees.filter((invitee) => {return invitee.state == 'Attending';});
 		}
 		return callback(err,attendees);
 	});
