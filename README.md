@@ -132,6 +132,12 @@ Once app server and mongoDB server running:
 - Click Register Guest button on this page
 - A confirmation message should appear indicating that the user has been registered as a guest for this event.
 
+### Feature 6: 'Keep track of possible/previous guests'
+- Login as an administrator user
+- Click View Previous Guests button
+- If there are guests who have previously attended an event, their names, emails, and the ids and titles of the events they have attended will be displayed as a list
+- Click Go Back button to return to the landing page
+
 ### Feature 29: 'I want to create menus'
 - Create a new event or view an existing event
 - Click Edit button

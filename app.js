@@ -16,6 +16,7 @@ var event = require('./routes/event');
 var createAcc = require("./routes/createAcc");
 var adminAccess = require("./routes/adminAccess");
 var registerGuest = require('./routes/registerGuest');
+var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
@@ -78,6 +79,7 @@ app.use("/event", event);
 app.use("/create", createAcc);
 app.use("/grant", adminAccess);
 app.use("/register", registerGuest);
+app.use("/previous", previousGuests);
 app.use("/invitationResponse", inviteResponse);
 
 // catch 404 and forward to error handler
