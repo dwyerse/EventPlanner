@@ -20,19 +20,32 @@
 		<h2 style="word-break: break-all;">Previous Guests</h2>
 		<br>
 
-		<div class="form-group col-md-12">
-				<table>
-					<%	for (var i=0; i < result.length; i++) { %>
+		<div class="form-group col-md-12" style="height: 400px; overflow-y:auto;">
+				<table class="table">
+					<thead>
+						<tr>
+							<th colspan="2"></th>
+							<th colspan="2">Events Attended</th>
+						</tr>
+						<tr>
+							<th>Guest Name</th>
+							<th>Guest Email</th>
+							<th>Event ID</th>
+							<th>Event Title</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%	for (var i=0; i < result.length; i++) { %>
 					   		<tr>
-					   			<td style="padding-right:70px;"><strong>Guest Name: </strong><%= result[i].name %></td>
-						    	<td style="padding-right:70px;"><strong>Guest Email: </strong><%= result[i].email %></td>
-						    	<td style="padding-right:70px;"><strong>Events Attended: </strong><% for (var j=0; j < result[i].eventsAttended.length; j++) { %> Event id: <%= result[i].eventsAttended[j] %><% } %></td>
+					   			<td style="padding-right:70px;"><%= result[i].name %></td>
+						    	<td style="padding-right:70px;"><%= result[i].email %></td>
+						    	<td style="padding-right:70px;"><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_id %><br><% } %></td>
 
-						    	
+						    	<td style="padding-right:70px;"><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_title %><br><% } %></td>
 						    	
 					   		</tr>
-					<%}%>
-
+						<%}%>
+					</tbody>
 						
 				</table>
 
