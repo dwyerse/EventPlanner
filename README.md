@@ -34,7 +34,7 @@ sudo chmod +x launch.sh
 ```
 
 # Testing
-All tests expect local app server on port 3000 and mongoDB server running. 
+All tests expect local app server on port 3000 and mongoDB server running.
 ### Unit Tests
 Unit test files found in ./test
 <br>In a new terminal (in EventPlanner folder):
@@ -160,7 +160,7 @@ Once app server and mongoDB server running:
 - Add an invitee to the invite list
 - Invitee's contact email is displayed on the invite list
 
-If the invitee is registered for the event, the invitee's name and email are displayed in the attendee report. 
+If the invitee is registered for the event, the invitee's name and email are displayed in the attendee report.
 To view this:
 - Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
@@ -194,6 +194,13 @@ To confirm an invitee's attendance
 - Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - The invitee is now listed in the invite list as 'accepted'
 - This invitee will now also be listed in the attendee report
+
+### Feature 17: 'Send out emails automatically when an event is created'
+- Log in to the admin account (eventplanner.gp@gmail.com) with password provided
+- Create a new event
+- Ensure success message is displayed.
+- Go to gmail.com and log into admin gmail account (eventplanner.gp@gmail.com)
+- Observe an email is present stating that an event with the title provided has been created
 
 ### Feature 24: 'I want to be able to see a report of who is attending an event'
 

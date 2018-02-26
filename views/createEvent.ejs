@@ -46,8 +46,27 @@
 				<textarea type="text" class="form-control" rows="5" name="description" required></textarea>
 				</div>
 		</div>
+	 
+		<a href="#myModal" class="btn btn-primary" data-toggle="modal">Confirm</a>
+		 <!-- Modal HTML -->
+		 <div id="myModal" class="modal fade">
+			 <div class="modal-dialog modal-confirm">
+				 <div class="modal-content">
+					 <div class="modal-header">
+						 <h4 class="modal-title">Confirm Event Creation</h4>
+						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					 </div>
+					 <div class="modal-body">
+						 <p>An email will be sent to all subscribed users.</p>
+					 </div>
+					 <div class="modal-footer">
+						 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						 <button type="submit" class="btn btn-primary">Confirm</button>
+					 </div>
+				 </div>
+			 </div>
+		 </div>
 
-	  <button type="submit" class="btn btn-primary">Confirm</button>
 	</form>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
