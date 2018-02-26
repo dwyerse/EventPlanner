@@ -78,7 +78,7 @@ Once app server and mongoDB server running:
 ### Feature 6: 'Keep track of possible/previous guests'
 - Login as an administrator user
 - Click View Previous Guests button
-- If there are guests who have previously attended an event, their names, emails, and the ids of the events they have attended will be displayed as a list
+- If there are guests who have previously attended an event, their names, emails, and the ids and titles of the events they have attended will be displayed as a list
 - Click Go Back button to return to the landing page
 
 ### Feature 29: 'I want to create menus'
