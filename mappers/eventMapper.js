@@ -58,6 +58,23 @@ function updateEventDetailsBy_event_id(event_id,eventObj,callback){
 	});
 }
 
+function updateInviteeList(event_id,inviteeList,callback){
+	EventModel.findOne({ event_id:event_id }, function(err,res){
+		if(err){
+			return callback(err);
+		}
+		if(!res){
+			return callback(err,[]);
+		}
+
+		res.invitees = inviteeList;
+
+		res.save(function (err, updatedEvent) {
+			return callback(err,updatedEvent);
+		});
+	});
+}
+
 function deleteEventByEventId(event_id, callback){
 	EventModel.remove({event_id:event_id}, function(err) {
 		return callback(err);
@@ -70,4 +87,4 @@ function deleteAllEvents(callback){
 	});
 }
 
-module.exports = {createEvent,updateEventBy_event_id,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents};
+module.exports = {createEvent,updateEventBy_event_id,updateInviteeList,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents};
