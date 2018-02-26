@@ -58,6 +58,36 @@ function updateEventDetailsBy_event_id(event_id,eventObj,callback){
 	});
 }
 
+function findInviteeEmails(event_id, callback){
+	EventModel.findOne({event_id:event_id}, 'invitees.email', function(err,event) {
+		var emails;
+		if(!err){
+			emails = event.invitees.map((invitee) => {return invitee.email;});
+		}
+		return callback(err,emails);
+	});
+}
+
+function findAttendeeEmails(event_id, callback){
+	findAttendees(event_id, function(err,attendees){
+		var emails;
+		if(!err){
+			emails = attendees.map((attendee) => {return attendee.email;});
+		}
+		return callback(err,emails);
+	});
+}
+
+function findAttendees(event_id, callback){
+	EventModel.findOne({event_id:event_id}, 'invitees', function(err,event) {
+		var attendees;
+		if(!err){
+			attendees = event.invitees.filter((invitee) => {return invitee.state == 'accepted';});
+		}
+		return callback(err,attendees);
+	});
+}
+
 function deleteEventByEventId(event_id, callback){
 	EventModel.remove({event_id:event_id}, function(err) {
 		return callback(err);
@@ -70,4 +100,4 @@ function deleteAllEvents(callback){
 	});
 }
 
-module.exports = {createEvent,updateEventBy_event_id,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents};
+module.exports = {createEvent,updateEventBy_event_id,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents,findAttendees,findInviteeEmails,findAttendeeEmails};

@@ -252,8 +252,29 @@ router.post('/subscribe', isLoggedIn, function(req, res){
 });
 
 router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
-	res.redirect('/event/view/'+req.body.event_id);
+	getRecipientEmails(req.body.select, req.body.event_id, function(err,emails) {
+		if(err){
+			req.flash('err', err);
+		}
+		else if(emails && emails.length>0){
+			req.flash('succ', 'Successfully sent email');
+			mailer.sendMail([], emails, req.body.subject, req.body.message);
+		}
+		res.redirect('/event/view/'+req.body.event_id);
+	});
 });
+
+function getRecipientEmails(select, event_id, callback){
+	if(select == 'attendees'){
+		eventMapper.findAttendeeEmails(event_id, function(err, attendees){
+			callback(err,attendees);
+		});
+	} else if(select == 'invitees') {
+		eventMapper.findInviteeEmails(event_id, function(err,invitees){
+			callback(err,invitees);
+		});
+	}
+}
 
 function sendUpdateEmail(event) {
 	var sub = EVENT_SUB_PREFIX + event.event_id;

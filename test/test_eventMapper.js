@@ -69,7 +69,31 @@ describe('eventMapper testing suite', function() {
 			done();
 		});
 	});
-	
+
+	it('should find attendees with event_id', function(done) {
+		mapper.findAttendees(testEventId,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.length, 1);
+			done();
+		});
+	});
+
+	it('should find attendee emails with event_id', function(done) {
+		mapper.findAttendeeEmails(testEventId,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res[0], testInvitees[1].email);
+			done();
+		});
+	});
+
+	it('should find invitees emails with event_id', function(done) {
+		mapper.findInviteeEmails(testEventId,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.length, 2);
+			assert.equal(res[0], testInvitees[0].email);
+			done();
+		});
+	});
 	it('should remove the test event', function(done){
 		mapper.deleteEventByEventId(testEventId, function(err){
 			assert.equal(err,null);
@@ -79,5 +103,5 @@ describe('eventMapper testing suite', function() {
 			});
 		});
 	});
-	
+
 });
