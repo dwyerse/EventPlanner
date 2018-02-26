@@ -13,8 +13,13 @@ router.get('/view/:event_id/:userEmail', function(req, res) {
 		var index = result.invitees.findIndex(function( obj ) {
 			return obj.email == userEmail;
 		});
-		res.render('invitationResponse', {result,index,userEmail,err: req.flash('err'),succ: req.flash('succ')});	
-		
+
+		if(index==-1){
+			res.redirect('/');
+		}
+		else{
+			res.render('invitationResponse', {result,index,userEmail,err: req.flash('err'),succ: req.flash('succ')});	
+		}		
 	});
 });
 
