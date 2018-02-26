@@ -211,6 +211,11 @@ To confirm an invitee's attendance
 - Go to inbox for email of subscribed admin account
 - Observe an email is present stating that an event with the title provided has been created
 
+### Feature 20: Subscribe to an event
+- Create or login to an Account
+- Create a new event or view an existing event
+- Click subscribe button on the event page
+
 ### Feature 20: 'I would like to email (legitimately) subscribed users'
 - Ensure a user account is subscribed to an event
 - Log in to an admin account
