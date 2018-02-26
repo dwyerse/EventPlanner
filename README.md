@@ -152,7 +152,7 @@ Once app server and mongoDB server running:
 - Login as an administrator user
 - Create a new event or view an existing event
 - Click View Guest Details button on the view page for this event
-- If guests have been registered for this event their details will be listed. Press Go Back button to return to the event view page
+- If guests have been invited to this event their details will be listed. Press Go Back button to return to the event view page
 - If instead no guests had been registered for this event, a message will be displayed indicating this.
 - Register new guest(s) for the event as per the instructions for Feature 13
 - Return to the view page for this event
