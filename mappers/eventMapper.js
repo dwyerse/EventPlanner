@@ -85,6 +85,8 @@ function findAttendees(event_id, callback){
 			attendees = event.invitees.filter((invitee) => {return invitee.state == 'accepted';});
 		}
 		return callback(err,attendees);
+	});
+}
 
 function updateInviteeList(event_id,inviteeList,callback){
 	EventModel.findOne({ event_id:event_id }, function(err,res){
@@ -118,4 +120,3 @@ function deleteAllEvents(callback){
 
 
 module.exports = {createEvent,updateEventBy_event_id,updateInviteeList,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents,findAttendees,findInviteeEmails,findAttendeeEmails};
-
