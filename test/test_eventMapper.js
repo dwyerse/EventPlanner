@@ -5,7 +5,7 @@ var userMapper = require('../mappers/userMapper');
 var mongoose = require('mongoose');
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 const ADMIN_EMAIL = 'eventplanner.gp@gmail.com';
-const testInvitees = [{email:'test@email.com', state:'pending'},{email:'test2@email.com', state:'accepted'}];
+const testInvitees = [{email:'test@email.com', state:'Pending'},{email:'test2@email.com', state:'Attending'}];
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
 	date:'01/01/2018',description:'test description',event_id:0,
@@ -98,7 +98,7 @@ describe('eventMapper testing suite', function() {
 	
 	it('should update invitee list', function(done) {
 
-		var newInvitees = [{email:'updated@email.com', state:'accepted'},{email:'updated2@email.com', state:'accepted'}];
+		var newInvitees = [{email:'updated@email.com', state:'Attending'},{email:'updated2@email.com', state:'Attending'}];
 
 		mapper.updateInviteeList(testEventId,newInvitees,function(err,res){
 			assert.equal(err,null);

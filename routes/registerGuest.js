@@ -47,13 +47,13 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 						for (var i = 0; i < result.invitees.length; i++)
 						{
-							if (result.invitees[i].email === guestEmail && result.invitees[i].state === 'attending')
+							if (result.invitees[i].email === guestEmail && result.invitees[i].state === 'Attending')
 							{
 								alreadyRegistered = true;
 							}
-							else if (result.invitees[i].email === guestEmail && result.invitees[i].state === 'pending')
+							else if (result.invitees[i].email === guestEmail && result.invitees[i].state === 'Pending')
 							{
-								result.invitees[i].state = 'attending';
+								result.invitees[i].state = 'Attending';
 								result.invitees[i].accessRequirements = guestAccessRequirements;
 								result.invitees[i].dietaryRestrictions = guestDietaryRestrictions;
 								wasPending = true;
@@ -64,7 +64,7 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 						{
 							if (!wasPending)
 							{
-								result.invitees.push({email:guestEmail, state:'attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
+								result.invitees.push({email:guestEmail, state:'Attending', accessRequirements:guestAccessRequirements, dietaryRestrictions:guestDietaryRestrictions});
 							}
 
 							eventMapper.updateEventBy_event_id(result.event_id, result, function(error,result) {
