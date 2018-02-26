@@ -26,22 +26,13 @@ sudo chmod +x install.sh
 ./install.sh
 ```
 
-## Selenium Setup
-Run npm command to install all webdriverio drivers (in EventPlanner folder):
-```
-npm run-script selenium-install
-```
 # Running the Application
-Run the mongodb server. (Defaults to localhost:27017)
+Run the launch script
 ```
-sudo service mongod start
-mongo --host 127.0.0.1:27017
+sudo chmod +x launch.sh
+./launch
 ```
-In another terminal (in EventPlanner folder):
-<br>Start the app server.  (Defaults to localhost:3000)
-```
-npm start
-```
+
 # Testing
 All tests expect local app server on port 3000 and mongoDB server running. 
 ### Unit Tests
