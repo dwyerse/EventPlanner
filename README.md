@@ -79,7 +79,7 @@ Once app server and mongoDB server running:
 ### Feature 2: 'I want to be able to give admin access to other people'
 - Login as administrator user 
 - Click Grant Admin Access button
-- This account will proceed to grant admin access page
+- This will proceed to grant admin access page
 - Enter email of non-admin user account
 - Click Grant button
 - Confirmation of successfully granted admin access should appear
