@@ -82,6 +82,38 @@ Once app server and mongoDB server running:
 - Click Grant Admin Access button
 - The user account will now be allowed to proceed to the grant admin access page because it now has admin access
 
+### Feature 4: I would like to be able to create an event e.g. a dinner
+- Login as an administrator user
+- Click Create Event button on the landing page
+- Fill in the details for the event
+- Click the confirm button
+- You will be redirected to the event page
+
+### Feature 5: I want to be able to update event information and submit event updates
+- Create a new event or view an existing event
+- Click 'Edit' button
+- Update event information using form fields
+- Click confirm button
+- You will be redirected to the event page with updated details.
+
+### Feature 9: Send out inivitation(s)	
+- Login as an administrator user
+- Create a new event or view an existing event
+- Add an invitee by typing their email into the input labelled 'Add new invite' and press the add button
+- An email will be automatically sent to their email address
+
+### Feature 14: I want to be able to send automated invitations, with link to register for the event
+- Login as an administrator user
+- Create a new event or view an existing event
+- Add an invitee,typing an email(with an accessible inbox) into the input labelled 'Add new invite' and press the add button.
+- A new invitee will appear in the list , the response field will say 'Pending'.
+- An email will be automatically sent to the inputted email address.
+- Open a new tab, and navigate to the inbox of the email address specified
+- Click on the link contained in the email 
+- The options on the response page are 'Attending' or 'Not Attending', choose an option.
+- The page will update with the response
+- Refresh the event page, the user response field will have updated with the correct response.
+
 ### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
 - Login as an administrator user
 - Ensure an event has been created e.g. event with id 0. If necessary create an event as per the instructions for Feature 4
