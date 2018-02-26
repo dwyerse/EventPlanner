@@ -17,7 +17,7 @@ router.get('/password', isLoggedIn, function(req, res) {
 router.post('/password', isLoggedIn, function(req, res) {
 	if (req.body.inputPassword1 == req.body.inputPassword2) {
 		var {hash, salt} = hashing.createHash(req.body.inputPassword1);
-		var updatedUser = {name: req.user.name, email: req.user.email, password:hash, salt:salt};
+		var updatedUser = {name: req.user.name, email: req.user.email, password:hash, type:req.user.type, eventsAttended:req.user.eventsAttended, salt:salt};
 		userMapper.updateUserByEmail(req.user.email, updatedUser, function(error,result) {
 			if (!result) {
 				req.flash('err', 'User not found');
@@ -36,7 +36,7 @@ router.post('/password', isLoggedIn, function(req, res) {
 //Need to replace password string with req.user.password
 router.post('/account', isLoggedIn, function(req, res) {
 	if(validUpdateParams(req.body)){
-		var updatedUser =  {name: req.body.inputName, email: req.body.inputEmail, password:req.user.password, salt:req.user.salt};
+		var updatedUser =  {name: req.body.inputName, email: req.body.inputEmail, password:req.user.password, type:req.user.type, eventsAttended:req.user.eventsAttended, salt:req.user.salt};
 		userMapper.updateUserByEmail(req.user.email, updatedUser, function(error,result) {
 			if (!result) {
 				req.flash('err', 'User not found');
