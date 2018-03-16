@@ -27,27 +27,29 @@
                 <% } %>
             </div>
             <div id="buttons">
-                <a class="btn btn-primary" href="/edit/account" role="button">Edit Account</a>           
+                <a class="btn btn-primary" href="/edit/account" role="button">Edit Account</a>
                 <a class="btn btn-primary" href="/edit/password" role="button">Change Password</a>
             </div>
         </div>
+				<div class="col-sm-6">
+						<h3>User Actions</h3>
+						<div style="padding-top:5px;">
+								<a class="btn btn-primary" href="/events" role="button">View all Events</a>
+						</div>
+				</div>
         <% if (user.type=='admin') { %>
         <div class="col-sm-6">
-            <h3>Actions</h3>         
-            <div id="buttons">
-                <a class="btn btn-primary" href="/grant/admin" role="button" id='createBtn'>Grant Admin Access</a>
-            </div>
-            <div id="buttons" style="padding-top:10px;">
+            <h3>Admin Actions</h3>
+            <div style="padding-top:5px;">
+								<a class="btn btn-primary" href="/grant/admin" role="button" id='createBtn'>Grant Admin Access</a>
                 <a class="btn btn-primary" href="/previous/guests" role="button" id='createBtn'>View Previous Guests</a>
-            <br>
-            <div id="buttons">
-                <a class="btn btn-primary" href="/event/create" role="button">Create Event</a>
+								<a class="btn btn-primary" href="/event/create" role="button">Create Event</a>
             </div>
         </div>
         <% } %>
 
-    </div>     
-            
+    </div>
+
 
 </div>
 
