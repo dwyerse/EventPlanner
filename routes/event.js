@@ -12,6 +12,7 @@ EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
 const NEWEVENTS_SUB = 'Event_new';
 var mailer = require('../config/mailer');
+const ADMIN_ACCOUNT = 'admin';
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
 	var isSubscribed = req.user.subscriptions.includes(EVENT_SUB_PREFIX + req.params.event_id);
@@ -19,10 +20,12 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-		var isAdmin=false;
-		if(req.user.type=='admin'){isAdmin=true;}
-		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin});
+		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult) {
+			if(req.user.type == ADMIN_ACCOUNT){
+				res.render('eventAdmin', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin:true});
+			} else {
+				res.render('eventUser', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed});
+			}
 		});
 	});
 });
