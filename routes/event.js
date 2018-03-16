@@ -118,7 +118,7 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 						}
 					}
 					if(!userExists){
-						names.push("");
+						names.push('');
 					}
 					attending.push(result.invitees[i]);
 				}
