@@ -19,6 +19,7 @@ var registerGuest = require('./routes/registerGuest');
 var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
 var eventList = require('./routes/eventList');
+var buyTickets = require('./routes/buyTickets');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
@@ -77,6 +78,7 @@ app.use(flash());*/
 app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
+app.use('/event/tickets', buyTickets);
 app.use("/event", event);
 app.use("/create", createAcc);
 app.use("/grant", adminAccess);
