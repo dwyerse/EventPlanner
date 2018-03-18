@@ -50,6 +50,15 @@ describe('eventMapper testing suite', function() {
 			});
 	});
 
+	it('should find all events including created event', function(done) {
+		mapper.findAllEvents((events) => {
+			assert.notEqual(events, null);
+			assert.notEqual(events.length, 0);
+			assert.equal(events[events.length-1].title, TEST_EVENT.title);
+			done();
+		});
+	});
+
 	it('should update event details by event_id', function(done) {
 		var newEvent = new Event({title:'Updated Title',location:'Updated Location',date:'02/01/2018',description:'Updated description',
 			event_id:0,creators:TEST_EVENT.creators,invitees:TEST_EVENT.invitees});
@@ -95,7 +104,7 @@ describe('eventMapper testing suite', function() {
 			done();
 		});
 	});
-	
+
 	it('should update invitee list', function(done) {
 
 		var newInvitees = [{email:'updated@email.com', state:'Attending'},{email:'updated2@email.com', state:'Attending'}];
