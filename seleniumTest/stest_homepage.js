@@ -18,10 +18,10 @@ describe('homepage tests', function() {
 			resolve();
 		});
 	});
-	it('should have functioning create button ref /create/admin', function() {
+	it('should have functioning create button ref /create/account', function() {
 		return new Promise(function(resolve) {
 			var createRef = browser.getAttribute('#createBtn', 'href');
-			assert.equal(createRef, 'http://localhost:3000/create/admin');
+			assert.equal(createRef, 'http://localhost:3000/create/account');
 			resolve();
 		});
 	});
