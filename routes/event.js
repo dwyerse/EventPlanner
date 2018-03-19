@@ -360,11 +360,11 @@ function sendEmailToCatering(cateringEmail, guestDetails) {
 		mailer.sendMail(cateringEmail, [], 'Guest Details', body, function(err, info) {
 			if (err) 
 			{
-				req.flash('err', err)
+				req.flash('err', err);
 			}
 			else
 			{
-				req.flash('info', info)
+				req.flash('info', info);
 			}
 		});
 	}
