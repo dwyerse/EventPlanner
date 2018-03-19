@@ -79,7 +79,10 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 
 			for (var i = 0; i < result.invitees.length; i++)
 			{
-				guestDetails = guestDetails + result.invitees[i].email + ' ' + result.invitees[i].accessRequirements + ' ' + result.invitees[i].dietaryRestrictions + '\n';
+				if (result.invitees[i].state == 'attending')
+				{
+					guestDetails = guestDetails + 'Guest Email: ' + result.invitees[i].email + '\nGuest Access Requirements: ' + result.invitees[i].accessRequirements + '\nGuest Dietary Restrictions: ' + result.invitees[i].dietaryRestrictions + '\n\n';
+				}
 			}
 
 			sendEmailToCatering(req.body.email, guestDetails, function(error, information) {
@@ -364,7 +367,7 @@ function sendUpdateEmail(event) {
 
 function sendEmailToCatering(cateringEmail, guestDetails, callback) {
 
-	body = 'The following is a specification of guest table arrangements, dietary restrictions and access requirements for the upcoming event:\n' + guestDetails;
+	body = 'The following is a specification of guest table arrangements, dietary restrictions and access requirements for the upcoming event:\n\n' + guestDetails;
 
 	recipient = [];
 	recipient.push(cateringEmail);
