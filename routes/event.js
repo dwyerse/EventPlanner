@@ -12,6 +12,7 @@ EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
 const NEWEVENTS_SUB = 'Event_new';
 var mailer = require('../config/mailer');
+const ADMIN_ACCOUNT = 'admin';
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
 	var isSubscribed = req.user.subscriptions.includes(EVENT_SUB_PREFIX + req.params.event_id);
@@ -19,10 +20,12 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-		var isAdmin=false;
-		if(req.user.type=='admin'){isAdmin=true;}
-		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult){
-			res.render('event', {result,err: req.flash('err'),succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin});
+		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult) {
+			if(req.user.type == ADMIN_ACCOUNT){
+				res.render('eventAdmin', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin:true});
+			} else {
+				res.render('eventUser', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed});
+			}
 		});
 	});
 });
@@ -50,6 +53,42 @@ router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
 	});
+});
+
+router.get('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id, function(err, result) {
+		if (err) {
+			res.send(err);
+		}
+
+		res.render('sendGuestDetails', {result, err: req.flash('err'),succ: req.flash('succ')});
+	});
+});
+
+router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id, function(err, result) {
+		if (!result) {
+			req.flash('err', 'Event not found');
+		}
+		else if (err) {
+			res.send(err);
+		}
+		else
+		{
+			guestDetails = '';
+
+			for (var i = 0; i < result.invitees.length; i++)
+			{
+				guestDetails = guestDetails + result.invitees[i].email + ' ' + result.invitees[i].accessRequirements + ' ' + result.invitees[i].dietaryRestrictions + '\n';
+			}
+
+			sendEmailToCatering(res, guestDetails);
+			return res.redirect('/event/view/' + req.params.event_id);
+		}
+		res.redirect('/event/view/' + req.params.event_id);
+	});
+
+
 });
 
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
@@ -115,7 +154,7 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 						}
 					}
 					if(!userExists){
-						names.push("");
+						names.push('');
 					}
 					attending.push(result.invitees[i]);
 				}
@@ -310,6 +349,25 @@ function sendUpdateEmail(event) {
 			mailer.sendEventNotification(emails, event, 'updated');
 		}
 	});
+}
+
+function sendEmailToCatering(cateringEmail, guestDetails) {
+
+	body = 'The following is a specification of guest table arrangements, dietary restrictions and access requirements for the upcoming event:\n' + guestDetails;
+
+
+	if (cateringEmail) {
+		mailer.sendMail(cateringEmail, [], 'Guest Details', body, function(err, info) {
+			if (err) 
+			{
+				req.flash('err', err)
+			}
+			else
+			{
+				req.flash('info', info)
+			}
+		});
+	}
 }
 
 function getNewFilename(filepath, eventId){

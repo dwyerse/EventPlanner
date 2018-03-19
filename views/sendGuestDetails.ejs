@@ -1,5 +1,5 @@
 <head>
-		<title>Guest Details</title>
+		<title>Send Details to Catering</title>
 		<meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- Bootstrap CSS -->
@@ -17,40 +17,47 @@
 			</div>
 		<% } %>
 
-		<div class="row" style="padding-top: 10px;">
+		<br>
+		<h2>Send Details to Catering</h2>
+		<br>
 
-			<div class="form-group col-md-8">
-				<h2 style="word-break: break-all;">Guest Details</h2>
+		<form action="<%=result.event_id%>" method="post" id='form'>
+
+
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="email">Catering Contact Email</label>
+					<input type="text" class="form-control" name="email" required>
+				</div>
+
+				<div class="form-group col-md-6" style="padding-top: 32px; padding-left: 20px;">
+					<a href="#myModal" class="btn btn-primary" data-toggle="modal">Send Guest Details</a>
+				</div>
 			</div>
 			
-			<div class="form-group col-md-4">
-				<a href="/event/guests/send/<%=result.event_id%>"><button class="btn btn-primary">Send Details to Catering</button></a>
-			</div>
-		</div>
+			
+			 <!-- Modal HTML -->
+			 <div id="myModal" class="modal fade">
+				 <div class="modal-dialog modal-confirm">
+					 <div class="modal-content">
+						 <div class="modal-header">
+							 <h4 class="modal-title">Confirm Email Submission</h4>
+							 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						 </div>
+						 <div class="modal-body">
+							 <p>An email will be sent to catering containing guest details.</p>
+						 </div>
+						 <div class="modal-footer">
+							 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							 <button type="submit" class="btn btn-primary">Confirm</button>
+						 </div>
+					 </div>
+				 </div>
+			 </div>
 
-		<div class="row">
-			<div class="form-group col-md-12">
-					<table>
-						<% if (result.invitees.length > 0) {
-								for (var i=0; i < result.invitees.length; i++) { %>
-						   		<tr>
-							    	<td style="padding-right:70px;"><strong>Guest Email: </strong><%= result.invitees[i].email %></td>
-							    	<td style="padding-right:70px;"><strong>Status: </strong><%= result.invitees[i].state %></td>
-							    	<td style="padding-right:70px;"><strong>Access Requirements: </strong><%= result.invitees[i].accessRequirements %></td>
-							    	<td><strong>Dietary Restrictions: </strong><%= result.invitees[i].dietaryRestrictions %></td>
-							    	
-						   		</tr>
-							<% 	} 
 
-							}
-							else
-							{ %>
-							<h5>There are currently no guests registered for the event.</h5>
-						<% } %>
-					</table>
 
-			</div>
-		</div>
+		</form>
 
 		<a href="/event/view/<%=result.event_id%>"><button class="btn btn-primary">Go Back</button> </a>
 
