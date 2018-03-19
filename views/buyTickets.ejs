@@ -51,6 +51,7 @@
 				</div>
 				<form action="/payment" method="post" id='form'>
 					<input type="hidden" name="event_id" value=<%=event.event_id%> />
+					<input type="hidden" name="noTickets" id="noTickets" value=1 />
 					<div class="modal-body">
 						<p id="totalAmount"> Total amount : </p>
 						<div class="form-group">
@@ -58,8 +59,8 @@
 							<input type="text" class="form-control" name="cardNo" required/>
 						</div>
 						<div class="form-group">
-							<label for="csv" class="col-form-label">CSV</label>
-							<input type="text" class="form-control" name="csv" required/>
+							<label for="csv" class="col-form-label">CVV</label>
+							<input type="text" class="form-control" name="cvv" required/>
 						</div>
 						<div class="form-group">
 							<label for="billingName" class="col-form-label">Card Holder Name</label>
@@ -78,6 +79,7 @@
 		function calculateTotalAmount() {
 			var noTickets = $("#noTicketsSelect").val();
 			$("#totalAmount").text("Total Amount : €" + (noTickets* <%=ticketPrice%>));
+			$("#noTickets").val(noTickets);
 		}
 	</script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
