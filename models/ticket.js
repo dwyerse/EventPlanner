@@ -13,7 +13,8 @@ Ticket = mongoose.model('ticket',ticketSchema);
 ticketSchema.pre('save', function (next) {
 	if (this.isNew){
 		Ticket.count().then(res => {
-			this.ticket_id = '' +res; // Increment count
+			//TODO: Change this to eventId_ticketCount
+			this.ticket_id = '' +res;
 			next();
 		});
 	} else {
