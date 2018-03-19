@@ -7,6 +7,15 @@ function createEvent(title,location,date,description,event_id,creators,invitees,
 	});
 }
 
+function findAllEvents(callback) {
+	EventModel.find({}, function(err,events){
+		if(err){
+			return callback(err);
+		}
+		return callback(events);
+	});
+}
+
 function findEventBy_event_id(event_id,callback){
 	EventModel.findOne({ event_id:event_id }, function(err,res){
 		return callback(err,res);
@@ -119,4 +128,4 @@ function deleteAllEvents(callback){
 }
 
 
-module.exports = {createEvent,updateEventBy_event_id,updateInviteeList,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents,findAttendees,findInviteeEmails,findAttendeeEmails};
+module.exports = {createEvent,updateEventBy_event_id,updateInviteeList,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents,findAttendees,findInviteeEmails,findAttendeeEmails, findAllEvents};

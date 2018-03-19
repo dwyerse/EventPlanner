@@ -5,13 +5,13 @@ var hashing = require('../config/hashing');
 const NEWEVENTS_SUB = 'Event_new';
 
 /* GET create account page. */
-router.get('/admin', function(req, res) {
+router.get('/account', function(req, res) {
 	res.render('createAcc', {err: req.flash('err'), succ: req.flash('succ') });
 });
 
 //Handle POST requests
 //Can find form values at req.body.ELEMNAMEHERE
-router.post('/admin', function(req,res){
+router.post('/account', function(req,res){
 
 	if (validUserParams(req.body)) {
 		if (req.body.inputPassword === req.body.inputConfirmPassword) {
@@ -31,11 +31,11 @@ router.post('/admin', function(req,res){
 			});
 		} else {
 			req.flash('err', 'Passwords do not match');
-			res.redirect('/create/admin');
+			res.redirect('/create/account');
 		}
 	} else {
 		req.flash('err', 'Not all details provided');
-		res.redirect('/create/admin');
+		res.redirect('/create/account');
 	}
 });
 

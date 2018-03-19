@@ -18,9 +18,11 @@ var adminAccess = require("./routes/adminAccess");
 var registerGuest = require('./routes/registerGuest');
 var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
+var eventList = require('./routes/eventList');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
+
 
 
 //Import the mongoose module
@@ -81,6 +83,7 @@ app.use("/grant", adminAccess);
 app.use("/register", registerGuest);
 app.use("/previous", previousGuests);
 app.use("/invitationResponse", inviteResponse);
+app.use('/events', eventList);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
