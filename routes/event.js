@@ -82,7 +82,18 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 				guestDetails = guestDetails + result.invitees[i].email + ' ' + result.invitees[i].accessRequirements + ' ' + result.invitees[i].dietaryRestrictions + '\n';
 			}
 
-			sendEmailToCatering(res, guestDetails);
+			sendEmailToCatering(res, guestDetails, function(error, information) {
+				if (error) {
+					req.flash('error', error);
+				}
+				else
+				{
+					req.flash('information', information);
+				}
+
+
+			});
+
 			return res.redirect('/event/view/' + req.params.event_id);
 		}
 		res.redirect('/event/view/' + req.params.event_id);
@@ -351,21 +362,14 @@ function sendUpdateEmail(event) {
 	});
 }
 
-function sendEmailToCatering(cateringEmail, guestDetails) {
+function sendEmailToCatering(cateringEmail, guestDetails, callback) {
 
 	body = 'The following is a specification of guest table arrangements, dietary restrictions and access requirements for the upcoming event:\n' + guestDetails;
 
 
 	if (cateringEmail) {
 		mailer.sendMail(cateringEmail, [], 'Guest Details', body, function(err, info) {
-			if (err) 
-			{
-				req.flash('err', err);
-			}
-			else
-			{
-				req.flash('info', info);
-			}
+			callback(err, info);
 		});
 	}
 }
