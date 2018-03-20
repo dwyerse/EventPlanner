@@ -25,8 +25,11 @@
 			<br>
 			<%if(isAdmin){%>
 				<div class="col-sm" style="margin-bottom:5px;">
-				<a href="#contactModal" class="btn btn-info btn-sm" data-toggle="modal">Contact Users</a>
-			</div>
+					<a href="#contactModal" class="btn btn-info btn-sm" data-toggle="modal">Contact Users</a>
+				</div>
+				<div class="col-sm" style="margin-bottom:5px;">
+					<a href="/event/tickets/setup/<%=result.event_id%>" class="btn btn-info btn-sm">Ticket Setup</a>
+				</div>
 			<%}%>
 			<div class="col-sm">
 			<% if(!isSubscribed) { %>

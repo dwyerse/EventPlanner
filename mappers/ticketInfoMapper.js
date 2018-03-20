@@ -1,9 +1,13 @@
 TicketInformation = require('../models/ticketInformation');
 
 function addTicketInfo(newTicketInfoObj, callback){
-	var newTicketInfo = new TicketInformation(newTicketInfoObj);
-	newTicketInfo.save(function(err,result){
-		callback(err,result);
+	new TicketInformation(newTicketInfoObj).validate(function(err){
+		if(err) {
+			return callback(err,null);
+		}
+		TicketInformation.findOneAndUpdate({event_id:newTicketInfoObj.event_id}, newTicketInfoObj, {upsert:true, new:true}, function(err,result){
+			callback(err,result);
+		});
 	});
 }
 

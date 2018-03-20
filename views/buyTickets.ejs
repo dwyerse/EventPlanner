@@ -6,7 +6,7 @@
 <body class="container">
 	<% if(err && err.length > 0) { %>
 		<div class="alert alert-danger" role="alert">
-		  Error in details provided: <%= err %>
+		  Error in details provided: <%=err%>
 		</div>
 	<% } %>
 	<% if (succ && succ.length > 0) { %>
@@ -23,10 +23,19 @@
 		<h6>Ticket information</h6>
 	</div>
 	<div class= "row">
-		<p> Tickets still available: <%=ticketsAvailable%></p>
+		<p>General Tickets still available: <%=ticketInfo.tickets.available%></p>
 	</div>
 	<div class= "row">
-		<p> Price per ticket: €<%=ticketPrice%> </p>
+		<p>Price per ticket: €<%=ticketInfo.tickets.price%> </p>
+	</div>
+	<div class= "row">
+		<p>Tables still available: <%=ticketInfo.tables.available%></p>
+	</div>
+	<div class= "row">
+		<p>Price per table: €<%=ticketInfo.tables.price%> </p>
+	</div>
+	<div class= "row">
+		<p>Seats per table: <%=ticketInfo.tables.size%> </p>
 	</div>
 	<br>
 	<div class= "row">
@@ -34,11 +43,22 @@
 	</diV>
 	<div class= "row">
 		<select id="noTicketsSelect" name="noTicketsSelect">
-		<% for(let i=0; i<ticketsAvailable && i<8; i++) { %>
+		<% for(let i=0; i<ticketInfo.tickets.available && i<8; i++) { %>
 			 <option value="<%= i+1 %>"><%= i+1 %></option>
 		<% } %>
 		</select>
-	</div> <br> <br>
+	</div> <br>
+	<div class= "row">
+		<h5>Amount of tables required</h5>
+	</diV>
+	<div class= "row">
+		<select id="noTablesSelect" name="noTablesSelect">
+		<% for(let i=0; i<ticketInfo.tables.available && i<8; i++) { %>
+			 <option value="<%= i+1 %>"><%= i+1 %></option>
+		<% } %>
+		</select>
+	</div> <br>
+	<br>
 	<div class= "row">
 		<a href="#paymentModal" class="btn btn-primary" data-toggle="modal" onclick="calculateTotalAmount()">Pay Now</a>
 	</div>
@@ -49,18 +69,20 @@
 					<h4 class="modal-title">Payment</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
-				<form action="/payment" method="post" id='form'>
+				<form action="/event/tickets/<%=event.event_id%>" method="post" id='form'>
 					<input type="hidden" name="event_id" value=<%=event.event_id%> />
-					<input type="hidden" name="noTickets" id="noTickets" value=1 />
+					<input type="hidden" name="noTickets" id="noTickets" value=0 />
+					<input type="hidden" name="noTables" id="noTables" value=0 />
+					<input type="hidden" name="paymentAmount" id="paymentAmount" value=0 />
 					<div class="modal-body">
-						<p id="totalAmount"> Total amount : </p>
+						<p id="totalAmount"> Total amount : €0</p>
 						<div class="form-group">
 							<label for="cardNo">Card Number</label>
-							<input type="text" class="form-control" name="cardNo" required/>
+							<input type="number" class="form-control" name="cardNo" required/>
 						</div>
 						<div class="form-group">
 							<label for="csv" class="col-form-label">CVV</label>
-							<input type="text" class="form-control" name="cvv" required/>
+							<input type="number" class="form-control" name="cvv" required/>
 						</div>
 						<div class="form-group">
 							<label for="billingName" class="col-form-label">Card Holder Name</label>
@@ -78,8 +100,13 @@
 	<script>
 		function calculateTotalAmount() {
 			var noTickets = $("#noTicketsSelect").val();
-			$("#totalAmount").text("Total Amount : €" + (noTickets* <%=ticketPrice%>));
+			var ticketCost = noTickets * <%=ticketInfo.tickets.price%>;
+			var noTables = $("#noTablesSelect").val();
+			var tableCost = noTables * <%=ticketInfo.tables.price%>;
+			$("#totalAmount").text("Total Amount : €" + (ticketCost + tableCost));
 			$("#noTickets").val(noTickets);
+			$("#noTables").val(noTables);
+			$("#paymentAmount").val(ticketCost + tableCost);
 		}
 	</script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

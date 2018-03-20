@@ -22,8 +22,7 @@ var registerGuest = require('./routes/registerGuest');
 var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
 var eventList = require('./routes/eventList');
-var buyTickets = require('./routes/buyTickets');
-var payment = require('./routes/payment');
+var tickets = require('./routes/tickets');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
@@ -82,7 +81,7 @@ app.use(flash());*/
 app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
-app.use('/event/tickets', buyTickets);
+app.use('/event/tickets', tickets);
 app.use("/event", event);
 app.use("/create", createAcc);
 app.use("/grant", adminAccess);
@@ -90,7 +89,6 @@ app.use("/register", registerGuest);
 app.use("/previous", previousGuests);
 app.use("/invitationResponse", inviteResponse);
 app.use('/events', eventList);
-app.use('/payment', payment);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
