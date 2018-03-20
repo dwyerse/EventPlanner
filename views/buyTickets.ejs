@@ -1,12 +1,12 @@
 <head>
-	<title>Tickets</title>
+	<title>Buy Tickets</title>
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body class="container">
 	<% if(err && err.length > 0) { %>
 		<div class="alert alert-danger" role="alert">
-		  Error in details provided: <%=err%>
+		 <%=err%>
 		</div>
 	<% } %>
 	<% if (succ && succ.length > 0) { %>
@@ -43,8 +43,8 @@
 	</diV>
 	<div class= "row">
 		<select id="noTicketsSelect" name="noTicketsSelect">
-		<% for(let i=0; i<ticketInfo.tickets.available && i<8; i++) { %>
-			 <option value="<%= i+1 %>"><%= i+1 %></option>
+		<% for(let i=0; i<=ticketInfo.tickets.available && i<=10; i++) { %>
+			 <option value="<%= i %>"><%= i %></option>
 		<% } %>
 		</select>
 	</div> <br>
@@ -53,8 +53,8 @@
 	</diV>
 	<div class= "row">
 		<select id="noTablesSelect" name="noTablesSelect">
-		<% for(let i=0; i<ticketInfo.tables.available && i<8; i++) { %>
-			 <option value="<%= i+1 %>"><%= i+1 %></option>
+		<% for(let i=0; i<=ticketInfo.tables.available && i<=8; i++) { %>
+			 <option value="<%= i %>"><%= i %></option>
 		<% } %>
 		</select>
 	</div> <br>
