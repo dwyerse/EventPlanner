@@ -1,4 +1,5 @@
 /* eslint-disable */
+//Dependencies
 var express = require("express");
 var path = require("path");
 var favicon = require("serve-favicon");
@@ -9,6 +10,8 @@ var bodyParser = require("body-parser");
 var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session');
+
+//Routes
 var index = require("./routes/index");
 var edit = require('./routes/edit');
 var login = require("./routes/login");
@@ -19,6 +22,7 @@ var registerGuest = require('./routes/registerGuest');
 var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
 var eventList = require('./routes/eventList');
+var tickets = require('./routes/tickets');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
@@ -77,6 +81,7 @@ app.use(flash());*/
 app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
+app.use('/event/tickets', tickets);
 app.use("/event", event);
 app.use("/create", createAcc);
 app.use("/grant", adminAccess);

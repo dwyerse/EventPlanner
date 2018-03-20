@@ -12,5 +12,12 @@ function isAdminUser(req, res, next) {
 	}
 	res.redirect('/login/landingPage');
 }
+//Mock payment system validation
+//This would be replaced in production for some 3rd party card validation API call etc
+function validatePaymentDetails(cardNo, cvv, billingName, amount) {
+	if(cardNo && cvv && billingName && amount){
+		return true;
+	}
+}
 
-module.exports = {isLoggedIn, isAdminUser};
+module.exports = {isLoggedIn, isAdminUser, validatePaymentDetails};
