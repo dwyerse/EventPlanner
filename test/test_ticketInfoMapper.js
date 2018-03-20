@@ -18,7 +18,7 @@ const TEST_TICKETINFO = {
 };
 
 
-describe.only('ticketInfoMapper testing suite', function() {
+describe('ticketInfoMapper testing suite', function() {
 	before(function(){
 		mongoose.connect(APP_DB);
 	});
