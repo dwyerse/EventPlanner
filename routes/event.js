@@ -105,14 +105,14 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 
 	// Call EventMapper function to delete event and any dependencies
-
-	eventMapper.deleteEvent(req.params.event_id, function(err) {
+	eventMapper.deleteEvent(req.params.event_id, function(err, result) {
 
 		if (err) {
 			req.flash('err', err);
 		}
 		else {
 			req.flash('succ', 'Event was successfully deleted.');
+			sendDeleteNotification(result);
 			res.redirect('/events');
 		}
 
@@ -294,6 +294,16 @@ function sendCreateNotfication(event){
 	userMapper.findSubscribedUsers(NEWEVENTS_SUB, function(err,subEmails) {
 		if(!err){
 			return mailer.sendEventNotification(subEmails, event, 'created');
+		}
+	});
+}
+
+function sendDeleteNotification(event) {
+	var sub = EVENT_SUB_PREFIX + event.event_id;
+
+	userMapper.findSubscribedUsers(sub, function(err, subEmails) {
+		if (!err) {
+			return mailer.sendEventNotification(subEmails, event, 'cancelled');
 		}
 	});
 }

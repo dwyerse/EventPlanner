@@ -17,8 +17,8 @@ function deleteEvent(event_id, callback) {
 			return callback(err, []);
 		}
 
-		res.remove(function(err) {
-			return callback(err);
+		res.remove(function(err, res) {
+			return callback(err, res);
 		});
 	});
 }
