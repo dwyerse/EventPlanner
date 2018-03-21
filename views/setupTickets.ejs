@@ -24,13 +24,13 @@
 		<div class="form-group row">
 			<div class= "col-xs-3">
 				<label for="totalTables">Number Of Tables</label>
-				<input type="number" class="form-control" name="totalTables" id="totalTables" onchange= "calculateTotalTickets()" required/>
+				<input type="number" class="form-control" name="totalTables" id="totalTables" pattern="\d+" onchange= "calculateTotalTickets()" required/>
 			</div>
 		</div>
 		<div class="form-group row">
 			<div class= "col-xs-3">
 				<label for="tableSize">Tickets per Table</label>
-				<input type="number" class="form-control" name="tableSize" id="tableSize" onchange="calculateTotalTickets()" required/>
+				<input type="number" class="form-control" name="tableSize" id="tableSize" pattern="\d+" onchange="calculateTotalTickets()" required/>
 			</div>
 		</div>
 		<div class="row">
@@ -41,13 +41,13 @@
 				<span class="input-group-text">€</span>
 			</div>
 			<div class= "col-xs-3">
-				<input type="number" class="form-control" name="tablePrice" required/>
+				<input type="number" class="form-control" name="tablePrice" pattern="\d+" required/>
 			</div>
 		</div>
 		<div class="form-group row">
 			<div class= "col-xs-3">
 				<label for="totalTickets">Number of General Tickets</label>
-				<input type="number" class="form-control" name="totalTickets" id="totalTickets" onchange="calculateTotalTickets()" required/>
+				<input type="number" class="form-control" name="totalTickets" id="totalTickets" pattern="\d+" onchange="calculateTotalTickets()" required/>
 			</div>
 		</div>
 		<div class="row">
@@ -58,7 +58,7 @@
 				<span class="input-group-text">€</span>
 			</div>
 			<div class= "col-xs-3">
-				<input type="number" class="form-control" name="ticketPrice" required/>
+				<input type="number" class="form-control" name="ticketPrice" pattern="\d+" required/>
 			</div>
 		</div> <br>
 		<h6 id="totalTicketsInForm">Total Amount Of Tickets: 0</h6>
@@ -67,8 +67,11 @@
 	</form>
 	<script>
 		function calculateTotalTickets() {
-			var tableTickets = $("#totalTables").val() * $("#tableSize").val();
-			var noTickets = parseFloat(tableTickets) + parseFloat($("#totalTickets").val());
+			var totalTables =  (!$("#totalTables").val())? 0 : $("#totalTables").val();
+			var tableSize =  (!$("#tableSize").val())? 0 : $("#tableSize").val();
+			var tableTickets = totalTables * tableSize;
+			var generalTickets = (!$("#totalTickets").val())? 0 : $("#totalTickets").val();
+			var noTickets = parseFloat(generalTickets) + parseFloat(tableTickets);
 			$("#totalTicketsInForm").text("Total Amount Of Tickets: "+noTickets);
 		}
 	</script>

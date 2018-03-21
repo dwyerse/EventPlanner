@@ -32,34 +32,24 @@ router.post('/:event_id', isLoggedIn, function(req, res) {
 				req.flash('err', err);
 				return res.redirect('/event/tickets/'+event_id);
 			}
-			let newPaymentObj = {event_id:event._id, amount: req.body.paymentAmount, user_id: req.user._id};
-			paymentMapper.addPayment(newPaymentObj, function(err) {
+			ticketInfoMapper.getTicketInfo(event_id, function(err, ticketInfo){
 				if(err){
 					req.flash('err', err);
 					return res.redirect('/event/tickets/'+event_id);
 				}
-				ticketInfoMapper.getTicketInfo(event_id, function(err, ticketInfo){
+				let newPaymentObj = {event_id:event._id, amount: req.body.paymentAmount, user_id: req.user._id};
+				paymentMapper.addPayment(newPaymentObj, function(err) {
 					if(err){
 						req.flash('err', err);
 						return res.redirect('/event/tickets/'+event_id);
 					}
-					generateTickets(ticketInfo, req.user._id, event._id, req.body.noTickets, req.body.noTables, function(tickets){
-						ticketMapper.addTickets(tickets, function(err){
-							if(err){
-								req.flash('err', err);
-								return res.redirect('/event/tickets/'+event_id);
-							}
-							let ticketsAvailable = ticketInfo.tickets.available - req.body.noTickets;
-							let tablesAvailable = ticketInfo.tables.available - req.body.noTables;
-							ticketInfoMapper.updateTicketAvailability(event._id, ticketsAvailable, tablesAvailable, function(err){
-								if(err){
-									req.flash('err', err);
-									return res.redirect('/event/tickets/'+event_id);
-								}
-								req.flash('succ', 'Succesfully Purchased Tickets');
-								return res.redirect('/event/view/'+event_id);
-							});
-						});
+					addTickets(ticketInfo, req.user._id, event._id, event_id, req.body.noTickets, req.body.noTables, function(err){
+						if(err){
+							req.flash('err', err);
+							return res.redirect('/event/tickets/'+event_id);
+						}
+						req.flash('succ', 'Succesfully Purchased Tickets');
+						return res.redirect('/event/view/'+event_id);
 					});
 				});
 			});
@@ -119,6 +109,24 @@ function generateTickets(ticketInfo, userID, event_id, noTickets, noTables,callb
 		tickets.push(newTicketObj);
 	}
 	callback(tickets);
+}
+
+function addTickets(ticketInfo, userID, eventObjectID, event_id, noTickets, noTables,callback){
+	generateTickets(ticketInfo, userID, eventObjectID, noTickets, noTables, function(tickets){
+		ticketMapper.addTickets(tickets, function(err){
+			if(err){
+				return callback(err);
+			}
+			let ticketsAvailable = ticketInfo.tickets.available - noTickets;
+			let tablesAvailable = ticketInfo.tables.available - noTables;
+			ticketInfoMapper.updateTicketAvailability(event_id, ticketsAvailable, tablesAvailable, function(err){
+				if(err){
+					return callback(err);
+				}
+				return callback(null);
+			});
+		});
+	});
 }
 
 module.exports = router;
