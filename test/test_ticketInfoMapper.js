@@ -56,6 +56,15 @@ describe('ticketInfoMapper testing suite', function() {
 		});
 	});
 
+	it('should update ticketInfo by event_id', function(done) {
+		mapper.updateTicketAvailability(TEST_TICKETINFO.event_id, 50, TEST_TICKETINFO.tables.available, function(err,res) {
+			assert.equal(err, null);
+			assert.equal(res.event_id, TEST_TICKETINFO.event_id);
+			assert.equal(res.tickets.available, 50);
+			done();
+		});
+	});
+
 	it('should remove test ticketInfo from the collection', function(done) {
 		mapper.deleteTicketInfo(TEST_TICKETINFO.event_id, function(err) {
 			assert.equal(err,null);

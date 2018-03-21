@@ -4,9 +4,12 @@ const isLoggedIn = require('../config/utils').isLoggedIn;
 const isAdminUser = require('../config/utils').isAdminUser;
 const validatePaymentDetails = require('../config/utils').validatePaymentDetails;
 const eventMapper = require('../mappers/eventMapper');
-//const ticketMapper = require('../mappers/ticketMapper');
+const ticketMapper = require('../mappers/ticketMapper');
 const paymentMapper = require('../mappers/paymentMapper');
 const ticketInfoMapper = require('../mappers/ticketInfoMapper');
+
+const GENERAL_TICKET_TYPE = 'Ticket';
+const TABLE_TICKET_TYPE = 'Table';
 
 router.get('/:event_id', isLoggedIn, function(req, res) {
 	let event_id = req.params.event_id;
@@ -23,7 +26,6 @@ router.get('/:event_id', isLoggedIn, function(req, res) {
 
 router.post('/:event_id', isLoggedIn, function(req, res) {
 	let event_id = req.params.event_id;
-	//req.body.noTickets | req.body.noTables
 	if(validatePaymentDetails(req.body.cardNo, req.body.cvv, req.body.billingName, req.body.paymentAmount)) {
 		let newPaymentObj = {event_id:event_id, amount: req.body.paymentAmount, user_id: req.user._id};
 		paymentMapper.addPayment(newPaymentObj, function(err) {
@@ -31,10 +33,30 @@ router.post('/:event_id', isLoggedIn, function(req, res) {
 				req.flash('err', err);
 				return res.redirect('/event/tickets/'+event_id);
 			}
-			//TODO: Create tickets
-			//TODO: Update Ticket Info -available
-			req.flash('succ', 'Succesfully Purchased Tickets');
-			return res.redirect('/event/view/'+event_id);
+			ticketInfoMapper.getTicketInfo(event_id, function(err, ticketInfo){
+				if(err){
+					req.flash('err', err);
+					return res.redirect('/event/tickets/'+event_id);
+				}
+				generateTickets(ticketInfo, req.user._id, event_id, req.body.noTickets, req.body.noTables, function(tickets){
+					ticketMapper.addTickets(tickets, function(err){
+						if(err){
+							req.flash('err', err);
+							return res.redirect('/event/tickets/'+event_id);
+						}
+						let ticketsAvailable = ticketInfo.tickets.available - req.body.noTickets;
+						let tablesAvailable = ticketInfo.tables.available - req.body.noTables;
+						ticketInfoMapper.updateTicketAvailability(event_id, ticketsAvailable, tablesAvailable, function(err){
+							if(err){
+								req.flash('err', err);
+								return res.redirect('/event/tickets/'+event_id);
+							}
+							req.flash('succ', 'Succesfully Purchased Tickets');
+							return res.redirect('/event/view/'+event_id);
+						});
+					});
+				});
+			});
 		});
 	} else {
 		req.flash('err', 'Invalid Payment Details');
@@ -45,9 +67,18 @@ router.post('/:event_id', isLoggedIn, function(req, res) {
 router.get('/setup/:event_id', isLoggedIn, isAdminUser, function(req, res) {
 	let event_id = req.params.event_id;
 	eventMapper.findEventBy_event_id(event_id, function(err,event) {
+		if(err){
+			req.flash('err', err);
+			return res.redirect('/event/tickets/setup/'+event_id);
+		}
 		ticketInfoMapper.getTicketInfo(event_id, function(err2, ticketInfo) {
-			if(!ticketInfo){
-				ticketInfo = {event_id:event_id, ticketInfo};
+			if(ticketInfo){
+				req.flash('err', 'Table settings already provided');
+				return res.redirect('/event/view/'+event_id);
+			}
+			else if(err2){
+				req.flash('err', err2);
+				return res.redirect('/event/tickets/setup/'+event_id);
 			}
 			res.render('setupTickets', {event, ticketInfo, err: req.flash('err'),succ: req.flash('succ') });
 		});
@@ -68,5 +99,20 @@ router.post('/setup/:event_id', isLoggedIn, isAdminUser, function(req, res) {
 		}
 	});
 });
+
+function generateTickets(ticketInfo, userID, event_id, noTickets, noTables,callback){
+	let newTicketObj = {price: ticketInfo.tickets.price, event_id:event_id, holder:userID, type: GENERAL_TICKET_TYPE};
+	let totalTicketsToGenerate = parseFloat(noTables) + parseFloat(noTickets);
+	let tickets = [];
+	for(let i =0; i<totalTicketsToGenerate; i++){
+		newTicketObj = {price: ticketInfo.tickets.price, event_id:event_id, holder:userID, type: GENERAL_TICKET_TYPE};
+		if(i==noTickets) {
+			newTicketObj.type = TABLE_TICKET_TYPE;
+			newTicketObj.price = ticketInfo.tables.price;
+		}
+		tickets.push(newTicketObj);
+	}
+	callback(tickets);
+}
 
 module.exports = router;

@@ -3,7 +3,6 @@ var mapper = require('../mappers/ticketMapper');
 var mongoose = require('mongoose');
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 const TEST_TICKET = {
-	'ticket_id': '-1',
 	'price': 30,
 	'event_id': '99999',
 	'holder': '999999',
@@ -11,7 +10,7 @@ const TEST_TICKET = {
 };
 
 
-describe('ticketMapper testing suite', function() {
+describe.only('ticketMapper testing suite', function() {
 	before(function(){
 		mongoose.connect(APP_DB);
 	});
@@ -26,17 +25,17 @@ describe('ticketMapper testing suite', function() {
 	});
 
 	it('should add ticket to the database without error', function(done) {
-		mapper.addTicket(TEST_TICKET, function(err,res) {
+		mapper.addTickets([TEST_TICKET], function(err,res) {
 			assert.equal(err,null);
-			ticket_id = res.ticket_id;
-			assert.equal(res.event_id, TEST_TICKET.event_id);
+			ticket_id = res[0]._id;
+			assert.equal(res[0].event_id, TEST_TICKET.event_id);
 			done();
 		});
 	});
 
 	it('should return an error if a required field is null ', function(done) {
-		let invalidTicketObj = {ticket_id:0, price:10};
-		mapper.addTicket(invalidTicketObj,function(err){
+		let invalidTicketObj = {price:10};
+		mapper.addTickets([invalidTicketObj],function(err){
 			assert.notEqual(err,null);
 			done();
 		});
