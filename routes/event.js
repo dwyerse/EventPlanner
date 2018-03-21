@@ -98,6 +98,28 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	}
 });
 
+
+router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+	
+	// Get all invitees of event and email them to say that event has been cancelled
+
+
+	// Call EventMapper function to delete event and any dependencies
+
+	eventMapper.deleteEvent(req.params.event_id, function(err) {
+
+		if (err) {
+			req.flash('err', err);
+		}
+		else {
+			req.flash('succ', 'Event was successfully deleted.');
+			res.redirect('/events');
+		}
+
+	});
+});
+
+
 //Attendee Report
 router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
