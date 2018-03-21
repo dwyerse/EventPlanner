@@ -1,18 +1,38 @@
 var assert = require('assert');
 var mapper = require('../mappers/ticketMapper');
+var eventMapper = require('../mappers/eventMapper');
 var mongoose = require('mongoose');
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 const TEST_TICKET = {
 	'price': 30,
-	'event_id': '99999',
+	'event': '99999',
 	'holder': '999999',
 	'type': 'attendee'
 };
-
+const TEST_EVENT = {
+	title:'Test Event', location:'Test Location',
+	date:'01/01/2018',description:'test description',event_id:0,
+	creators:[],invitees:[] };
 
 describe('ticketMapper testing suite', function() {
-	before(function(){
+
+	var testEvent_id = -1;
+	before(function(done){
 		mongoose.connect(APP_DB);
+		//event_id is Event Ref so must be valid event ObjectId
+		eventMapper.createEvent(TEST_EVENT.title,TEST_EVENT.location,TEST_EVENT.date,TEST_EVENT.description,0,
+			TEST_EVENT.creators,TEST_EVENT.invitees,function(err,res){
+				testEvent_id = res.event_id;
+				TEST_TICKET.event = res._id;
+				assert.equal(err,null);
+				done();
+			});
+	});
+
+	after(function() {
+		eventMapper.deleteEventByEventId(testEvent_id, function(err){
+			assert.equal(err,null);
+		});
 	});
 
 	let ticket_id = 1;
@@ -28,7 +48,7 @@ describe('ticketMapper testing suite', function() {
 		mapper.addTickets([TEST_TICKET], function(err,res) {
 			assert.equal(err,null);
 			ticket_id = res[0]._id;
-			assert.equal(res[0].event_id, TEST_TICKET.event_id);
+			assert.equal(res[0].event, TEST_TICKET.event);
 			done();
 		});
 	});

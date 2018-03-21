@@ -7,7 +7,7 @@ function addTickets(newTickets, callback){
 }
 
 function getUserTickets(user_id, callback){
-	Ticket.find({holder:user_id}, function(err, tickets) {
+	Ticket.find({holder:user_id}).populate('event').exec(function(err,tickets) {
 		callback(err,tickets);
 	});
 }

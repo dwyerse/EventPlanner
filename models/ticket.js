@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ticketSchema = new Schema({
 	price: {type: Number, required:true},
-	event_id: { type:String , required:true},
+	event: { type: Schema.Types.ObjectId, ref: 'event' },
 	holder: { type: String, required:true},
 	type:{type:String}
 });
