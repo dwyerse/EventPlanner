@@ -10,7 +10,7 @@ const TEST_TICKET = {
 };
 
 
-describe.only('ticketMapper testing suite', function() {
+describe('ticketMapper testing suite', function() {
 	before(function(){
 		mongoose.connect(APP_DB);
 	});
