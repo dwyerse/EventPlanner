@@ -4,6 +4,7 @@ var eventMapper = require('../mappers/eventMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
+var paymentMapper = require('../mappers/paymentMapper');
 var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
@@ -54,6 +55,45 @@ router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
 	});
 });
+
+router.get('/payments/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,eventResult){
+		if(err){
+			res.send(err);
+		}
+		paymentMapper.getAllPayments(function(err,paymentResult){
+			if(err){
+				res.send(err);
+			}
+			userMapper.allUsers(function(err,userResult){
+				let names = [];
+				let payments = [];
+				let paymentTotal = 0;
+				for (let i = 0; i < paymentResult.length; i++) {
+					if(paymentResult[i].event_id===eventResult._id+''){
+						payments.push(paymentResult[i]);
+						paymentTotal+=paymentResult[i].amount;
+						let userExists = false;
+						for (let j = 0; j < userResult.length; j++) {
+							if(userResult[j]._id+''===paymentResult[i].user_id+''){
+								names.push(userResult[j].name);
+								userExists=true;
+								break;
+							}
+						}
+						if(!userExists){
+							names.push('');
+						}
+					}
+				}
+				res.render('eventPayments', {event:req.params.event_id,paymentTotal, 
+					names, payments, err: req.flash('err'),succ: req.flash('succ')});
+			});
+		});
+	});
+
+});
+
 
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
