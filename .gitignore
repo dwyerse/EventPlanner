@@ -63,3 +63,5 @@ errorShots/
 # Output from mongodb
 data/
 
+#JetBrains Config Files
+.idea/
