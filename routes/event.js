@@ -85,7 +85,7 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 				}
 			}
 
-			sendEmailToCatering(req.body.email, guestDetails, function(error, information) {
+			sendEmailToCatering(req.body.cateringEmail, guestDetails, function(error, information) {
 				if (error) {
 					req.flash('error', error);
 				}
