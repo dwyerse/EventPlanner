@@ -1,4 +1,5 @@
 /* eslint-disable */
+//Dependencies
 var express = require("express");
 var path = require("path");
 var favicon = require("serve-favicon");
@@ -9,6 +10,8 @@ var bodyParser = require("body-parser");
 var passport = require('passport');
 var flash = require('connect-flash');
 var session = require('express-session');
+
+//Routes
 var index = require("./routes/index");
 var edit = require('./routes/edit');
 var login = require("./routes/login");
@@ -19,6 +22,8 @@ var registerGuest = require('./routes/registerGuest');
 var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
 var eventList = require('./routes/eventList');
+var eventTickets = require('./routes/eventTickets');
+var ticketList = require('./routes/ticketList');
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
@@ -77,6 +82,7 @@ app.use(flash());*/
 app.use("/",index);
 app.use("/edit", edit);
 app.use("/login", login);
+app.use('/event/tickets', eventTickets);
 app.use("/event", event);
 app.use("/create", createAcc);
 app.use("/grant", adminAccess);
@@ -84,6 +90,7 @@ app.use("/register", registerGuest);
 app.use("/previous", previousGuests);
 app.use("/invitationResponse", inviteResponse);
 app.use('/events', eventList);
+app.use('/tickets', ticketList);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
