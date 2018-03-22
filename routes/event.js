@@ -100,23 +100,37 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 
 router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
-	
-	// Get all invitees of event and email them to say that event has been cancelled
 
-
-	// Call EventMapper function to delete event and any dependencies
-	eventMapper.deleteEvent(req.params.event_id, function(err, result) {
-
-		if (err) {
-			req.flash('err', err);
-		}
-		else {
-			req.flash('succ', 'Event was successfully deleted.');
-			sendDeleteNotification(result);
-			res.redirect('/events');
+	eventMapper.findEventBy_event_id(req.params.event_id, function(error, eventResult) {
+		if(error){
+			res.send(error);
 		}
 
+		// Get all invitees of event and email them to say that event has been cancelled
+		sendDeleteNotification(eventResult, function(notificationError, eventResult) {
+
+			if (notificationError)
+			{
+				req.flash('err', notificationError);
+			}
+			// Call EventMapper function to delete event and any dependencies
+			eventMapper.deleteEvent(eventResult.event_id, function(err) {
+				if (err) {
+					req.flash('err', err);
+				}
+				else {
+					req.flash('succ', 'Event was successfully deleted.');
+				
+					res.redirect('/events');
+				}
+
+			});
+
+		});
+		
 	});
+
+	
 });
 
 
@@ -298,14 +312,14 @@ function sendCreateNotfication(event){
 	});
 }
 
-function sendDeleteNotification(event) {
-	var sub = EVENT_SUB_PREFIX + event.event_id;
-
-	userMapper.findSubscribedUsers(sub, function(err, subEmails) {
-		if (!err) {
-			return mailer.sendEventNotification(subEmails, event, 'cancelled');
+function sendDeleteNotification(event, callback) {
+	getRecipientEmails('all', event.event_id, function(err,emails) {
+		if(!err && emails && emails.length>0){
+			mailer.sendEventNotification(emails, event, 'cancelled');
+			callback(err, event);
 		}
 	});
+		
 }
 
 router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
@@ -322,10 +336,31 @@ router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
 });
 
 function getRecipientEmails(select, event_id, callback){
-	if(select == 'attendees'){
+	if (select == 'all') {
+		var recipients;
+
+		eventMapper.findAttendeeEmails(event_id, function(err, attendees){
+
+			recipients = attendees;
+
+			eventMapper.findInviteeEmails(event_id, function(err,invitees){
+
+				recipients = recipients.concat(invitees);
+				
+				var sub = EVENT_SUB_PREFIX + event_id;
+				userMapper.findSubscribedUsers(sub, function(err , subscribers){
+
+					recipients = recipients.concat(subscribers);
+
+					callback(err,recipients);
+				});
+			});
+		});
+	}
+	else if(select == 'attendees'){
 		eventMapper.findAttendeeEmails(event_id, function(err, attendees){
 			callback(err,attendees);
-		});
+		});	
 	} else if(select == 'invitees') {
 		eventMapper.findInviteeEmails(event_id, function(err,invitees){
 			callback(err,invitees);
