@@ -14,6 +14,11 @@ router.get('/landingPage', isLoggedIn, function(req, res) {
 	});
 });
 
+router.get('/logout', isLoggedIn, function(req, res){
+	req.logout();
+	res.redirect('/');
+});
+
 router.post('/authenticate', passport.authenticate('local-login', {
 	successRedirect : '/login/landingPage', // redirect to the secure profile section
 	failureRedirect : '/login', // redirect back to the login page if there is an error
