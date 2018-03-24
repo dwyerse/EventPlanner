@@ -32,17 +32,13 @@ router.get('/guests',isLoggedIn, isAdminUser, function(req, res) {
 				}
 
 				finalResult.push([filteredResult[i], amountSpent]);
-
 			}
 
-			finalResult.sort(function(current, next){return next[1] - current[1]});
+			finalResult.sort(function(current, next){return next[1] - current[1];});
 
 			res.render('previousGuests', {result: finalResult,err: req.flash('err'),succ: req.flash('succ')});
 		
 		});
-
-
-
 	});
 });
 
