@@ -30,14 +30,58 @@
 
 		<div class="row">
 			<div class="form-group col-md-12">
+				<table class="table">
+					<colgroup>
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+					</colgroup>
+
+					<thead>
+						<tr>
+							<th style="padding-right:70px;">Guest Email</th>
+							<th style="padding-right:70px;">Status</th>
+							<th style="padding-right:70px;">Access Requirements</th>
+							<th style="padding-right:70px;">Dietary Restrictions</th>
+							<th style="padding-right:70px;">Table No.</th>
+
+						</tr>
+					</thead>
+				</table>
+
+				<div style="height: 350px; overflow-y:auto;">
+
 					<table>
+						<colgroup>
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+						</colgroup>
+
+						<thead>
+							<tr>
+								<th style="padding-right:70px;"></th>
+								<th style="padding-right:70px;"></th>
+								<th style="padding-right:70px;"></th>
+								<th style="padding-right:70px;"></th>
+								<th style="padding-right:70px;"></th>
+
+							</tr>
+						</thead>
+
+						<tbody>
 						<% if (result.invitees.length > 0) {
 								for (var i=0; i < result.invitees.length; i++) { %>
 						   		<tr>
-							    	<td style="padding-right:70px;"><strong>Guest Email: </strong><%= result.invitees[i].email %></td>
-							    	<td style="padding-right:70px;"><strong>Status: </strong><%= result.invitees[i].state %></td>
-							    	<td style="padding-right:70px;"><strong>Access Requirements: </strong><%= result.invitees[i].accessRequirements %></td>
-							    	<td><strong>Dietary Restrictions: </strong><%= result.invitees[i].dietaryRestrictions %></td>
+							    	<td style="padding-right:70px;"><%= result.invitees[i].email %></td>
+							    	<td style="padding-right:70px;"><%= result.invitees[i].state %></td>
+							    	<td style="padding-right:70px;"><strong><%= result.invitees[i].accessRequirements %></td>
+							    	<td><%= result.invitees[i].dietaryRestrictions %></td>
+							    	<td></td>
 							    	
 						   		</tr>
 							<% 	} 
@@ -47,8 +91,9 @@
 							{ %>
 							<h5>There are currently no guests registered for the event.</h5>
 						<% } %>
+						</tbody>
 					</table>
-
+				</div>
 			</div>
 		</div>
 
