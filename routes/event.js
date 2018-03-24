@@ -107,7 +107,7 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		}
 
 		// Get all invitees of event and email them to say that event has been cancelled
-		sendDeleteNotification(eventResult, function(notificationError, eventResult) {
+		sendDeleteNotification(eventResult, function(notificationError) {
 
 			if (notificationError)
 			{
@@ -125,12 +125,8 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 				}
 
 			});
-
-		});
-		
+		});	
 	});
-
-	
 });
 
 
@@ -316,8 +312,9 @@ function sendDeleteNotification(event, callback) {
 	getRecipientEmails('all', event.event_id, function(err,emails) {
 		if(!err && emails && emails.length>0){
 			mailer.sendEventNotification(emails, event, 'cancelled');
-			callback(err, event);
 		}
+
+		callback(err);
 	});
 		
 }
