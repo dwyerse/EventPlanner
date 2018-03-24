@@ -11,7 +11,6 @@ userSchema.add({
 		event_id: Number,
 		event_title: String
 	}],
-	amountSpent: {type: Number, required: true},
 	salt:{ type: String, required: true },
 	subscriptions:{ type: [String] }
 });

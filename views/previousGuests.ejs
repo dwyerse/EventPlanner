@@ -23,11 +23,21 @@
 
 		<div class="form-group col-md-12">
 			<table class="table">
+				<colgroup>
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+				</colgroup>
+
 				<thead>
 					<tr>
-						<th colspan="2" style="padding-right:140px;"></th>
-						<th colspan="2" style="padding-right:140px;">Events Attended</th>
-						<th colspan="2" style="padding-right:70px;"></th>
+						<th style="padding-right:70px;"></th>
+						<th style="padding-right:70px;"></th>
+						<th style="padding-right:70px;"></th>
+						<th style="padding-right:70px;">Events Attended</th>
+						<th style="padding-right:70px;"></th>
 					</tr>
 					<tr>
 						<th style="padding-right:70px; padding-bottom:0px; border:none;">Guest Name</th>
@@ -36,11 +46,20 @@
 						<th style="padding-right:70px; padding-bottom:0px; border:none;">Event Title</th>
 						<th style="padding-right:70px; padding-bottom:0px; border:none;">Amount Donated</th>
 					</tr>
+
 				</thead>
 			</table>
 
 			<div style="height: 350px; overflow-y:auto;">
 				<table class="table">
+					<colgroup>
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+					</colgroup>
+
 					<thead>
 						<tr>
 							<th style="padding-top: 0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
@@ -53,12 +72,12 @@
 					<tbody>
 						<%	for (var i=0; i < result.length; i++) { %>
 					   		<tr>
-					   			<td><%= result[i].name %></td>
-						    	<td><%= result[i].email %></td>
-						    	<td><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_id %><br><% } %></td>
+					   			<td><%= result[i][0].name %></td>
+						    	<td><%= result[i][0].email %></td>
+						    	<td><% for (var j=0; j < result[i][0].eventsAttended.length; j++) { %><%= result[i][0].eventsAttended[j].event_id %><br><% } %></td>
 
-						    	<td><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_title %><br><% } %></td>
-						    	<td></td>
+						    	<td><% for (var j=0; j < result[i][0].eventsAttended.length; j++) { %><%= result[i][0].eventsAttended[j].event_title %><br><% } %></td>
+						    	<td><% if (result[i][1]) { %><%= result[i][1] %><% } else { %><%= 'None' %><% } %></td>
 						    	
 					   		</tr>
 						<%}%>

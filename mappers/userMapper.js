@@ -5,7 +5,6 @@ const ADMINUSER= {
 	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
 	'type' : 'admin',
 	'eventsAttended' : [],
-	'amountSpent' : 0,
 	'salt' : 'a548ce51589fff7a',
 	'subscriptions' : []
 };
@@ -16,8 +15,8 @@ function allUsers(callback){
 	});
 }
 
-function addUser(name,email,password,type,salt,subscriptions,eventsAttended, amountSpent, callback){
-	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt,subscriptions:subscriptions,eventsAttended:eventsAttended, amountSpent:amountSpent});
+function addUser(name,email,password,type,salt,subscriptions,eventsAttended, callback){
+	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt,subscriptions:subscriptions,eventsAttended:eventsAttended});
 	newUser.save(function (err,product) {
 		return callback(err,product);
 	});
@@ -48,7 +47,6 @@ function updateUserByEmail(email,userObj,callback){
 		res.type = userObj.type;
 		res.password = userObj.password;
 		res.eventsAttended = userObj.eventsAttended;
-		res.amountSpent = userObj.amountSpent;
 		res.salt = userObj.salt;
 		res.subscriptions = userObj.subscriptions;
 		res.save(function (err, updatedUser) {
