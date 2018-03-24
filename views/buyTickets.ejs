@@ -1,0 +1,118 @@
+<head>
+	<title>Buy Tickets</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="container">
+	<% if(err && err.length > 0) { %>
+		<div class="alert alert-danger" role="alert">
+		 <%=err%>
+		</div>
+	<% } %>
+	<% if (succ && succ.length > 0) { %>
+		<div class="alert alert-success" role="alert">
+			<%= succ %>
+		</div>
+	<% } %>
+	<br>
+	<div class= "row">
+		<h2><%=event.title%> Tickets</h2>
+	</div>
+	<br>
+	<div class= "row">
+		<h6>Ticket information</h6>
+	</div>
+	<div class= "row">
+		<p>General Tickets still available: <%=ticketInfo.tickets.available%></p>
+	</div>
+	<div class= "row">
+		<p>Price per ticket: €<%=ticketInfo.tickets.price%> </p>
+	</div>
+	<div class= "row">
+		<p>Tables still available: <%=ticketInfo.tables.available%></p>
+	</div>
+	<div class= "row">
+		<p>Price per table: €<%=ticketInfo.tables.price%> </p>
+	</div>
+	<div class= "row">
+		<p>Seats per table: <%=ticketInfo.tables.size%> </p>
+	</div>
+	<br>
+	<div class= "row">
+		<h5>Amount of tickets required</h5>
+	</diV>
+	<div class= "row">
+		<select id="noTicketsSelect" name="noTicketsSelect">
+		<% for(let i=0; i<=ticketInfo.tickets.available; i++) { %>
+			 <option value="<%= i %>"><%= i %></option>
+		<% } %>
+		</select>
+	</div> <br>
+	<div class= "row">
+		<h5>Amount of tables required</h5>
+	</diV>
+	<div class= "row">
+		<select id="noTablesSelect" name="noTablesSelect">
+		<% for(let i=0; i<=ticketInfo.tables.available; i++) { %>
+			 <option value="<%= i %>"><%= i %></option>
+		<% } %>
+		</select>
+	</div> <br>
+	<br>
+	<div class= "row">
+		<a href="#paymentModal" class="btn btn-primary" data-toggle="modal" onclick="calculateTotalAmount()">Pay Now</a>
+	</div>
+	<div id="paymentModal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Payment</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<form action="/event/tickets/<%=event.event_id%>" method="post" id='form'>
+					<input type="hidden" name="event_id" value=<%=event.event_id%> />
+					<input type="hidden" name="noTickets" id="noTickets" value=0 />
+					<input type="hidden" name="noTables" id="noTables" value=0 />
+					<input type="hidden" name="paymentAmount" id="paymentAmount" value=0 />
+					<div class="modal-body">
+						<p id="totalAmount"> Total amount : €0</p>
+						<div class="form-group">
+							<label for="cardNo">Card Number</label>
+							<input type="number" class="form-control" name="cardNo" min="0" max="9999999999999999" required/>
+						</div>
+						<div class="form-group">
+							<label for="cvv" class="col-form-label">CVV</label>
+							<input type="number" class="form-control" name="cvv" min="0" max="999" required/>
+						</div>
+						<div class="form-group">
+							<label for="billingName" class="col-form-label">Card Holder Name</label>
+							<input type="text" class="form-control" name="billingName" required/>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Confirm</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		function calculateTotalAmount() {
+			var noTickets = $("#noTicketsSelect").val();
+			var ticketCost = noTickets * <%=ticketInfo.tickets.price%>;
+			var noTables = $("#noTablesSelect").val();
+			var tableCost = noTables * <%=ticketInfo.tables.price%>;
+			$("#totalAmount").text("Total Amount : €" + (ticketCost + tableCost));
+			$("#noTickets").val(noTickets);
+			$("#noTables").val(noTables);
+			$("#paymentAmount").val(ticketCost + tableCost);
+		}
+	</script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+</body>

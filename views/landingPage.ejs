@@ -29,12 +29,14 @@
             <div id="buttons">
                 <a class="btn btn-primary" href="/edit/account" role="button">Edit Account</a>
                 <a class="btn btn-primary" href="/edit/password" role="button">Change Password</a>
+                <a class="btn btn-primary" href="/login/logout" role="button">Logout</a>
             </div>
         </div>
 				<div class="col-sm-6">
 						<h3>User Actions</h3>
 						<div style="padding-top:5px;">
 								<a class="btn btn-primary" href="/events" role="button">View all Events</a>
+								<a class="btn btn-primary" href="/tickets" role="button">View my Tickets</a>
 						</div>
 				</div>
         <% if (user.type=='admin') { %>
