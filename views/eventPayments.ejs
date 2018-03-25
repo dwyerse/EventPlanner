@@ -31,6 +31,7 @@
 			<th>Name</th>
 			<th>Payment Amount</th>
 			<th>Date of Payment</th>
+			<th>Payment Type</th>
 		</thead>
 		<tbody>
 			<% for(var i=0; i < payments.length; i++) { %>
@@ -38,6 +39,7 @@
 				<td><%=names[i]%></td>
 				<td>€<%=payments[i].amount%></td>
 				<td><%=payments[i].paidAt%></td>
+				<td><%=payments[i].type%></td>
 			</tr>
 			<% } %>
 		</tbody>
