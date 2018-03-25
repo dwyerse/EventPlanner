@@ -41,7 +41,7 @@ function editTable(eventId,tableNumber,tableObj,callback){
 
 function deleteTable(eventId,tableNumber,callback){
 	Table.remove({eventId:eventId,tableNumber:tableNumber},function(){		
-		Table.update({tableNumber:{$gt: tableNumber}},{ $inc: { tableNumber: -1} }, { multi: true }, function(error,result){			
+		Table.update({tableNumber:{$gt: tableNumber},eventId:eventId},{ $inc: { tableNumber: -1} }, { multi: true }, function(error,result){			
 			return callback(error,result);	
 		});	
 	});
