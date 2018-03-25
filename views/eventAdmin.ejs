@@ -94,6 +94,7 @@
 					<% for(var i=0; i < result.invitees.length; i++) { %>
 					<tr>
 						<td><%=result.invitees[i].email%></td>
+						<td><%=userHasPaid[i]%></td>
 						<td><%=result.invitees[i].state%></td>
 						<td>
 							<form method="post" action="<%=result.event_id%>/removeInvitee" class="inline">

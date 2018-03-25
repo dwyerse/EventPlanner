@@ -23,7 +23,29 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult) {
 			if(req.user.type == ADMIN_ACCOUNT){
-				res.render('eventAdmin', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin:true});
+				let inviteeEmails = result.invitees.map(invitee=>invitee.email);
+				userMapper.findMultipleUsersByEmail(inviteeEmails,function(err,usersResult){
+					if(err){
+						res.send(err);
+					}
+					else{
+						paymentMapper.getAllPayments(function(err,paymentResult){
+							let eventPayments = paymentResult.filter(payment=>payment.event_id===result._id+'');
+							let idsOfPayers = eventPayments.map(payment=>payment.user_id);
+							let userHasPaid = usersResult.map(invitee=>(idsOfPayers.indexOf(invitee._id+'') > -1)?invitee.email:'');
+							let inviteePaymentStatus = [];
+							for (var i = 0; i < result.invitees.length; i++) {
+								if(userHasPaid.indexOf(result.invitees[i].email)>-1){
+									inviteePaymentStatus.push('Has Paid');
+								}
+								else{
+									inviteePaymentStatus.push('Has Not Paid');
+								}
+							}
+							res.render('eventAdmin', {result, userHasPaid:inviteePaymentStatus, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin:true});
+						});
+					}
+				});
 			} else {
 				res.render('eventUser', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed});
 			}
