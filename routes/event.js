@@ -23,31 +23,40 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 		}
 		menuMapper.findMenusByEvent(req.params.event_id).then(function(menuResult) {
 			if(req.user.type == ADMIN_ACCOUNT){
-				let inviteeEmails = result.invitees.map(invitee=>invitee.email);
-				userMapper.findMultipleUsersByEmail(inviteeEmails,function(err,usersResult){
-					if(err){
-						res.send(err);
-					}
-					else{
-						paymentMapper.getAllPayments(function(err,paymentResult){
-							let eventPayments = paymentResult.filter(payment=>payment.event_id===result._id+'');
-							let idsOfPayers = eventPayments.map(payment=>payment.user_id);
-							let userHasPaid = usersResult.map(invitee=>(idsOfPayers.indexOf(invitee._id+'') > -1)?invitee.email:'');
-							let inviteePaymentStatus = [];
-							for (var i = 0; i < result.invitees.length; i++) {
-								if(userHasPaid.indexOf(result.invitees[i].email)>-1){
-									inviteePaymentStatus.push('Has Paid');
-								}
-								else{
-									inviteePaymentStatus.push('Has Not Paid');
-								}
-							}
-							res.render('eventAdmin', {result, userHasPaid:inviteePaymentStatus, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin:true});
-						});
-					}
-				});
+				res.render('eventAdmin', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed, isAdmin:true});
 			} else {
 				res.render('eventUser', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed});
+			}
+		});
+	});
+});
+
+router.get('/inviteList/:event_id', isAdminUser, isLoggedIn, function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+		let inviteeEmails = result.invitees.map(invitee=>invitee.email);
+		userMapper.findMultipleUsersByEmail(inviteeEmails,function(err,usersResult){
+			if(err){
+				res.send(err);
+			}
+			else{
+				paymentMapper.getAllPayments(function(err,paymentResult){
+					let eventPayments = paymentResult.filter(payment=>payment.event_id===result._id+'');
+					let idsOfPayers = eventPayments.map(payment=>payment.user_id);
+					let userHasPaid = usersResult.map(invitee=>(idsOfPayers.indexOf(invitee._id+'') > -1)?invitee.email:'');
+					let inviteePaymentStatus = [];
+					for (var i = 0; i < result.invitees.length; i++) {
+						if(userHasPaid.indexOf(result.invitees[i].email)>-1){
+							inviteePaymentStatus.push('Has Paid');
+						}
+						else{
+							inviteePaymentStatus.push('Has Not Paid');
+						}
+					}
+					res.render('inviteList', {result, userHasPaid:inviteePaymentStatus, err: req.flash('err'), succ: req.flash('succ')});
+				});
 			}
 		});
 	});
@@ -191,10 +200,10 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 });
 
 //Add invitee
-router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
+router.post('/inviteList/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
 		if(!req.body.email){
-			res.redirect('/event/view/' + req.params.event_id);
+			res.redirect('/event/inviteList/' + req.params.event_id);
 		}
 		else{
 			var emailAlreadyExists = false;
@@ -206,7 +215,7 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 			}
 			if(emailAlreadyExists){
 				req.flash('err', 'Invitee failed to be added: invitee already exists');
-				res.redirect('/event/view/' + req.params.event_id);
+				res.redirect('/event/inviteList/' + req.params.event_id);
 			}
 			else{
 
@@ -217,20 +226,31 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 						req.flash('err', 'Invitee failed to be added');
 					}
 				});
-				mailer.sendInvitation([req.body.email],result,function(err){
-					if(err){
-						req.flash('err', 'Email not sent');
-					}
-				});
 				req.flash('succ', 'Invitee added');
-				res.redirect('/event/view/' + req.params.event_id);
+				res.redirect('/event/inviteList/' + req.params.event_id);
 			}
 		}
 	});
 });
 
+router.post('/inviteList/:event_id/invitePending', isLoggedIn, isAdminUser, function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id, function(error,result){
+		inviteList.mailPendingInvitees(result,function(err,mailResult){
+			if(err){
+				req.flash('err', err);
+				res.redirect('/event/inviteList/' + req.params.event_id);
+			}
+			else{
+				req.flash('succ', 'Invites Sent!');
+				res.redirect('/event/inviteList/' + req.params.event_id);
+			}
+		});
+	});
+
+});
+
 //Remove invitee
-router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(req,res){
+router.post('/inviteList/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
 
 		var newInvitees = [];
@@ -245,7 +265,7 @@ router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(re
 			}
 		});
 		req.flash('succ', 'Invitee removed');
-		res.redirect('/event/view/' + req.params.event_id);
+		res.redirect('/event/inviteList/' + req.params.event_id);
 	});
 });
 
