@@ -1,0 +1,44 @@
+<head>
+	<title>Your Tickets</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class="container">
+	<% if(err && err.length > 0) { %>
+		<div class="alert alert-danger" role="alert">
+		  Error in details provided: <%= err %>
+		</div>
+	<% } %>
+	<% if (succ && succ.length > 0) { %>
+		<div class="alert alert-success" role="alert">
+			<%= succ %>
+		</div>
+	<% } %>
+	<br>
+	<h2>Your Tickets</h2>
+	<br>
+	<div class= "row">
+		<%if(tickets.length == 0) { %>
+			<h6> No Tickets to display! </h6>
+		<% } %>
+		<% for(let ticket of tickets) { %>
+			<% if(ticket && ticket.event) {%>
+				<div class="col-md" style="padding:5px;">
+					<div class="card" style="width:20rem; padding:15px;border-color:#17AF84; border-style:solid; border-radius:8px; border-width:medium">
+				  	<div class="card-body">
+					    <h5 class="card-title"><%= ticket.event.title%></h5>
+					    <h6 class="card-subtitle mb-2 text-muted"><%= ticket.event.date.toDateString() %></h6>
+					    <p class="card-text">Location: <%= ticket.event.location%></p>
+							<p class="card-text">Ticket Type: <%= ticket.type%></p>
+							<p class="card-text">Ticket Price: <%= ticket.price%></p>
+							<p class="card-text" style="font-size:9px;"><%= ticket._id%></p>
+				  	</div>
+					</div>
+				</div>
+		<% } } %>
+	</div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

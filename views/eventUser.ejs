@@ -8,7 +8,7 @@
 <body class="container">
 	<% if(err && err.length > 0) { %>
 	<div class="alert alert-danger" role="alert">
-		Error in details provided: <%= err %>
+		<%= err %>
 	</div>
 	<% } %>
 	<% if (succ && succ.length > 0) { %>
@@ -35,6 +35,9 @@
 				<input type="hidden" name="event_id" value=<%=result.event_id%> />
 			</form>
 			<% } %>
+		</div>
+		<div class="col-sm" style="margin-bottom:5px;">
+			<a href="/event/tickets/<%=result.event_id%>" class="btn btn-info btn-sm">Buy Tickets</a>
 		</div>
 			<br>
 			<div class="form-group col-md-6">
