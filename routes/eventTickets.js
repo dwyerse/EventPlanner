@@ -37,7 +37,7 @@ router.post('/:event_id', isLoggedIn, function(req, res) {
 					req.flash('err', err);
 					return res.redirect('/event/tickets/'+event_id);
 				}
-				let newPaymentObj = {event_id:event._id, amount: req.body.paymentAmount, user_id: req.user._id};
+				let newPaymentObj = {event_id:event._id, amount: req.body.paymentAmount, user_id: req.user._id, type:'tickets'};
 				paymentMapper.addPayment(newPaymentObj, function(err) {
 					if(err){
 						req.flash('err', err);
