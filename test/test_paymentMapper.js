@@ -5,7 +5,8 @@ const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 const TEST_PAYMENT = {
 	'event_id': '99999',
 	'amount': 100,
-	'user_id': '99999'
+	'user_id': '99999',
+	'type': 'tickets'
 };
 
 
