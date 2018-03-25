@@ -46,11 +46,12 @@
 												<button type="button"style="float:left;margin:0;" class="close" data-dismiss="modal">&times;</button>
 												<h4 class="modal-title" style="float:left">Table <%= table[i].tableNumber%></h4>
 											</div>
+											<div class="modal-body" >
 											<div style="margin:10px; text-align: center;">Table Labels</div>														
 											
 											<input type="name" name="label-0" class="labels0> form-control" value="<%= table[i].tableLabels[0]%>" name="label" rows="5" required><br>												
 																				
-											<div class="modal-body" >
+											
 												<div style="padding:2px;text-align: center;">Seat Allocation</div>
 												<% for(var x=0; x < table[i].seatLabels.length; x++) { %>
 													Seat <%= x+1%> :<textarea type="name" class="form-control" name="seat-<%=x%>" rows="1" required><%= table[i].seatLabels[x]%></textarea> <br>
