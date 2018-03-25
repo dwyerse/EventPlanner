@@ -46,18 +46,10 @@
 												<button type="button"style="float:left;margin:0;" class="close" data-dismiss="modal">&times;</button>
 												<h4 class="modal-title" style="float:left">Table <%= table[i].tableNumber%></h4>
 											</div>
-											<div style="margin:10px; text-align: center;">Table Labels</div>
-											<div id="labelGroup<%=i%>" style="padding:2px">
-											<% for(var j=0; j < table[i].tableLabels.length; j++) { %>
-												
-													<input type="name" name="label-<%=j%>" class="labels<%=j%> form-control" value="<%= table[i].tableLabels[j]%>" name="label" rows="5" required><br>												
-												
-											<%}%> 
-											</div>	
-											<% if(table[i].tableLabels.length ==0){%>
-												<div id="noLabels<%=i%>" style="margin:10px; text-align: center;">-No labels-</div>
-											<%}%>
-											<div data-table="<%=i%>" class="addLabel btn btn-secondary btn-sm">Add label</div>
+											<div style="margin:10px; text-align: center;">Table Labels</div>														
+											
+											<input type="name" name="label-0" class="labels0> form-control" value="<%= table[i].tableLabels[0]%>" name="label" rows="5" required><br>												
+																				
 											<div class="modal-body" >
 												<div style="padding:2px;text-align: center;">Seat Allocation</div>
 												<% for(var x=0; x < table[i].seatLabels.length; x++) { %>
