@@ -13,7 +13,8 @@ eventSchema.add({
 		email: String,
 		state: String,
 		accessRequirements: String,
-		dietaryRestrictions: String
+		dietaryRestrictions: String,
+		telephoneNo:String
 	}]
 });
 

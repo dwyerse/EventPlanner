@@ -47,7 +47,7 @@ router.post('/:event_id', isLoggedIn, function(req, res) {
 						req.flash('err', err);
 						return res.redirect('/event/tickets/'+event_id);
 					}
-					updateInviteeList(event, req.user.email, req.body.accessRequirements, req.body.dietaryRestrictions, function(err) {
+					updateInviteeList(event, req.user.email, req.body.accessRequirements, req.body.dietaryRestrictions, req.body.telephoneNumber, function(err) {
 						if(err){
 							req.flash('err', err);
 							return res.redirect('/event/tickets/'+event_id);
@@ -121,11 +121,11 @@ function generateTickets(ticketInfo, userID, event_id, noTickets, noTables,callb
 	callback(tickets);
 }
 
-function updateInviteeList(event, userEmail, accessRequirements, dietaryRestrictions, callback){
+function updateInviteeList(event, userEmail, accessRequirements, dietaryRestrictions, telephoneNo, callback){
 	let inviteeIndex =  event.invitees.findIndex(invitee => invitee.email === userEmail);
 	let newInviteeList = event.invitees;
 	if(inviteeIndex == -1){ //New invitee
-		newInviteeList.push({email:userEmail, state:'Attending', accessRequirements:accessRequirements, dietaryRestrictions:dietaryRestrictions});
+		newInviteeList.push({email:userEmail, state:'Attending', accessRequirements:accessRequirements, dietaryRestrictions:dietaryRestrictions, telephoneNo:telephoneNo});
 	} else { //Present invitee
 		let invitee = newInviteeList[inviteeIndex];
 		invitee.state = 'Attending';
@@ -133,6 +133,8 @@ function updateInviteeList(event, userEmail, accessRequirements, dietaryRestrict
 			invitee.accessRequirements = accessRequirements;
 		if(dietaryRestrictions && dietaryRestrictions.length>0)
 			invitee.dietaryRestrictions = dietaryRestrictions;
+		if(telephoneNo && telephoneNo.length>0)
+			invitee.telephoneNo = telephoneNo;
 		newInviteeList[inviteeIndex] = invitee;
 	}
 	eventMapper.updateInviteeList(event.event_id, newInviteeList,function(err, res) {
