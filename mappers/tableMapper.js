@@ -40,8 +40,10 @@ function editTable(eventId,tableNumber,tableObj,callback){
 }
 
 function deleteTable(eventId,tableNumber,callback){
-	Table.remove({eventId:eventId,tableNumber:tableNumber},function(err,res){
-		return callback(err,res);
+	Table.remove({eventId:eventId,tableNumber:tableNumber},function(){		
+		Table.update({tableNumber:{$gt: tableNumber}},{ $inc: { tableNumber: -1} }, { multi: true }, function(error,result){			
+			return callback(error,result);	
+		});	
 	});
 }
 
