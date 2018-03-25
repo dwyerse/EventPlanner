@@ -1,0 +1,81 @@
+<head>
+	<title>Events</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<br>
+<a href="/event/view/<%=table[0].eventId%>"><button class="btn btn-primary">Return to event</button> </a>
+<body class="container">		
+	<br>
+	<div style="text-align: center;font-size:2em;">Table Plan</div>
+	<br>
+	<% if (succ && succ.length > 0) { %>
+		<div class="alert alert-success" role="alert">
+			<%= succ %>
+		</div>
+	<% } %>
+	<div class= "row">		
+		<% for(var i=0; i < table.length; i++) { %>
+		<div class="col-md-4" style="padding:5px;">
+			<div class="card" style="width:20rem; padding:15px;border-color:#0181C6; border-style:solid; border-radius:8px; border-width:medium">
+			<div class="card-body">
+				<h5 class="card-title" style="text-align: center;">Table <%= table[i].tableNumber%></h5>
+				<h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">
+						<% for(var j=0; j < table[i].tableLabels.length; j++) { %>
+							<%= table[i].tableLabels[j]%>
+							<%if(j!=table[i].tableLabels.length-1){%>
+							,
+							<%}%>
+
+						<% }%> 
+				</h6>
+				<p class="card-text">
+						<% for(var x=0; x < table[i].seatLabels.length; x++) { %>
+							Seat <%= x+1%> : <%= table[i].seatLabels[x]%><br>
+						<% }%> 
+				</p>		
+				<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal<%=i%>">Edit</button>				
+					<form action="/table/edit/<%= table[0].eventId %>/<%= table[i].tableNumber %>/<%=table[0].tableLabels.length %>" method="post" id='form'>
+							<div id="myModal<%=i%>" class="modal fade" role="dialog">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button"style="float:left;margin:0;" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title" style="float:left">Table <%= table[i].tableNumber%></h4>
+										</div>
+										<div style="margin:10px; text-align: center;">Table Labels</div>
+										
+										<% for(var j=0; j < table[i].tableLabels.length; j++) { %>
+											<div style="padding:2px">
+												<input type="name" name="label-<%=j%>" class="form-control" value="<%= table[i].tableLabels[j]%>" name="label" rows="5" required><br>												
+											</div>
+										<%}%> 
+										<% if(table[i].tableLabels.length ==0){%>
+											<div style="margin:10px; text-align: center;">-No labels-</div>
+										<%}%>
+								
+										<div class="modal-body" >
+											<div style="padding:2px;text-align: center;">Seat Allocation</div>
+											<% for(var x=0; x < table[i].seatLabels.length; x++) { %>
+												Seat <%= x+1%> :<textarea type="name" class="form-control" name="seat-<%=x%>" rows="1" required><%= table[i].seatLabels[x]%></textarea> <br>
+											<% }%> 
+										</div>
+										<div class="modal-footer">		
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>							
+											<button type="submit" class="btn btn-success">Confirm</button>
+										</div>
+									</div>
+								</div>
+							</div>			    
+						</div>		
+					</form>
+				
+				</div>
+			</div>	
+		<%}%>
+	</div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
