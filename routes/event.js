@@ -12,7 +12,6 @@ var isAdminUser = require('../config/utils').isAdminUser;
 EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
 const NEWEVENTS_SUB = 'Event_new';
-var mailer = require('../config/mailer');
 const ADMIN_ACCOUNT = 'admin';
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
@@ -235,7 +234,7 @@ router.post('/inviteList/:event_id/addInvitee',isLoggedIn,isAdminUser,function(r
 
 router.post('/inviteList/:event_id/invitePending', isLoggedIn, isAdminUser, function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id, function(error,result){
-		inviteList.mailPendingInvitees(result,function(err,mailResult){
+		inviteList.mailPendingInvitees(result,function(err){
 			if(err){
 				req.flash('err', err);
 				res.redirect('/event/inviteList/' + req.params.event_id);
