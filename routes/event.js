@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
+//var paymentMapper = require('../mappers/paymentMapper');
+var ticketMapper = require('../mappers/ticketMapper');
+var ticketInfoMapper = require('../mappers/ticketInfoMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
@@ -113,17 +116,58 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 			{
 				req.flash('err', notificationError);
 			}
-			// Call EventMapper function to delete event and any dependencies
-			eventMapper.deleteEvent(eventResult.event_id, function(err) {
+
+			userMapper.allUsers(function(err, users) {
+
 				if (err) {
 					req.flash('err', err);
 				}
-				else {
-					req.flash('succ', 'Event was successfully deleted.');
-				
-					res.redirect('/events');
-				}
+				else
+				{
+					for (var i = 0; i < users.length; i++) {
+						ticketMapper.getUserTickets(users[i]._id, function(err,tickets) {
+							if (err)
+							{
+								req.flash('err', err);
+							}
+							else
+							{
+								for (var j = 0; j < tickets.length; j++) {
+									if (tickets[j].event == null || tickets[j].event.event_id == eventResult.event_id)
+									{
+										ticketMapper.deleteTicket(tickets[j]._id, function(err) {
 
+											if (err) {
+												req.flash('err', err);
+											}
+
+										});
+									}
+								}
+							}
+						});
+					}
+				}
+			});
+								
+			ticketInfoMapper.deleteTicketInfo(eventResult.event_id, function(err) {
+				// Call EventMapper function to delete event and any dependencies
+
+				if (err) {
+					req.flash('err', notificationError);
+				}
+				else {
+					eventMapper.deleteEvent(eventResult.event_id, function(err) {	
+						if (err) {
+							req.flash('err', err);							
+						}
+						else {
+							req.flash('succ', 'Event was successfully deleted.');
+												
+							res.redirect('/events');
+						}
+					});
+				}		
 			});
 		});	
 	});
