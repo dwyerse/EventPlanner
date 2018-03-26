@@ -4,6 +4,7 @@ var eventMapper = require('../mappers/eventMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
+var tableMapper = require('../mappers/tableMapper');
 var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
@@ -75,34 +76,26 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 		}
 		else
 		{
-			guestDetails = '';
+			var details = 'The following is a specification of guest dietary restrictions, access requirements and table arrangements for the upcoming event, ' + result.title + ':\n\n';
 
-			for (var i = 0; i < result.invitees.length; i++)
-			{
-				if (result.invitees[i].state == 'attending')
-				{
-					guestDetails = guestDetails + 'Guest Email: ' + result.invitees[i].email + '\nGuest Access Requirements: ' + result.invitees[i].accessRequirements + '\nGuest Dietary Restrictions: ' + result.invitees[i].dietaryRestrictions + '\n\n';
-				}
-			}
+			addGuestDetails(result, details, function(guestDetails) {
+				addTableDetails(result, guestDetails, function(guestAndTableDetails) {	
+					sendEmailToCatering(req.body.cateringEmail, guestAndTableDetails, function(error, information) {	
+						if (error) {
+							req.flash('error', error);
+						}
+						else
+						{
+							req.flash('information', information);
+						}
 
-			sendEmailToCatering(req.body.cateringEmail, guestDetails, function(error, information) {
-				if (error) {
-					req.flash('error', error);
-				}
-				else
-				{
-					req.flash('information', information);
-				}
-
-
+						return res.redirect('/event/view/' + req.params.event_id);
+					});
+				});
 			});
-
-			return res.redirect('/event/view/' + req.params.event_id);
 		}
 		res.redirect('/event/view/' + req.params.event_id);
 	});
-
-
 });
 
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
@@ -365,9 +358,59 @@ function sendUpdateEmail(event) {
 	});
 }
 
-function sendEmailToCatering(cateringEmail, guestDetails, callback) {
+function addGuestDetails(event, details, callback) {
+	var guestDetails = details;
 
-	body = 'The following is a specification of guest table arrangements, dietary restrictions and access requirements for the upcoming event:\n\n' + guestDetails;
+	for (var i = 0; i < event.invitees.length; i++)
+	{
+		if (event.invitees[i].state == 'Attending')
+		{
+			guestDetails = guestDetails + 'Guest Email: ' + event.invitees[i].email + '\nGuest Access Requirements: ' + event.invitees[i].accessRequirements + '\nGuest Dietary Restrictions: ' + event.invitees[i].dietaryRestrictions + '\n\n';
+		}
+	}
+
+	callback(guestDetails);
+}
+
+function addTableDetails(event, guestDetails, callback) {
+	var guestAndTableDetails = guestDetails;
+
+	tableMapper.findTablesByEventId(event.event_id, function(err,table) {
+		if (err) {
+			req.flash('err', err);
+		}
+		else if (table != null) {
+			for (var x = 0; x < table.length; x++) {
+				guestAndTableDetails = guestAndTableDetails + 'Table: ' + table[x].tableNumber + '\n';
+
+				for (var y=0; y < table[x].tableLabels.length; y++) {		
+					guestAndTableDetails = guestAndTableDetails + table[x].tableLabels[y];
+							
+					if (y != table[x].tableLabels.length-1) {
+						guestAndTableDetails = guestAndTableDetails + ', ';
+					}
+				}
+
+				guestAndTableDetails = guestAndTableDetails + '\n';
+			
+				for(var z=0; z < table[x].seatLabels.length; z++) {
+					guestAndTableDetails = guestAndTableDetails + 'Seat ' + (z + 1) + ': ' + table[x].seatLabels[z] + '\n';
+				}
+
+				guestAndTableDetails = guestAndTableDetails + '\n';
+			}
+		}
+		else
+		{
+			guestAndTableDetails = guestAndTableDetails + 'No tables have been allocated for the event.';
+		}
+
+		callback(guestAndTableDetails);		
+	});	
+}
+
+function sendEmailToCatering(cateringEmail, guestAndTableDetails, callback) {
+	body = guestAndTableDetails;
 
 	recipient = [];
 	recipient.push(cateringEmail);
