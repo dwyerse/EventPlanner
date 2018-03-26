@@ -22,6 +22,7 @@ var registerGuest = require('./routes/registerGuest');
 var previousGuests = require('./routes/previousGuests');
 var inviteResponse = require('./routes/invitationResponse');
 var eventList = require('./routes/eventList');
+var table = require('./routes/table');
 var eventTickets = require('./routes/eventTickets');
 var ticketList = require('./routes/ticketList');
 var live = require('./routes/live')
@@ -91,6 +92,7 @@ app.use("/register", registerGuest);
 app.use("/previous", previousGuests);
 app.use("/invitationResponse", inviteResponse);
 app.use('/events', eventList);
+app.use('/table', table);
 app.use('/tickets', ticketList);
 app.use('/live',live);
 // catch 404 and forward to error handler

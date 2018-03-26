@@ -16,4 +16,9 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 	});
 });
 
+router.post('/amount', function(req, res){
+	
+	res.send("10");
+}); 
+
 module.exports = router;
