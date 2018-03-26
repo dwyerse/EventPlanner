@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var milestoneMapper = require('../mappers/milestoneMapper');
-var Milestones = require('../models/milestones')
+var Milestones = require('../models/milestones');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 
 router.get('/:event_id',isLoggedIn, function(req, res) {	
@@ -33,19 +33,18 @@ router.post('/add/:eventId/:existsGoal',function(req,res){
 		milestoneMapper.findMilestonesByEventId(req.params.eventId,function(error,milestone){
 			
 			milestone.amounts.push(newAmounts);
-			console.log(milestone.amounts);
 			var editedMilestone = milestone;
 
-			milestoneMapper.editMilestones(req.params.eventId,editedMilestone,function(error,created){
-				res.redirect("/live/"+req.params.eventId);
+			milestoneMapper.editMilestones(req.params.eventId,editedMilestone,function(){
+				res.redirect('/live/'+req.params.eventId);
 			});
 		});
 
 		
 	}
 	else{
-		milestoneMapper.createMilestones(new Milestone(newMilestone),function(error,created){
-			res.redirect("/live/"+req.params.eventId);
+		milestoneMapper.createMilestones(new Milestone(newMilestone),function(){
+			res.redirect('/live/'+req.params.eventId);
 		});
 	}
 	
@@ -59,17 +58,14 @@ router.post('/amount', function(req, res){
 router.post('/achieved/:eventId/:totalRaised', function(req, res){
 	var notFound = true;
 	Milestones.findOne({eventId:req.params.eventId},function(err,miles){
-
-		console.log(miles);
-
-		for(var x=0;x<miles.amounts.length;x++){
-			console.log(miles.amounts[x].amount);
+		
+		for(var x=0;x<miles.amounts.length;x++){			
 			if(req.params.totalRaised>=miles.amounts[x].amount && miles.amounts[x].achieved == false){
 				if(notFound){
 					miles.amounts[x].achieved = true;	
 					notFound = false;
 					res.send('Achieved € ' + miles.amounts[x].amount + ' goal');
-					miles.save(function () {									
+					miles.save(function () {		
 						
 					});
 				}

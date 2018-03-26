@@ -28,7 +28,7 @@ function editMilestones(eventId,newMilestone,callback){
 
 function deleteMilestones(eventId,callback){
 	Milestone.remove({eventId:eventId},function(err){		
-			return callback(err);
+		return callback(err);
 	});
 }
 

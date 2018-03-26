@@ -4,11 +4,11 @@ var mapper = require('../mappers/milestoneMapper');
 var mongoose = require('mongoose');
 const APP_DB = 'mongodb://127.0.0.1/eventplanner_db';
 const TESTMILESTONE= {
-	'amounts' : [{achieved:false,amount:100,label:"Low milestone"}],
+	'amounts' : [{achieved:false,amount:100,label:'Low milestone'}],
 	'eventId' : '9999'	
 };
 const TESTUPDATEDMILESTONE= {
-	'amounts' : [{achieved:true,amount:200,label:"New milestone"}],
+	'amounts' : [{achieved:true,amount:200,label:'New milestone'}],
 	'eventId' : '9999'	
 };
 
@@ -47,7 +47,7 @@ describe('milestoneMapper testing suite', function() {
 	});
 
 	it('should delete Milestone ', function(done) {
-		mapper.deleteMilestones(TESTMILESTONE.eventId, function(err,res){
+		mapper.deleteMilestones(TESTMILESTONE.eventId, function(err){
 			assert.equal(err,null);
 			done();
 		});
