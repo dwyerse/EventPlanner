@@ -4,6 +4,7 @@ var eventMapper = require('../mappers/eventMapper');
 //var paymentMapper = require('../mappers/paymentMapper');
 var ticketMapper = require('../mappers/ticketMapper');
 var ticketInfoMapper = require('../mappers/ticketInfoMapper');
+var tableMapper = require('../mappers/tableMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
@@ -103,7 +104,6 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 
 router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
-
 	eventMapper.findEventBy_event_id(req.params.event_id, function(error, eventResult) {
 		if(error){
 			res.send(error);
@@ -111,14 +111,12 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 		// Get all invitees of event and email them to say that event has been cancelled
 		sendDeleteNotification(eventResult, function(notificationError) {
-
 			if (notificationError)
 			{
 				req.flash('err', notificationError);
 			}
 
 			userMapper.allUsers(function(err, users) {
-
 				if (err) {
 					req.flash('err', err);
 				}
@@ -136,11 +134,9 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 									if (tickets[j].event == null || tickets[j].event.event_id == eventResult.event_id)
 									{
 										ticketMapper.deleteTicket(tickets[j]._id, function(err) {
-
 											if (err) {
 												req.flash('err', err);
 											}
-
 										});
 									}
 								}
@@ -149,10 +145,30 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					}
 				}
 			});
+
+			tableMapper.findTablesByEventId(eventResult.event_id, function(err, tables) {
+				if (err) {
+					req.flash('err', err);
+				}
+				else
+				{
+					for (var i = 0; i < tables.length; i++) {
+						tableMapper.deleteTable(eventResult.event_id, tables[i].tableNumber, function(err, deletedTables) {
+							if (err)
+							{
+								req.flash('err', err);
+							}
+							else
+							{
+								req.flash('deleted tables', deletedTables);
+							}
+						});
+					}
+				}
+			});
 								
 			ticketInfoMapper.deleteTicketInfo(eventResult.event_id, function(err) {
 				// Call EventMapper function to delete event and any dependencies
-
 				if (err) {
 					req.flash('err', notificationError);
 				}
@@ -172,7 +188,6 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		});	
 	});
 });
-
 
 //Attendee Report
 router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,res){
