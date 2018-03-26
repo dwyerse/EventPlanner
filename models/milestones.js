@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var milestoneSchema = new Schema({
-	amounts: [{achieved: Boolean,amount: Number,label:String}],
+	amounts: {type:[{achieved: Boolean,amount: Number,label:String}],required:true},
 	eventId: {type:Number, required: true}
 });
 

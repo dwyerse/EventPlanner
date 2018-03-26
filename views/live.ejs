@@ -39,22 +39,72 @@
 				vertical-align: middle;
 				color:white;				
 			}
+
+			.achieved{
+				color:green;
+			}
+			.notachieved{
+				color:red;
+			}
+
 	</style>
 	<div class="milestone" id ="milestonePopup"></div>
 	<div id="milestoneText"></div>
 	<body class="container">
 		<div class="row" style="margin-top:20px">
-				<div class="col-md-4"></div>
-				<div class="col-md-4" style="text-align:center;">
-					<h1>LIVE</h1>
+				<div class="col-md-3"></div>
+				<div class="col-md-6" style="text-align:center;">					
 					<div class="">
-						<h2 style="word-break: break-all; " > <%= result.title %> </h2>			
+						<h2 style="word-break: break-all; " > <%= result.title %> , Live Updates!</h2>			
 					</div>			
 					<br>
 					<div class="">
 							<h2 style="word-break: break-all; " > Total raised so far: €<span id="totalRaised">0</span></h2>			
 					</div>
-					<br>
+					<div class="form-group">
+						<h3>Milestones</h3>
+						<% var existsGoal = true; if(!milestones||milestones.amounts.length==0){ existsGoal =false; %>
+							<div>-No milestones-</div>
+						<%}else{%>
+						<%for(var x=0;x<milestones.amounts.length;x++){%>
+							<div style="font-size:1.5em">
+								€<span><%=milestones.amounts[x].amount%></span>								
+								<span><%=milestones.amounts[x].label%></span>
+								<span><% if(milestones.amounts[x].achieved){%>
+									<span class='achieved'>Achieved</span>
+								<% }else{ %>
+									<span class='notachieved'>Not reached yet</span>
+								<%}%>
+									</span>
+							</div>
+						<%}}%>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add Milestone</button>							
+						<div class="row">
+							<form action="/live/add/<%=eventId%>/<%=existsGoal%>" method="post" id='form'>
+								<div id="addModal" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button"style="float:left;margin:0;" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title" style="float:left">Add Milestone</h4>
+											</div>
+											<div class="modal-body" >
+												<label>Milestone Label</label>
+												<input type="label" name="label" class="form-control" value="" rows="5" required><br>
+												<label>Donation goal</label>
+												<input type="number" name="amount" class="form-control" value="" rows="5" required><br>							
+											</div>
+											<div class="modal-footer">		
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>							
+												<button type="submit" class="btn btn-success">Confirm</button>
+											</div>
+										</div>
+									</div>
+								</div>		
+							</form>	
+						</div>
+
+					</div>
 					<div class="form-group">
 						<h4>Location</h4>
 						<label style="word-break: break-all;"><%= result.location %></label>
@@ -64,10 +114,10 @@
 						<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
 					</div>	
 				</div>
-				<div class="col-md-4"></div>	
+				<div class="col-md-3"></div>	
 				
 				<div class="btn btn-primary" id ="milestone">Milestone</div>
-
+				
 		</div>	
 	</body>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -79,7 +129,7 @@
 	<script> $("#datepicker").datepicker(); </script>
 	<script>
 	
-	var requestLoop = setInterval(function(){
+	var amountLoop = setInterval(function(){
 		$.ajax({
 			url: "amount",
 			type: "POST",			
@@ -89,11 +139,34 @@
 			error:   function(xhr, text, err) {
 			}
 		  });
-	}, 1000);
+	}, 2000);
+
+	var achievedLoop = setInterval(function(){
+		$.ajax({
+			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(data),
+			type: "POST",			
+			success: function(data) {
+				
+			},
+			error:   function(xhr, text, err) {
+			}
+		  });
+	}, 100000);
 	
 
 	$('#milestone').click(function(){
-		milestonePop("You reached the goal!");		
+		//milestonePop("You reached the goal!");	
+		$.ajax({
+			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(),
+			type: "POST",			
+			success: function(data) {
+				if(data&& data!='None'){
+					milestonePop(data);
+				}
+			},
+			error:   function(xhr, text, err) {
+			}
+		  });
 	});
 
 	function milestonePop(milestoneMessage){

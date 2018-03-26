@@ -1,13 +1,12 @@
-Milestone = require('../models/milestone');
+Milestones = require('../models/milestones');
 
-function createMilestone(amounts,eventId,callback){
-	var newMilestone = new Milestone({amounts:amounts, eventId:eventId});
+function createMilestones(newMilestone,callback){
 	newMilestone.save(function (err,product) {
 		return callback(err,product);
 	});
 }
 
-function findMilestoneByEventId(eventId,callback){		
+function findMilestonesByEventId(eventId,callback){		
 	
 	Milestone.findOne({eventId:eventId},function(err,res){
 		if(err){
@@ -18,28 +17,19 @@ function findMilestoneByEventId(eventId,callback){
 
 }
 
-function editMilestone(eventId,newObj,callback){
-	Milestone.findOne({eventId:eventId}, function(err,res){
+function editMilestones(eventId,newMilestone,callback){
+	Milestone.findOneAndUpdate({eventId:eventId},newMilestone,function(err,res){
 		if(err){
 			return callback(err);
 		}
-		else{
-
-			res.amount = newObj.amount;
-			res.eventId = newObj.eventId;	
-
-			res.save(function (err, updated) {
-				return callback(err,updated);
-			});
-
-		}
+		return callback(err,res);
 	});	
 }
 
-function deleteMilestone(eventId,callback){
+function deleteMilestones(eventId,callback){
 	Milestone.remove({eventId:eventId},function(err){		
 			return callback(err);
 	});
 }
 
-module.exports = {createMilestone, findMilestoneByEventId,editMilestone,deleteMilestone};
+module.exports = {createMilestones, findMilestonesByEventId,editMilestones,deleteMilestones};
