@@ -11,7 +11,7 @@
 				display: none;
 				width:100%;
 				height:100%;
-				opacity:0.5;
+				opacity:0.7;
 				background-color: orange;
 				z-index: 1000;
 				position: absolute;
@@ -21,15 +21,27 @@
 				vertical-align: middle;
 				font-size: 3em;
 				margin: 0 auto;
+				
 			}
 
 			#milestoneText{
+				display: none;
 				vertical-align: middle;
-				margin-top: 20%;
+				font-size: 4em;
+				position: absolute;
+				position: absolute;
+				top: 25%;
+				left: 25%;
+				width: 50%;
+				height: 25%;
+				text-align: center;
+				z-index: 1000;
+				vertical-align: middle;
+				color:white;				
 			}
 	</style>
-	<div class="milestone" id ="milestonePopup"><div id="milestoneText">You reached the goal!</div></div>
-
+	<div class="milestone" id ="milestonePopup"></div>
+	<div id="milestoneText"></div>
 	<body class="container">
 		<div class="row" style="margin-top:20px">
 				<div class="col-md-4"></div>
@@ -81,9 +93,15 @@
 	
 
 	$('#milestone').click(function(){
-		console.log("Milestone");
-		$('#milestonePopup').show();
-		//setTimeout(function(){ $('#milestonePopup').fadeOut(); }, 3000);
+		milestonePop("You reached the goal!");		
 	});
+
+	function milestonePop(milestoneMessage){
+		$('#milestonePopup').show();
+		$('#milestoneText').text(milestoneMessage);
+		$('#milestoneText').show();
+		setTimeout(function(){ $('#milestonePopup').fadeOut(); }, 3000);
+		setTimeout(function(){ $('#milestoneText').fadeOut(); }, 3000);
+	}
 
 	</script>
