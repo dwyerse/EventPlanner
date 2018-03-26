@@ -42,19 +42,8 @@ router.get('/inviteList/:event_id', isAdminUser, isLoggedIn, function(req,res){
 			}
 			else{
 				paymentMapper.getAllPayments(function(err,paymentResult){
-					let eventPayments = paymentResult.filter(payment=>payment.event_id===result._id+'');
-					let idsOfPayers = eventPayments.map(payment=>payment.user_id);
-					let userHasPaid = usersResult.map(invitee=>(idsOfPayers.indexOf(invitee._id+'') > -1)?invitee.email:'');
-					let inviteePaymentStatus = [];
-					for (var i = 0; i < result.invitees.length; i++) {
-						if(userHasPaid.indexOf(result.invitees[i].email)>-1){
-							inviteePaymentStatus.push('Has Paid');
-						}
-						else{
-							inviteePaymentStatus.push('Has Not Paid');
-						}
-					}
-					res.render('inviteList', {result, userHasPaid:inviteePaymentStatus, err: req.flash('err'), succ: req.flash('succ')});
+					let userHasPaid = inviteList.usersThatHavePaid(paymentResult, result, usersResult);
+					res.render('inviteList', {result, userHasPaid, err: req.flash('err'), succ: req.flash('succ')});
 				});
 			}
 		});
@@ -407,4 +396,5 @@ function getNewFilename(filepath, eventId){
 function validUpdateParams(body){
 	return (body.title&&body.location&&body.date&&body.description);
 }
+
 module.exports = router;
