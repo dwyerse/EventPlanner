@@ -1,7 +1,7 @@
 Table = require('../models/table');
 
-function createTable(tableNumber,tableLabels,size,seatLabels,eventId,callback){
-	var newTable = new Table({tableNumber:tableNumber, tableLabels:tableLabels, size:size,seatLabels:seatLabels,eventId:eventId});
+function createTable(tableNumber,tableLabels,seatLabels,eventId,callback){
+	var newTable = new Table({tableNumber:tableNumber, tableLabels:tableLabels,seatLabels:seatLabels,eventId:eventId});
 	newTable.save(function (err,product) {
 		return callback(err,product);
 	});
@@ -26,8 +26,7 @@ function editTable(eventId,tableNumber,tableObj,callback){
 		else{
 
 			res.tableNumber = tableObj.tableNumber;
-			res.tableLabels = tableObj.tableLabels;
-			res.size = tableObj.size;
+			res.tableLabels = tableObj.tableLabels;			
 			res.seatLabels = tableObj.seatLabels;
 			res.eventId = tableObj.eventId;
 

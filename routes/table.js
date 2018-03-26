@@ -9,28 +9,32 @@ var isAdminUser = require('../config/utils').isAdminUser;
 router.get('/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 
+		if(result==null){
+			res.redirect('/');
+		}
+
 		var eventName = result.title;
 
 		tableMapper.findTablesByEventId(req.params.event_id,function(err,table){
-			res.render('table', {table:table,event_id:req.params.event_id,eventName:eventName, succ: req.flash('succ')});
+			res.render('table', {table:table,event_id:req.params.event_id,eventName:eventName,err: req.flash('err'), succ: req.flash('succ')});
 		});	
 	});	
 });
 
-router.post('/edit/:event_id/:tableNumber/:labelAmount',isLoggedIn, isAdminUser, function(req, res) {
+router.post('/edit/:event_id/:tableNumber',isLoggedIn, isAdminUser, function(req, res) {
 	
-	var Labels = [];
-	var Seats = [];
+	var labels = [];
+	var seats = [];
 	var data = req.body;
 	for(var item in data){
 		if(item.split('-')[0] == 'label'){
-			Labels.push(req.body[item]);
+			labels.push(req.body[item]);
 		}
 		else{
-			Seats.push(req.body[item]);
+			seats.push(req.body[item]);
 		}
 	}
-	var tableObj = new Table({tableNumber:req.params.tableNumber,tableLabels:Labels,size:req.params.labelAmount,seatLabels:Seats,eventId:req.params.event_id});
+	var tableObj = new Table({tableNumber:req.params.tableNumber,tableLabels:labels,seatLabels:seats,eventId:req.params.event_id});
 	tableMapper.editTable(req.params.event_id,req.params.tableNumber,tableObj,function(err){
 		if(err){
 			req.flash('err', err);
@@ -55,7 +59,7 @@ router.post('/create/:event_id/',isLoggedIn, isAdminUser, function(req, res) {
 		for(var i = 0; i < length; i++) {
 			data.push('Attendee');
 		}
-		tableMapper.createTable(l+1,[],req.body.seats,data,req.params.event_id,function(err){
+		tableMapper.createTable(l+1,[],data,req.params.event_id,function(err){
 			if(err){
 				req.flash('err', err);
 			}
