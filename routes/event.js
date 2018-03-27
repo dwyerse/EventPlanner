@@ -76,7 +76,7 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 		}
 		else
 		{
-			var details = 'The following is a specification of guest dietary restrictions, access requirements and table arrangements for the upcoming event, ' + result.title + ':\n\n';
+			var details = 'The following is a specification of guest dietary restrictions, access requirements and table arrangements for the upcoming event, ' + result.title + ' on ' + result.date + ':\n\n';
 
 			addGuestDetails(result, details, function(guestDetails) {
 				addTableDetails(result, guestDetails, function(guestAndTableDetails) {	
@@ -360,26 +360,31 @@ function sendUpdateEmail(event) {
 
 function addGuestDetails(event, details, callback) {
 	var guestDetails = details;
+	var numInvitees = event.invitees.length;
+	var inviteeIndex = 0;
 
-	for (var i = 0; i < event.invitees.length; i++)
+	for (var i = 0; i < numInvitees; i++)
 	{
-		if (event.invitees[i].state == 'Attending')
+		if (event.invitees[i].state == 'Attending' && event.invitees[i].accessRequirements != null && event.invitees[i].dietaryRestrictions != null)
 		{
-			guestDetails = guestDetails + 'Guest Email: ' + event.invitees[i].email + '\nGuest Access Requirements: ' + event.invitees[i].accessRequirements + '\nGuest Dietary Restrictions: ' + event.invitees[i].dietaryRestrictions + '\n\n';
+			var invitee = event.invitees[i];
+			
+			userMapper.findUserByEmail(invitee.email, function(err, user) {
+				guestDetails = guestDetails + 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
+				if (inviteeIndex == (numInvitees - 1)) {
+					callback(guestDetails);
+				}
+				inviteeIndex++;
+			});
 		}
 	}
-
-	callback(guestDetails);
 }
 
 function addTableDetails(event, guestDetails, callback) {
 	var guestAndTableDetails = guestDetails;
 
 	tableMapper.findTablesByEventId(event.event_id, function(err,table) {
-		if (err) {
-			req.flash('err', err);
-		}
-		else if (table != null) {
+		if (!err && table != null && table.length > 0) {
 			for (var x = 0; x < table.length; x++) {
 				guestAndTableDetails = guestAndTableDetails + 'Table: ' + table[x].tableNumber + '\n';
 
