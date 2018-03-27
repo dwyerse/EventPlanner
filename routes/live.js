@@ -6,6 +6,7 @@ var paymentMapper = require('../mappers/paymentMapper');
 var Payment = require('../models/payment');
 var Milestones = require('../models/milestones');
 var isLoggedIn = require('../config/utils').isLoggedIn;
+var isAdminUser = require('../config/utils').isAdminUser;
 
 router.get('/:event_id',isLoggedIn, function(req, res) {	
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
@@ -24,14 +25,20 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 				for(var i=0;i<payments.length;i++){
 					total += payments[i].amount;
 				}
-				res.render('live',{result:result,milestones:milestones,eventId:req.params.event_id,totalRaised:total,err: req.flash('err'),succ: req.flash('succ')});
+				if (req.user.type === 'admin'){
+					res.render('live',{result:result,milestones:milestones,isAdminUser:true,eventId:req.params.event_id,totalRaised:total,err: req.flash('err'),succ: req.flash('succ')});
+				}
+				else{
+					res.render('live',{result:result,milestones:milestones,isAdminUser:false,eventId:req.params.event_id,totalRaised:total,err: req.flash('err'),succ: req.flash('succ')});
+				}
+				
 			});
 			
 		});
 	});
 });
 
-router.post('/add/:eventId/:existsGoal',isLoggedIn,function(req,res){
+router.post('/add/:eventId/:existsGoal',isLoggedIn,isAdminUser,function(req,res){
 
 	const newAmounts = {achieved:false,amount:req.body.amount,label:req.body.label};
 

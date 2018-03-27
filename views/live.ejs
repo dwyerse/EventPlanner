@@ -94,6 +94,7 @@
 									</span>
 							</div>
 						<%}}%>
+						<%if(isAdminUser){%>
 						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">Add Milestone</button>							
 						<div class="row">
 							<form action="/live/add/<%=eventId%>/<%=existsGoal%>" method="post" id='form'>
@@ -119,6 +120,7 @@
 								</div>		
 							</form>	
 						</div>
+						<%}%>
 
 					</div>
 					<div class="form-group">
