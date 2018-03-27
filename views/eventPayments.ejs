@@ -38,7 +38,11 @@
 			<tr>
 				<td><%=names[i]%></td>
 				<td>€<%=payments[i].amount%></td>
-				<td><%=payments[i].paidAt%></td>
+				<td><%=
+					payments[i].paidAt.getHours() + ':' + (payments[i].paidAt.getMinutes() < 10 ? '0'+ payments[i].paidAt.getMinutes() : payments[i].paidAt.getMinutes()) + ' - ' + 
+					payments[i].paidAt.toDateString()
+
+					%></td>
 				<td><%=payments[i].type%></td>
 			</tr>
 			<% } %>

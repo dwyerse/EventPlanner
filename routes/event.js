@@ -35,18 +35,22 @@ router.get('/inviteList/:event_id', isAdminUser, isLoggedIn, function(req,res){
 		if(err){
 			res.send(err);
 		}
-		let inviteeEmails = result.invitees.map(invitee=>invitee.email);
-		userMapper.findMultipleUsersByEmail(inviteeEmails,function(err,usersResult){
-			if(err){
-				res.send(err);
-			}
-			else{
-				paymentMapper.getAllPayments(function(err,paymentResult){
-					let userHasPaid = inviteList.usersThatHavePaid(paymentResult, result, usersResult);
-					res.render('inviteList', {result, userHasPaid, err: req.flash('err'), succ: req.flash('succ')});
-				});
-			}
-		});
+		if(result===null){
+			res.render('error');
+		}else{
+			let inviteeEmails = result.invitees.map(invitee=>invitee.email);
+			userMapper.findMultipleUsersByEmail(inviteeEmails,function(err,usersResult){
+				if(err){
+					res.send(err);
+				}
+				else{
+					paymentMapper.getAllPayments(function(err,paymentResult){
+						let userHasPaid = inviteList.usersThatHavePaid(paymentResult, result, usersResult);
+						res.render('inviteList', {result, userHasPaid, err: req.flash('err'), succ: req.flash('succ')});
+					});
+				}
+			});
+		}
 	});
 });
 
@@ -86,35 +90,39 @@ router.get('/payments/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-		paymentMapper.getAllPayments(function(err,paymentResult){
-			if(err){
-				res.send(err);
-			}
-			userMapper.allUsers(function(err,userResult){
-				let names = [];
-				let payments = [];
-				let paymentTotal = 0;
-				for (let i = 0; i < paymentResult.length; i++) {
-					if(paymentResult[i].event_id===eventResult._id+''){
-						payments.push(paymentResult[i]);
-						paymentTotal+=paymentResult[i].amount;
-						let userExists = false;
-						for (let j = 0; j < userResult.length; j++) {
-							if(userResult[j]._id+''===paymentResult[i].user_id+''){
-								names.push(userResult[j].name);
-								userExists=true;
-								break;
+		if(eventResult===null){
+			res.render('error');
+		}else{
+			paymentMapper.getAllPayments(function(err,paymentResult){
+				if(err){
+					res.send(err);
+				}
+				userMapper.allUsers(function(err,userResult){
+					let names = [];
+					let payments = [];
+					let paymentTotal = 0;
+					for (let i = 0; i < paymentResult.length; i++) {
+						if(paymentResult[i].event_id===eventResult._id+''){
+							payments.push(paymentResult[i]);
+							paymentTotal+=paymentResult[i].amount;
+							let userExists = false;
+							for (let j = 0; j < userResult.length; j++) {
+								if(userResult[j]._id+''===paymentResult[i].user_id+''){
+									names.push(userResult[j].name);
+									userExists=true;
+									break;
+								}
+							}
+							if(!userExists){
+								names.push('');
 							}
 						}
-						if(!userExists){
-							names.push('');
-						}
 					}
-				}
-				res.render('eventPayments', {event:req.params.event_id,paymentTotal, 
-					names, payments, err: req.flash('err'),succ: req.flash('succ')});
+					res.render('eventPayments', {event:req.params.event_id,paymentTotal, 
+						names, payments, err: req.flash('err'),succ: req.flash('succ')});
+				});
 			});
-		});
+		}
 	});
 
 });
