@@ -25,6 +25,7 @@
 		</h5>
 		<form action="/event/inviteList/<%=result.event_id%>/invitePending" method="post" id='unsubForm'>
 			<button type="submit" class="btn btn-info btn-sm">Send invites</button>
+			<a class="btn btn-info btn-sm" href="/event/view/<%=result.event_id%>" role="button">Back to Event</a>
 			<input type="hidden" name="event_id" value=<%=result.event_id%> />
 		</form>
 		<br>
