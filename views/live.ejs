@@ -1,11 +1,22 @@
 <head>
-		<title><%= result.name %></title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	</head>
-
+	<title><%= result.name %></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+</head>
+<% if(err && err.length > 0) { %>
+	<% console.log(err) %>
+	<div class="alert alert-danger" role="alert">
+		Error in details provided: <%= err %>
+	</div>
+<% } %>
+<% if (succ && succ.length > 0) { %>
+	<div class="alert alert-success" role="alert">
+		<%= succ %>
+	</div>
+<% } %>
 	<style>
 			#milestonePopup{
 				display: none;
@@ -46,21 +57,25 @@
 			.notachieved{
 				color:red;
 			}
+			.Blink {
+				animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+			}
+			@keyframes blinker {  
+				from { opacity: 1; }
+				to { opacity: 0; }
+			}
 
 	</style>
 	<div class="milestone" id ="milestonePopup"></div>
 	<div id="milestoneText"></div>
 	<body class="container">
-		<div class="row" style="margin-top:20px">
-				<div class="col-md-3"></div>
+		<div class="row" style="margin-top:20px">				
 				<div class="col-md-6" style="text-align:center;">					
 					<div class="">
+						<div><i class="fa fa-circle text-danger Blink"></i>&nbsp; LIVE </div>
 						<h2 style="word-break: break-all; " > <%= result.title %> , Live Updates!</h2>			
 					</div>			
 					<br>
-					<div class="">
-							<h2 style="word-break: break-all; " > Total raised so far: €<span id="totalRaised">0</span></h2>			
-					</div>
 					<div class="form-group">
 						<h3>Milestones</h3>
 						<% var existsGoal = true; if(!milestones||milestones.amounts.length==0){ existsGoal =false; %>
@@ -68,7 +83,7 @@
 						<%}else{%>
 						<%for(var x=0;x<milestones.amounts.length;x++){%>
 							<div style="font-size:1.5em">
-								€<span><%=milestones.amounts[x].amount%></span>								
+								€<span class="milestones" data-ach="<%=milestones.amounts[x].achieved%>"><%=milestones.amounts[x].amount%></span>								
 								<span><%=milestones.amounts[x].label%></span>
 								<span><% if(milestones.amounts[x].achieved){%>
 									<span class='achieved'>Achieved</span>
@@ -78,7 +93,7 @@
 									</span>
 							</div>
 						<%}}%>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add Milestone</button>							
+						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">Add Milestone</button>							
 						<div class="row">
 							<form action="/live/add/<%=eventId%>/<%=existsGoal%>" method="post" id='form'>
 								<div id="addModal" class="modal fade" role="dialog">
@@ -113,10 +128,50 @@
 						<h4>Date</h4>
 						<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
 					</div>	
-				</div>
-				<div class="col-md-3"></div>	
+				</div>	
 				
-				<div class="btn btn-primary" id ="milestone">Milestone</div>
+				<div style="margin-top:10%;text-align:center;" class= "col-md-6">
+					<div class="">
+						<h2 style="word-break: break-all; " > Total raised <div style="color:green">€ <span id="totalRaised"><%=totalRaised%></span></div> </h2>			
+					</div>
+					<a href="#paymentModal" class="btn btn-info" data-toggle="modal" onclick="">Make Donation</a>
+				</div>
+					<form action="donate" method="post" id='form'>
+					<div id="paymentModal" class="modal fade">
+						<div class="modal-dialog modal-confirm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">Payment</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								</div>
+									<input type="hidden" name="eventId" value="<%=eventId%>" />
+									<input type="hidden" name="paymentAmount" id="paymentAmount" value=0 />
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="donationValue">Donation Amount</label>
+											<input type="number" class="form-control" name="donationValue" min="0" max="9999999999999999" required/>
+										</div>
+										<div class="form-group">
+											<label for="cardNo">Card Number</label>
+											<input type="number" class="form-control" name="cardNo" min="0" max="9999999999999999" required/>
+										</div>
+										<div class="form-group">
+											<label for="cvv" class="col-form-label">CVV</label>
+											<input type="number" class="form-control" name="cvv" min="0" max="999" required/>
+										</div>
+										<div class="form-group">
+											<label for="billingName" class="col-form-label">Card Holder Name</label>
+											<input type="text" class="form-control" name="billingName" required/>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary">Confirm</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
 				
 		</div>	
 	</body>
@@ -131,7 +186,7 @@
 	
 	var amountLoop = setInterval(function(){
 		$.ajax({
-			url: "amount",
+			url: "amount/<%=eventId%>",
 			type: "POST",			
 			success: function(data) {
 			  $('#totalRaised').html(data);	
@@ -141,40 +196,35 @@
 		  });
 	}, 2000);
 
-	var achievedLoop = setInterval(function(){
-		$.ajax({
-			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(data),
-			type: "POST",			
-			success: function(data) {
-				
-			},
-			error:   function(xhr, text, err) {
-			}
-		  });
-	}, 100000);
-	
+	var milestones = $('.milestones');
 
-	$('#milestone').click(function(){
-		//milestonePop("You reached the goal!");	
+	var achievedLoop = setInterval(function(){
 		$.ajax({
 			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(),
 			type: "POST",			
 			success: function(data) {
-				if(data&& data!='None'){
-					milestonePop(data);
+				if(data){
+					for(var d =0;d<data.length;d++){						
+						if(milestones[d].getAttribute("data-ach")=='false'){
+							milestonePop("Achieved €" + milestones[d].innerHTML + " goal!");
+						}
+					}
 				}
 			},
 			error:   function(xhr, text, err) {
 			}
 		  });
-	});
+	}, 1000);	
 
 	function milestonePop(milestoneMessage){
 		$('#milestonePopup').show();
 		$('#milestoneText').text(milestoneMessage);
 		$('#milestoneText').show();
 		setTimeout(function(){ $('#milestonePopup').fadeOut(); }, 3000);
-		setTimeout(function(){ $('#milestoneText').fadeOut(); }, 3000);
+		setTimeout(function(){ $.when($('#milestoneText').fadeOut()).done(function() {
+				location.reload();
+			});
+		}, 3000);
 	}
 
 	</script>

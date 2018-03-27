@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var milestoneMapper = require('../mappers/milestoneMapper');
+var paymentMapper = require('../mappers/paymentMapper');
+var Payment = require('../models/payment');
 var Milestones = require('../models/milestones');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 
@@ -10,16 +12,26 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 		if(err){
 			res.send(err);
 		}
+		if(!result){
+			res.redirect('/');
+		}
 		milestoneMapper.findMilestonesByEventId(req.params.event_id,function(error,milestones){
 			if(err){
 				res.send(error);
 			}
-			res.render('live',{result:result,milestones:milestones,eventId:req.params.event_id});
+			var total = 0;
+			Payment.find({event_id:req.params.event_id},function(error,payments){
+				for(var i=0;i<payments.length;i++){
+					total += payments[i].amount;
+				}
+				res.render('live',{result:result,milestones:milestones,eventId:req.params.event_id,totalRaised:total,err: req.flash('err'),succ: req.flash('succ')});
+			});
+			
 		});
 	});
 });
 
-router.post('/add/:eventId/:existsGoal',function(req,res){
+router.post('/add/:eventId/:existsGoal',isLoggedIn,function(req,res){
 
 	const newAmounts = {achieved:false,amount:req.body.amount,label:req.body.label};
 
@@ -50,30 +62,51 @@ router.post('/add/:eventId/:existsGoal',function(req,res){
 	
 });
 
-router.post('/amount', function(req, res){
-	//TODO
-	res.send('10');
+router.post('/amount/:event_id',isLoggedIn, function(req, res){
+	var total = 0;
+	Payment.find({event_id:req.params.event_id},function(error,result){
+		for(var i=0;i<result.length;i++){
+			total += result[i].amount;
+		}
+		res.send(''+total);
+	});	
 }); 
 
-router.post('/achieved/:eventId/:totalRaised', function(req, res){
-	var notFound = true;
-	Milestones.findOne({eventId:req.params.eventId},function(err,miles){
-		
-		for(var x=0;x<miles.amounts.length;x++){			
-			if(req.params.totalRaised>=miles.amounts[x].amount && miles.amounts[x].achieved == false){
-				if(notFound){
-					miles.amounts[x].achieved = true;	
-					notFound = false;
-					res.send('Achieved € ' + miles.amounts[x].amount + ' goal');
-					miles.save(function () {		
-						
-					});
-				}
-				
-			}
+router.post('/donate', function(req, res){
+	
+	let newPaymentObj = {
+		event_id: req.body.eventId,
+		amount: req.body.donationValue,
+		user_id: req.user._id,
+		type: 'Donation'
+	};
+	paymentMapper.addPayment(newPaymentObj, function(err) {
+
+		if(err){
+			res.redirect('/');
 		}
-		if(notFound){			
-			res.send('None');
+		else{
+			req.flash('succ', 'Thank you for your donation!');
+			res.redirect('/live/'+req.body.eventId);
+		}
+
+	});
+
+}); 
+
+router.post('/achieved/:eventId/:totalRaised',isLoggedIn, function(req, res){
+
+	Milestones.findOne({eventId:req.params.eventId},function(err,miles){
+		if(miles!=null){
+			var achArr = [];
+			for(var x=0;x<miles.amounts.length;x++){			
+				if(req.params.totalRaised>=miles.amounts[x].amount){
+					achArr.push(x);
+					miles.amounts[x].achieved = true;				
+					miles.save();										
+				}
+			}
+			res.send(achArr);
 		}
 	});
 }); 
