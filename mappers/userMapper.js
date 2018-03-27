@@ -15,8 +15,8 @@ function allUsers(callback){
 	});
 }
 
-function addUser(name,email,password,type,salt,subscriptions,eventsAttended, callback){
-	var newUser = new User({name: name,email: email,password:password,type:type,salt:salt,subscriptions:subscriptions,eventsAttended:eventsAttended});
+function addUser(name,email,telephoneNo,password,type,salt,subscriptions,eventsAttended, callback){
+	var newUser = new User({name: name,email: email,telephoneNo:telephoneNo,password:password,type:type,salt:salt,subscriptions:subscriptions,eventsAttended:eventsAttended});
 	newUser.save(function (err,product) {
 		return callback(err,product);
 	});
