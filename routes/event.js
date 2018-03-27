@@ -50,8 +50,14 @@ router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-
-		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
+		userMapper.allUsers(function(error,userResult){
+			let userEmails = userResult.map(invitee=>invitee.email);
+			let usersWithAllInfoAvailable = result.invitees.map(invitee=>
+				(userEmails.indexOf(invitee.email) > -1)?userResult[userEmails.indexOf(invitee.email)]:
+					{email:invitee.email});
+			res.render('viewGuestDetails', {result,usersWithAllInfoAvailable,err: req.flash('err'),succ: req.flash('succ')});
+		});
+		
 	});
 });
 
