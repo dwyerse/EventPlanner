@@ -67,6 +67,12 @@ function deleteUserByEmail(email, callback){
 	});
 }
 
+function findMultipleUsersByEmail(emails,callback){
+	User.find( { email: { $in : emails }}, function(err,users){
+		return callback(err,users);
+	});
+}
+
 function addAdminUser(callback){
 	User.update({email:ADMINUSER.email}, ADMINUSER, {upsert:true}, function(err) {
 		callback(err);
@@ -90,4 +96,5 @@ function updateUserSubs(email, newSub, isSub, callback) {
 	}
 }
 
-module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,deleteUserByEmail,addAdminUser,findSubscribedUsers,updateUserSubs};
+module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,
+	deleteUserByEmail,addAdminUser,findSubscribedUsers,updateUserSubs, findMultipleUsersByEmail};
