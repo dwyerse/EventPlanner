@@ -18,14 +18,21 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 		}
 		milestoneMapper.findMilestonesByEventId(req.params.event_id,function(error,milestones){
 			if(err){
-				res.send(error);
+				req.flash('err', error);	
+				res.redirect('/');
 			}
 			var total = 0;
-			Payment.find({event_id:req.params.event_id},function(error,payments){
+			Payment.find({event_id:req.params.event_id},function(error2,payments){
+
+				if(error2){
+					req.flash('err', error2);	
+					res.redirect('/');
+				}
+
 				for(var i=0;i<payments.length;i++){
 					total += payments[i].amount;
 				}
-				if (req.user.type === 'admin'){
+				if (req.user.type == 'admin'){
 					res.render('live',{result:result,milestones:milestones,isAdminUser:true,eventId:req.params.event_id,totalRaised:total,err: req.flash('err'),succ: req.flash('succ')});
 				}
 				else{
@@ -48,18 +55,20 @@ router.post('/add/:eventId/:existsGoal',isLoggedIn,isAdminUser,function(req,res)
 	};
 
 	if(req.params.existsGoal=='true'){
-
 		milestoneMapper.findMilestonesByEventId(req.params.eventId,function(error,milestone){
 			
+			if(error){
+				req.flash('err', error);	
+				res.redirect('/live/'+req.params.eventId);
+			}
+
 			milestone.amounts.push(newAmounts);
 			var editedMilestone = milestone;
 
 			milestoneMapper.editMilestones(req.params.eventId,editedMilestone,function(){
 				res.redirect('/live/'+req.params.eventId);
 			});
-		});
-
-		
+		});		
 	}
 	else{
 		milestoneMapper.createMilestones(new Milestone(newMilestone),function(){
@@ -72,6 +81,10 @@ router.post('/add/:eventId/:existsGoal',isLoggedIn,isAdminUser,function(req,res)
 router.post('/amount/:event_id',isLoggedIn, function(req, res){
 	var total = 0;
 	Payment.find({event_id:req.params.event_id},function(error,result){
+		if(error){
+			req.flash('err', err);		
+			res.send('Could not access donation total');
+		}
 		for(var i=0;i<result.length;i++){
 			total += result[i].amount;
 		}
@@ -90,6 +103,7 @@ router.post('/donate', function(req, res){
 	paymentMapper.addPayment(newPaymentObj, function(err) {
 
 		if(err){
+			req.flash('err', 'The was an issue with the doantion!');
 			res.redirect('/');
 		}
 		else{
@@ -104,6 +118,12 @@ router.post('/donate', function(req, res){
 router.post('/achieved/:eventId/:totalRaised',isLoggedIn, function(req, res){
 
 	Milestones.findOne({eventId:req.params.eventId},function(err,miles){
+
+		if(err){
+			req.flash('err', err);			
+			res.send('None');
+		}
+
 		if(miles!=null){
 			var achArr = [];
 			for(var x=0;x<miles.amounts.length;x++){			
@@ -114,6 +134,8 @@ router.post('/achieved/:eventId/:totalRaised',isLoggedIn, function(req, res){
 				}
 			}
 			res.send(achArr);
+		}else{
+			res.send('None');
 		}
 	});
 }); 

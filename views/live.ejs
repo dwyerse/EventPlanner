@@ -9,7 +9,7 @@
 <% if(err && err.length > 0) { %>
 	<% console.log(err) %>
 	<div class="alert alert-danger" role="alert">
-		Error in details provided: <%= err %>
+		Error: <%= err %>
 	</div>
 <% } %>
 <% if (succ && succ.length > 0) { %>
@@ -206,7 +206,7 @@
 			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(),
 			type: "POST",			
 			success: function(data) {
-				if(data){
+				if(data&&data!='None'){
 					for(var d =0;d<data.length;d++){						
 						if(milestones[d].getAttribute("data-ach")=='false'){
 							milestonePop("Achieved €" + milestones[d].innerHTML + " goal!");
