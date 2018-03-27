@@ -364,19 +364,21 @@ function addGuestDetails(event, details, callback) {
 	var inviteeIndex = 0;
 
 	for (var i = 0; i < numInvitees; i++)
-	{
-		if (event.invitees[i].state == 'Attending' && event.invitees[i].accessRequirements != null && event.invitees[i].dietaryRestrictions != null)
-		{
-			var invitee = event.invitees[i];
+	{	
+		var invitee = event.invitees[i];
 			
-			userMapper.findUserByEmail(invitee.email, function(err, user) {
+		userMapper.findUserByEmail(invitee.email, function(err, user) {
+			if (invitee.state == 'Attending' && invitee.accessRequirements != null && invitee.dietaryRestrictions != null)
+			{
 				guestDetails = guestDetails + 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
-				if (inviteeIndex == (numInvitees - 1)) {
-					callback(guestDetails);
-				}
-				inviteeIndex++;
-			});
-		}
+			}
+
+			if (inviteeIndex == (numInvitees - 1)) {
+				callback(guestDetails);
+			}
+
+			inviteeIndex++;
+		});
 	}
 }
 
