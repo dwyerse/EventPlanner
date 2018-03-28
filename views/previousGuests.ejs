@@ -64,7 +64,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<%	for (var i=0; i < result.length; i++) { %>
+						<%	if (result.length > 0) { 
+							for (var i=0; i < result.length; i++) { %>
 					   		<tr>
 					   			<td><%= result[i][0] %></td>
 						    	<td><%= result[i][1] %></td>
@@ -72,6 +73,11 @@
 						    	<td>&euro;<% if (result[i][3]) { %><%= result[i][3] %><% } else { %><%= '0' %><% } %></td>
 						    	<td><% if (result[i][4]) { %><%= result[i][4] %><% } else { %><%= '0' %><% } %></td>
 					   		</tr>
+						<%}
+						}
+						else
+						{%>
+							<strong><h5>There are currently no guests registered for the event.</h5></strong>
 						<%}%>
 					</tbody>
 						
