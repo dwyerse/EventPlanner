@@ -179,12 +179,14 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id, function(error, eventResult) {
 		if(error){
-			res.send(error);
+			req.flash('err', error);
+			res.redirect('/event/view/' + req.params.event_id);
 		}
 
 		paymentMapper.getPaymentBy_event_id(eventResult._id, function(err, payment) {
 			if (err) {
 				req.flash('err', err);
+				res.redirect('/event/view/' + req.params.event_id);
 			}
 			else
 			{				
@@ -200,11 +202,13 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 						if (notificationError)
 						{
 							req.flash('err', notificationError);
+							res.redirect('/event/view/' + req.params.event_id);
 						}
 
 						tableMapper.findTablesByEventId(eventResult.event_id, function(err, tables) {
 							if (err) {
 								req.flash('err', err);
+								res.redirect('/event/view/' + req.params.event_id);
 							}
 							else
 							{
@@ -213,6 +217,7 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 										if (err)
 										{
 											req.flash('err', err);
+											res.redirect('/event/view/' + req.params.event_id);
 										}
 										else
 										{
@@ -226,16 +231,17 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 						ticketInfoMapper.deleteTicketInfo(eventResult.event_id, function(err) {
 							// Call EventMapper function to delete event and any dependencies
 							if (err) {
-								req.flash('err', notificationError);
+								req.flash('err', err);
+								res.redirect('/event/view/' + req.params.event_id);
 							}
 							else {
 								eventMapper.deleteEvent(eventResult.event_id, function(err) {	
 									if (err) {
-										req.flash('err', err);							
+										req.flash('err', err);	
+										res.redirect('/event/view/' + req.params.event_id);						
 									}
 									else {
-										req.flash('succ', 'Event was successfully deleted.');
-															
+										req.flash('succ', 'Event was successfully deleted.');					
 										res.redirect('/events');
 									}
 								});
