@@ -102,7 +102,7 @@ router.post('/donate', function(req, res){
 
 		if(err){
 			req.flash('err', 'There was an issue with the donation!');
-			res.redirect('/');
+			res.redirect('/live/'+req.body.eventId);
 		}
 		else{
 			req.flash('succ', 'Thank you for your donation!');
