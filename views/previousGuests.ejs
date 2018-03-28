@@ -43,35 +43,64 @@
 		<h2 style="word-break: break-all;">Previous Guests</h2>
 		<br>
 
-
 		<div class="form-group col-md-12">
 			<table class="table">
+				<colgroup>
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+					<col span="1" style="width: 20%;">
+				</colgroup>
+
 				<thead>
 					<tr>
-						<th colspan="2" style="padding-right:140px;"></th>
-						<th colspan="2" style="padding-right:140px;">Events Attended</th>
+						<th style="padding-right:70px; padding-bottom:0px; border:none;">Guest Name</th>
+						<th style="padding-right:70px; padding-bottom:0px; border:none;">Guest Email</th>
+						<th style="padding-right:70px; padding-bottom:0px; border:none;">Event Title</th>
+						<th style="padding-right:70px; padding-bottom:0px; border:none;">Total Donations</th>
+						<th style="padding-right:70px; padding-bottom:0px; border:none;">Number of Donations</th>
+
 					</tr>
-					<tr>
-						<th style="padding-right:70px;">Guest Name</th>
-						<th style="padding-right:70px;">Guest Email</th>
-						<th style="padding-right:70px;">Event ID</th>
-						<th style="padding-right:70px;">Event Title</th>
-					</tr>
+
 				</thead>
 			</table>
 
 			<div style="height: 350px; overflow-y:auto;">
 				<table class="table">
+					<colgroup>
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+					</colgroup>
+
+					<thead>
+						<tr>
+							<th style="padding-top: 0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+							<th style="padding-top: 0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+							<th style="padding-top: 0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+							<th style="padding-top: 0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+							<th style="padding-top: 0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+						</tr>
+					</thead>
 					<tbody>
-						<%	for (var i=0; i < result.length; i++) { %>
+						<%	if (result.length > 0) { 
+							for (var i=0; i < result.length; i++) { %>
 					   		<tr>
-					   			<td style="padding-right:70px;"><%= result[i].name %></td>
-						    	<td style="padding-right:70px;"><%= result[i].email %></td>
-						    	<td style="padding-right:70px;"><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_id %><br><% } %></td>
-
-						    	<td style="padding-right:70px;"><% for (var j=0; j < result[i].eventsAttended.length; j++) { %><%= result[i].eventsAttended[j].event_title %><br><% } %></td>
-
+					   			<td><%= result[i][0] %></td>
+						    	<td><%= result[i][1] %></td>
+						    	<td><% for (var j=0; j < result[i][2].length; j++) { %><%= result[i][2][j] %><br><% } %></td>
+						    	<td>&euro;<% if (result[i][3]) { %><%= result[i][3] %><% } else { %><%= '0' %><% } %></td>
+						    	<td><% if (result[i][4]) { %><%= result[i][4] %><% } else { %><%= '0' %><% } %></td>
 					   		</tr>
+						<%}
+						}
+						else
+						{%>
+							<strong><h5>There are currently no guests registered for the event.</h5></strong>
 						<%}%>
 					</tbody>
 

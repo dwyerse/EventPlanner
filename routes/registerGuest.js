@@ -16,9 +16,7 @@ router.get('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 });
 
 router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
-
 	if(validGuestParams(req.body)){
-
 		var guestEmail = req.body.guestEmail;
 		var guestAccessRequirements = req.body.accessRequirements;
 		var guestDietaryRestrictions = req.body.dietaryRestrictions;
@@ -33,8 +31,6 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 			} else if (err) {
 				req.flash('err', err);
 			} else {
-				var user = result;
-
 				eventMapper.findEventBy_event_id(currentEventId, function(err, result) {
 					if (!result) {
 						req.flash('err', 'Event not found');
@@ -74,24 +70,7 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 									req.flash('err', error);
 								} else {
 									req.flash('succ', 'Succesfully registered guest');
-
-									user.eventsAttended.push({event_id:result.event_id, event_title:result.title});
-
-									userMapper.updateUserByEmail(user.email, user, function(err, result) {
-										if (!result) {
-											req.flash('err', 'User not found');
-										} else if (error) {
-											req.flash('err', error);
-										} else {
-											req.flash('succ', 'Successfully changed password!');
-										}
-										//res.redirect('/event/view' + req.params.event_id);
-
-									});
-
-									//return res.redirect('/event/view/'+ result.event_id);
 								}
-
 								res.redirect('/event/view/' + req.params.event_id);
 							});
 						}
@@ -100,14 +79,10 @@ router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 							req.flash('err', 'Guest has already been registered');
 							res.redirect('/register/guest/' + req.params.event_id);
 						}
-				
 					}
 				});
-						
 			}
-
 		});
-		
 	} else {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/view/' + req.params.event_id);
