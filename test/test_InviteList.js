@@ -5,14 +5,13 @@ const testInvitees = [{email:'test@email.com', state:'Pending'},{email:'test2@em
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
 	date:'01/01/2018',description:'test description',event_id:0,
-	creators:[],invitees:testInvitees };
+	creators:[],invitees:testInvitees,liveState:0 };
 var inviteList = require('../routes/inviteList');
 
 describe('Invite list testing suite', function() {
 
 	it('Should have at least one event in database', function(done) {
-		mapper.createEvent(TEST_EVENT.title,TEST_EVENT.location,TEST_EVENT.date,TEST_EVENT.description,0,
-			TEST_EVENT.creators,TEST_EVENT.invitees,function(err,res){
+		mapper.createEvent(TEST_EVENT,function(err,res){
 				eventID = res.event_id;
 				TEST_EVENT.event_id = res.event_id;
 				assert.equal(err,null);

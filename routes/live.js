@@ -15,6 +15,10 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 		if(!result){
 			res.redirect('/');
 		}
+		if(result.liveState==0){
+			res.redirect('/event/view/'+result.event_id);
+		}
+
 		milestoneMapper.findMilestonesByEventId(req.params.event_id,function(error,milestones){
 			if(err){
 				req.flash('err', error);	

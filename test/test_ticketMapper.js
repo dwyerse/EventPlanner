@@ -12,7 +12,7 @@ const TEST_TICKET = {
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
 	date:'01/01/2018',description:'test description',event_id:0,
-	creators:[],invitees:[] };
+	creators:[],invitees:[] ,liveState:0};
 
 describe('ticketMapper testing suite', function() {
 
@@ -20,8 +20,7 @@ describe('ticketMapper testing suite', function() {
 	before(function(done){
 		mongoose.connect(APP_DB);
 		//event_id is Event Ref so must be valid event ObjectId
-		eventMapper.createEvent(TEST_EVENT.title,TEST_EVENT.location,TEST_EVENT.date,TEST_EVENT.description,0,
-			TEST_EVENT.creators,TEST_EVENT.invitees,function(err,res){
+		eventMapper.createEvent(TEST_EVENT,function(err,res){
 				testEvent_id = res.event_id;
 				TEST_TICKET.event = res._id;
 				assert.equal(err,null);

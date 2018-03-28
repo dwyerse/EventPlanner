@@ -14,7 +14,8 @@ eventSchema.add({
 		state: String,
 		accessRequirements: String,
 		dietaryRestrictions: String
-	}]
+	}],
+	liveState:{type: Number}
 });
 
 eventSchema.pre('save', function (next) {

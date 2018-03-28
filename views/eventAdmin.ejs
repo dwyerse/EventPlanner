@@ -35,7 +35,12 @@
 	</div>
 	<div class="col-sm" style="margin-bottom:5px;">
 		<a href="/table/<%=result.event_id%>"><button class="btn btn-info">Table Plan</button> </a>
+		<%if(result.liveState==1){%>
 		<a href="/live/<%=result.event_id%>"><button class="btn btn-danger">Live Page</button> </a>
+		<a href ="/event/startLive/<%=result.event_id%>/0"><button class="btn btn-danger">End Live Event</button> </a>
+		<%}else{%>
+		<a href ="/event/startLive/<%=result.event_id%>/1"><button class="btn btn-danger">Start Live Event</button> </a>
+		<%}%>
 	</div>
 	
 	<%}%>

@@ -180,7 +180,13 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
-		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
+
+		const EVENT = {
+			title:req.body.title, location:req.body.location,
+			date:req.body.date,description:req.body.description,event_id:0,
+			creators:[req.user._id],invitees:[],liveState:0};
+
+		eventMapper.createEvent(EVENT,
 			function(error,result) {
 				if (!result) {
 					req.flash('err', 'Event not created');
@@ -219,6 +225,28 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		req.flash('err', 'Not all details provided');
 		res.redirect('/event/edit' + req.params.event_id);
 	}
+});
+
+router.get('/startLive/:event_id/:state',isLoggedIn, isAdminUser, function(req, res) {
+
+	console.log("HERE2");
+
+	eventMapper.setLiveState(req.params.event_id,req.params.state,function(err,result){
+
+		console.log("HERE");
+
+		if(err){
+			req.flash('err',err);
+			res.redirect('/event/view/' + req.params.event_id);
+		}
+		if(!res){
+			res.redirect('/');
+		}
+
+		res.redirect('/live/'+req.params.event_id);
+
+	});
+
 });
 
 //Attendee Report

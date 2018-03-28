@@ -9,7 +9,7 @@ const testInvitees = [{email:'test@email.com', state:'Pending'},{email:'test2@em
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
 	date:'01/01/2018',description:'test description',event_id:0,
-	creators:[],invitees:testInvitees };
+	creators:[],invitees:testInvitees,liveState:1};
 
 describe('eventMapper testing suite', function() {
 	before(function(done){
@@ -39,8 +39,7 @@ describe('eventMapper testing suite', function() {
 	});
 
 	it('should create a new event with correct values', function(done) {
-		mapper.createEvent(TEST_EVENT.title,TEST_EVENT.location,TEST_EVENT.date,TEST_EVENT.description,0,
-			TEST_EVENT.creators,TEST_EVENT.invitees,function(err,res){
+		mapper.createEvent(TEST_EVENT,function(err,res){
 				testEventId = res.event_id;
 				assert.equal(err,null);
 				assert.equal(res.title,TEST_EVENT.title);

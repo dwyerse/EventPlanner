@@ -1,7 +1,7 @@
 EventModel = require('../models/event');
 
-function createEvent(title,location,date,description,event_id,creators,invitees,callback){
-	var newEvent = new EventModel({title:title,location:location,date:date,description:description,event_id:event_id,creators:creators,invitees:invitees});
+function createEvent(event,callback){
+	var newEvent = new EventModel(event);
 	newEvent.save(function (err,product) {
 		return callback(err,product);
 	});
@@ -40,6 +40,7 @@ function updateEventBy_event_id(event_id,eventObj,callback){
 		res.event_id = eventObj.event_id;
 		res.creators = eventObj.creators;
 		res.invitees = eventObj.invitees;
+		res.liveState = eventObj.liveState;
 
 		res.save(function (err, updatedEvent) {
 			return callback(err,updatedEvent);
@@ -66,6 +67,8 @@ function updateEventDetailsBy_event_id(event_id,eventObj,callback){
 		});
 	});
 }
+
+
 
 function findInviteeEmails(event_id, callback){
 	EventModel.findOne({event_id:event_id}, 'invitees.email', function(err,event) {
@@ -115,6 +118,21 @@ function updateInviteeList(event_id,inviteeList,callback){
 	});
 }
 
+function setLiveState(event_id,liveState,callback){
+	EventModel.findOne({ event_id:event_id }, function(err,res){
+		if(err){
+			return callback(err);
+		}
+		if(!res){
+			return callback(err,[]);
+		}
+		res.liveState = liveState;
+		res.save(function (err, updatedEvent) {
+			return callback(err,updatedEvent);
+		});
+	});
+}
+
 function deleteEventByEventId(event_id, callback){
 	EventModel.remove({event_id:event_id}, function(err) {
 		return callback(err);
@@ -128,4 +146,4 @@ function deleteAllEvents(callback){
 }
 
 
-module.exports = {createEvent,updateEventBy_event_id,updateInviteeList,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents,findAttendees,findInviteeEmails,findAttendeeEmails, findAllEvents};
+module.exports = {createEvent,updateEventBy_event_id,setLiveState,updateInviteeList,updateEventDetailsBy_event_id,findEventBy_event_id,deleteEventByEventId,deleteAllEvents,findAttendees,findInviteeEmails,findAttendeeEmails, findAllEvents};
