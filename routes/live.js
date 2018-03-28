@@ -29,8 +29,8 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 					res.redirect('/event/view/'+req.params.event_id);
 				}
 				var str = tickets.toString();				
-				if(str.indexOf("_id: "+ result._id)==-1){
-					req.flash('err',"You do not have a ticket for this event");
+				if(str.indexOf('_id: '+ result._id)==-1){
+					req.flash('err','You do not have a ticket for this event');
 					res.redirect('/event/view/'+result.event_id);
 				}
 			});
