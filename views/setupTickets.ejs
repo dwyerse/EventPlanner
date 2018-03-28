@@ -40,16 +40,21 @@
  <br>
 	<form action="/event/tickets/setup/<%=event.event_id%>" method="post" id='form'>
 		<input type="hidden" name="event_id" value=<%=event.event_id%> />
+		<%if(ticketInfo.event_id) {%>
+			<input type="hidden" name="isUpdate" value=true />
+		<% } else { %>
+			<input type="hidden" name="isUpdate" value=false />
+		<% } %>
 		<div class="form-group row">
 			<div class= "col-xs-3">
 				<label for="totalTables">Number Of Tables</label>
-				<input type="number" class="form-control" name="totalTables" id="totalTables" onchange= "calculateTotalTickets()" min="0" pattern="\d" required/>
+				<input type="number" class="form-control" name="totalTables" id="totalTables" onchange= "calculateTotalTickets()" min="0" pattern="\d" value=<%=ticketInfo.tables.total%> required/>
 			</div>
 		</div>
 		<div class="form-group row">
 			<div class= "col-xs-3">
 				<label for="tableSize">Tickets per Table</label>
-				<input type="number" class="form-control" name="tableSize" id="tableSize" onchange="calculateTotalTickets()" min="0" pattern="\d" required/>
+				<input type="number" class="form-control" name="tableSize" id="tableSize" onchange="calculateTotalTickets()" min="0" pattern="\d" value=<%=ticketInfo.tables.size%> required/>
 			</div>
 		</div>
 		<div class="row">
@@ -60,13 +65,13 @@
 				<span class="input-group-text">€</span>
 			</div>
 			<div class= "col-xs-3">
-				<input type="number" class="form-control" name="tablePrice" min="0" step="0.01" required/>
+				<input type="number" class="form-control" name="tablePrice" min="0" step="0.01" value=<%=ticketInfo.tables.price%> required/>
 			</div>
 		</div>
 		<div class="form-group row">
 			<div class= "col-xs-3">
 				<label for="totalTickets">Number of General Tickets</label>
-				<input type="number" class="form-control" name="totalTickets" id="totalTickets" onchange="calculateTotalTickets()" min="0" pattern="\d" required/>
+				<input type="number" class="form-control" name="totalTickets" id="totalTickets" onchange="calculateTotalTickets()" min="0" pattern="\d" value=<%=ticketInfo.tickets.total%> required/>
 			</div>
 		</div>
 		<div class="row">
@@ -77,7 +82,7 @@
 				<span class="input-group-text">€</span>
 			</div>
 			<div class= "col-xs-3">
-				<input type="number" class="form-control" name="ticketPrice" min="0" step="0.01" required/>
+				<input type="number" class="form-control" name="ticketPrice" min="0" step="0.01" value=<%=ticketInfo.tickets.price%> required/>
 			</div>
 		</div> <br>
 		<h6 id="totalTicketsInForm">Total Amount Of Tickets: 0</h6>

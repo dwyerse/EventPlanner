@@ -98,3 +98,4 @@ function updateUserSubs(email, newSub, isSub, callback) {
 
 module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,
 	deleteUserByEmail,addAdminUser,findSubscribedUsers,updateUserSubs, findMultipleUsersByEmail};
+

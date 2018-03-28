@@ -13,6 +13,12 @@ function getTicketInfo(event_id, callback){
 	});
 }
 
+function updateTicketInfo(event_id, updatedTicket, callback){
+	TicketInformation.findOneAndUpdate({event_id:event_id}, updatedTicket, {new:true}, function(err, updatedTicket){
+		callback(err, updatedTicket);
+	});
+}
+
 function updateTicketAvailability(event_id, ticketsAvailable, tablesAvailable,  callback){
 	TicketInformation.findOneAndUpdate({event_id:event_id}, {$set: {'tickets.available' : ticketsAvailable, 'tables.available': tablesAvailable}}, {new:true}, function(err,result){
 		callback(err,result);
@@ -25,4 +31,4 @@ function deleteTicketInfo(event_id, callback) {
 	});
 }
 
-module.exports = {addTicketInfo, getTicketInfo, updateTicketAvailability, deleteTicketInfo};
+module.exports = {addTicketInfo, getTicketInfo, updateTicketInfo, updateTicketAvailability, deleteTicketInfo};
