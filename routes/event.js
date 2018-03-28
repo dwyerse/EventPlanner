@@ -4,11 +4,13 @@ var eventMapper = require('../mappers/eventMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
+var tableMapper = require('../mappers/tableMapper');
 var paymentMapper = require('../mappers/paymentMapper');
 var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
+var mailer = require('../config/mailer');
 EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
 const NEWEVENTS_SUB = 'Event_new';
@@ -127,6 +129,54 @@ router.get('/payments/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 });
 
+router.get('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id, function(err, result) {
+		if (err) {
+			res.send(err);
+		}
+
+		res.render('sendGuestDetails', {result, err: req.flash('err'),succ: req.flash('succ')});
+	});
+});
+
+router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id, function(err, result) {
+		if (!result) {
+			req.flash('err', 'Event not found');
+		}
+		else if (err) {
+			res.send(err);
+		}
+		else
+		{
+			var details = 'The following is a specification of guest dietary restrictions, access requirements and table arrangements for the upcoming event, ' + result.title + ' on ' + result.date + ':\n\n';
+
+			addGuestDetails(result, function(guestDetails) {
+				if (guestDetails == '') {
+					details = details + 'There are no guest requirements for this event.\n\n';
+				}
+				else
+				{
+					details = details + guestDetails;
+				}
+
+				addTableDetails(result, function(tableDetails) {
+					details = details + tableDetails;
+					sendEmailToCatering(req.body.cateringEmail, details, function(err) {
+						if (err) {
+							req.flash('err', err);
+						}
+						else
+						{
+							req.flash('succ', 'Succesfully sent email to catering');
+						}
+						return res.redirect('/event/view/' + req.params.event_id);
+					});
+				});
+			});
+		}
+	});
+});
 
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
@@ -397,6 +447,80 @@ function sendUpdateEmail(event) {
 			mailer.sendEventNotification(emails, event, 'updated');
 		}
 	});
+}
+
+function addGuestDetails(event, callback) {
+	var guestDetails = '';
+
+	if (event.invitees.length > 0) {
+		//For every invitee create a promise (for sync operation)
+		let promises = event.invitees.map(function(invitee) {
+			return new Promise((resolve) => {
+				if (invitee.state == 'Attending' && (invitee.accessRequirements != null || invitee.dietaryRestrictions != null))
+				{
+					userMapper.findUserByEmail(invitee.email, function(err, user) {
+						guestDetails += 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
+						resolve();
+					});
+				} else{
+					resolve();
+				}
+			});
+		});
+		//Force node to execute all the promises in order before callback
+		Promise.all(promises).then(function(){
+			callback(guestDetails);
+		});
+	}
+	else {
+		callback(guestDetails);
+	}
+}
+
+function addTableDetails(event, callback) {
+	var tableDetails = '';
+
+	tableMapper.findTablesByEventId(event.event_id, function(err,table) {
+		if (!err && table != null && table.length > 0) {
+			for (var x = 0; x < table.length; x++) {
+				tableDetails = tableDetails + 'Table: ' + table[x].tableNumber + '\n';
+
+				for (var y=0; y < table[x].tableLabels.length; y++) {
+					tableDetails = tableDetails + table[x].tableLabels[y];
+
+					if (y != table[x].tableLabels.length-1) {
+						tableDetails = tableDetails + ', ';
+					}
+				}
+
+				tableDetails = tableDetails + '\n';
+
+				for(var z=0; z < table[x].seatLabels.length; z++) {
+					tableDetails = tableDetails + 'Seat ' + (z + 1) + ': ' + table[x].seatLabels[z] + '\n';
+				}
+				tableDetails = tableDetails + '\n';
+			}
+		}
+		else
+		{
+			tableDetails = tableDetails + 'No table details have been allocated for the event.';
+		}
+
+		callback(tableDetails);
+	});
+}
+
+function sendEmailToCatering(cateringEmail, guestAndTableDetails, callback) {
+	body = guestAndTableDetails;
+
+	recipient = [];
+	recipient.push(cateringEmail);
+
+	if (cateringEmail) {
+		mailer.sendMail(recipient, [], 'Guest Details', body, function(err, succ) {
+			callback(err, succ);
+		});
+	}
 }
 
 function getNewFilename(filepath, eventId){
