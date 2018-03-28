@@ -12,12 +12,12 @@ describe('Invite list testing suite', function() {
 
 	it('Should have at least one event in database', function(done) {
 		mapper.createEvent(TEST_EVENT,function(err,res){
-				eventID = res.event_id;
-				TEST_EVENT.event_id = res.event_id;
-				assert.equal(err,null);
-				assert.equal(res.title,TEST_EVENT.title);
-				done();
-			});
+			eventID = res.event_id;
+			TEST_EVENT.event_id = res.event_id;
+			assert.equal(err,null);
+			assert.equal(res.title,TEST_EVENT.title);
+			done();
+		});
 	});
 
 	it('Should be able to add invitee', function(done){

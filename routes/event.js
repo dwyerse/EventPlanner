@@ -229,11 +229,7 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 
 router.get('/startLive/:event_id/:state',isLoggedIn, isAdminUser, function(req, res) {
 
-	console.log("HERE2");
-
-	eventMapper.setLiveState(req.params.event_id,req.params.state,function(err,result){
-
-		console.log("HERE");
+	eventMapper.setLiveState(req.params.event_id,req.params.state,function(err){
 
 		if(err){
 			req.flash('err',err);

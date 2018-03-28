@@ -21,11 +21,11 @@ describe('ticketMapper testing suite', function() {
 		mongoose.connect(APP_DB);
 		//event_id is Event Ref so must be valid event ObjectId
 		eventMapper.createEvent(TEST_EVENT,function(err,res){
-				testEvent_id = res.event_id;
-				TEST_TICKET.event = res._id;
-				assert.equal(err,null);
-				done();
-			});
+			testEvent_id = res.event_id;
+			TEST_TICKET.event = res._id;
+			assert.equal(err,null);
+			done();
+		});
 	});
 
 	after(function() {

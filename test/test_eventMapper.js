@@ -40,13 +40,13 @@ describe('eventMapper testing suite', function() {
 
 	it('should create a new event with correct values', function(done) {
 		mapper.createEvent(TEST_EVENT,function(err,res){
-				testEventId = res.event_id;
-				assert.equal(err,null);
-				assert.equal(res.title,TEST_EVENT.title);
-				assert.equal(res.invitees.length, 2);
-				assert.equal(res.creators.length, 1);
-				done();
-			});
+			testEventId = res.event_id;
+			assert.equal(err,null);
+			assert.equal(res.title,TEST_EVENT.title);
+			assert.equal(res.invitees.length, 2);
+			assert.equal(res.creators.length, 1);
+			done();
+		});
 	});
 
 	it('should find all events including created event', function(done) {

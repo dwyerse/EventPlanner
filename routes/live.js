@@ -10,6 +10,7 @@ var isAdminUser = require('../config/utils').isAdminUser;
 router.get('/:event_id',isLoggedIn, function(req, res) {	
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
+			req.flash('err',err);
 			res.send(err);
 		}
 		if(!result){
