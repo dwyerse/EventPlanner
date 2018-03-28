@@ -41,8 +41,10 @@ router.get('/guests',isLoggedIn, isAdminUser, function(req, res) {
 							}
 						}
 
-						filteredResult.push([users[i].name, users[i].email, userEvents, amountSpent, numDonations]);
-						
+						if (userEvents.length > 0)
+						{
+							filteredResult.push([users[i].name, users[i].email, userEvents, amountSpent, numDonations]);
+						}
 					}
 
 					filteredResult.sort(function(current, next){return next[3] - current[3];});
