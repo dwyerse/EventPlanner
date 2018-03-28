@@ -22,21 +22,22 @@ router.get('/guests',isLoggedIn, isAdminUser, function(req, res) {
 			var finalResult = [];
 
 			for (var i = 0; i < filteredResult.length; i++) {
-				//var amountSpent = [];
 				var amountSpent = 0;
+				var numDonations = 0;
+
 
 				for (var j = 0; j < payments.length; j++) {
 					if (filteredResult[i]._id == payments[j].user_id)
 					{
-						//amountSpent.push(payments[j].amount);
 						amountSpent = amountSpent + payments[j].amount;
+						numDonations++;
 					}
 				}
 
-				finalResult.push([filteredResult[i], amountSpent]);
+				finalResult.push([filteredResult[i], [amountSpent, numDonations]]);
 			}
 
-			finalResult.sort(function(current, next){return next[1] - current[1];});
+			finalResult.sort(function(current, next){return next[1][0] - current[1][0];});
 
 			res.render('previousGuests', {result: finalResult,err: req.flash('err'),succ: req.flash('succ')});
 		
