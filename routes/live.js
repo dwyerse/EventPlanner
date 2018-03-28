@@ -4,7 +4,6 @@ var eventMapper = require('../mappers/eventMapper');
 var milestoneMapper = require('../mappers/milestoneMapper');
 var paymentMapper = require('../mappers/paymentMapper');
 var Payment = require('../models/payment');
-var Milestones = require('../models/milestones');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 
@@ -22,7 +21,7 @@ router.get('/:event_id',isLoggedIn, function(req, res) {
 				res.redirect('/');
 			}
 			var total = 0;
-			Payment.find({event_id:req.params.event_id},function(error2,payments){
+			Payment.find({event_id:result._id},function(error2,payments){
 
 				if(error2){
 					req.flash('err', error2);	
@@ -93,49 +92,50 @@ router.post('/amount/:event_id',isLoggedIn, function(req, res){
 }); 
 
 router.post('/donate', function(req, res){
-	
 	let newPaymentObj = {
-		event_id: req.body.eventId,
+		event_id: req.body.eventObjId,
 		amount: req.body.donationValue,
 		user_id: req.user._id,
-		type: 'Donation'
+		type: 'donation'
 	};
 	paymentMapper.addPayment(newPaymentObj, function(err) {
 
 		if(err){
-			req.flash('err', 'The was an issue with the doantion!');
+			req.flash('err', 'There was an issue with the donation!');
 			res.redirect('/');
 		}
 		else{
 			req.flash('succ', 'Thank you for your donation!');
 			res.redirect('/live/'+req.body.eventId);
 		}
-
 	});
 
 }); 
 
 router.post('/achieved/:eventId/:totalRaised',isLoggedIn, function(req, res){
 
-	Milestones.findOne({eventId:req.params.eventId},function(err,miles){
+	milestoneMapper.findMilestonesByEventId(req.params.eventId,function(err,miles){
 
 		if(err){
 			req.flash('err', err);			
 			res.send('None');
-		}
-
-		if(miles!=null){
-			var achArr = [];
-			for(var x=0;x<miles.amounts.length;x++){			
-				if(req.params.totalRaised>=miles.amounts[x].amount){
-					achArr.push(x);
-					miles.amounts[x].achieved = true;				
-					miles.save();										
-				}
-			}
-			res.send(achArr);
 		}else{
-			res.send('None');
+
+			if(miles!=null){
+				var achArr = [];
+				for(var x=0;x<miles.amounts.length;x++){			
+					if(req.params.totalRaised>=miles.amounts[x].amount){
+						achArr.push(x);
+						miles.amounts[x].achieved = true;						
+						milestoneMapper.editMilestones(req.params.eventId,miles,function(){
+
+						});															
+					}
+				}
+				res.send(achArr);
+			}else{
+				res.send('None');
+			}
 		}
 	});
 }); 

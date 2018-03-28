@@ -125,14 +125,6 @@
 						</div>
 						<%}%>
 
-					</div>
-					<div class="form-group">
-						<h4>Location</h4>
-						<label style="word-break: break-all;"><%= result.location %></label>
-					</div>
-					<div class="form-group">
-						<h4>Date</h4>
-						<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
 					</div>	
 				</div>	
 				
@@ -150,6 +142,7 @@
 									<h4 class="modal-title">Payment</h4>
 									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 								</div>
+									<input type="hidden" name="eventObjId" value="<%=result._id%>" />
 									<input type="hidden" name="eventId" value="<%=eventId%>" />
 									<input type="hidden" name="paymentAmount" id="paymentAmount" value=0 />
 									<div class="modal-body">
@@ -192,10 +185,13 @@
 	
 	var amountLoop = setInterval(function(){
 		$.ajax({
-			url: "amount/<%=eventId%>",
+			url: "amount/<%=result._id%>",
 			type: "POST",			
 			success: function(data) {
-			  $('#totalRaised').html(data);	
+				console.log(data);
+				var asdf = data.toLocaleString('en');
+				console.log(asdf);
+			  $('#totalRaised').html(data.toLocaleString('en'));	
 			},
 			error:   function(xhr, text, err) {
 			}
@@ -211,8 +207,8 @@
 			success: function(data) {
 				if(data&&data!='None'){
 					for(var d =0;d<data.length;d++){						
-						if(milestones[d].getAttribute("data-ach")=='false'){
-							milestonePop("Achieved €" + milestones[d].innerHTML + " goal!");
+						if(milestones[data[d]].getAttribute("data-ach")=='false'){
+							milestonePop("Achieved €" + milestones[data[d]].innerHTML + " goal!");
 						}
 					}
 				}
