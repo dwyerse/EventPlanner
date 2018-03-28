@@ -22,11 +22,13 @@ router.get('/guests',isLoggedIn, isAdminUser, function(req, res) {
 			var finalResult = [];
 
 			for (var i = 0; i < filteredResult.length; i++) {
+				//var amountSpent = [];
 				var amountSpent = 0;
 
 				for (var j = 0; j < payments.length; j++) {
 					if (filteredResult[i]._id == payments[j].user_id)
 					{
+						//amountSpent.push(payments[j].amount);
 						amountSpent = amountSpent + payments[j].amount;
 					}
 				}
