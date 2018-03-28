@@ -5,14 +5,15 @@ var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
 var tableMapper = require('../mappers/tableMapper');
+var paymentMapper = require('../mappers/paymentMapper');
 var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
+var mailer = require('../config/mailer');
 EventModel = require('../models/event');
 const EVENT_SUB_PREFIX = 'Event_';
 const NEWEVENTS_SUB = 'Event_new';
-var mailer = require('../config/mailer');
 const ADMIN_ACCOUNT = 'admin';
 
 router.get('/view/:event_id',isLoggedIn, function(req, res) {
@@ -28,6 +29,30 @@ router.get('/view/:event_id',isLoggedIn, function(req, res) {
 				res.render('eventUser', {result, err: req.flash('err'), succ: req.flash('succ'), menus:menuResult, isSubscribed});
 			}
 		});
+	});
+});
+
+router.get('/inviteList/:event_id', isAdminUser, isLoggedIn, function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
+		if(err){
+			res.send(err);
+		}
+		if(result===null){
+			res.render('error');
+		}else{
+			let inviteeEmails = result.invitees.map(invitee=>invitee.email);
+			userMapper.findMultipleUsersByEmail(inviteeEmails,function(err,usersResult){
+				if(err){
+					res.send(err);
+				}
+				else{
+					paymentMapper.getAllPayments(function(err,paymentResult){
+						let userHasPaid = inviteList.usersThatHavePaid(paymentResult, result, usersResult);
+						res.render('inviteList', {result, userHasPaid, err: req.flash('err'), succ: req.flash('succ')});
+					});
+				}
+			});
+		}
 	});
 });
 
@@ -51,9 +76,57 @@ router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 		if(err){
 			res.send(err);
 		}
-
-		res.render('viewGuestDetails', {result,err: req.flash('err'),succ: req.flash('succ')});
+		userMapper.allUsers(function(error,userResult){
+			let userEmails = userResult.map(invitee=>invitee.email);
+			let usersWithAllInfoAvailable = result.invitees.map(invitee=>
+				(userEmails.indexOf(invitee.email) > -1)?userResult[userEmails.indexOf(invitee.email)]:
+					{email:invitee.email});
+			res.render('viewGuestDetails', {result,usersWithAllInfoAvailable,err: req.flash('err'),succ: req.flash('succ')});
+		});
+		
 	});
+});
+
+router.get('/payments/:event_id',isLoggedIn, isAdminUser, function(req, res) {
+	eventMapper.findEventBy_event_id(req.params.event_id,function(err,eventResult){
+		if(err){
+			res.send(err);
+		}
+		if(eventResult===null){
+			res.render('error');
+		}else{
+			paymentMapper.getAllPayments(function(err,paymentResult){
+				if(err){
+					res.send(err);
+				}
+				userMapper.allUsers(function(err,userResult){
+					let names = [];
+					let payments = [];
+					let paymentTotal = 0;
+					for (let i = 0; i < paymentResult.length; i++) {
+						if(paymentResult[i].event_id===eventResult._id+''){
+							payments.push(paymentResult[i]);
+							paymentTotal+=paymentResult[i].amount;
+							let userExists = false;
+							for (let j = 0; j < userResult.length; j++) {
+								if(userResult[j]._id+''===paymentResult[i].user_id+''){
+									names.push(userResult[j].name);
+									userExists=true;
+									break;
+								}
+							}
+							if(!userExists){
+								names.push('');
+							}
+						}
+					}
+					res.render('eventPayments', {event:req.params.event_id,paymentTotal, 
+						names, payments, err: req.flash('err'),succ: req.flash('succ')});
+				});
+			});
+		}
+	});
+
 });
 
 router.get('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res) {
@@ -181,10 +254,10 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 });
 
 //Add invitee
-router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
+router.post('/inviteList/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
 		if(!req.body.email){
-			res.redirect('/event/view/' + req.params.event_id);
+			res.redirect('/event/inviteList/' + req.params.event_id);
 		}
 		else{
 			var emailAlreadyExists = false;
@@ -196,7 +269,7 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 			}
 			if(emailAlreadyExists){
 				req.flash('err', 'Invitee failed to be added: invitee already exists');
-				res.redirect('/event/view/' + req.params.event_id);
+				res.redirect('/event/inviteList/' + req.params.event_id);
 			}
 			else{
 
@@ -207,20 +280,31 @@ router.post('/view/:event_id/addInvitee',isLoggedIn,isAdminUser,function(req,res
 						req.flash('err', 'Invitee failed to be added');
 					}
 				});
-				mailer.sendInvitation([req.body.email],result,function(err){
-					if(err){
-						req.flash('err', 'Email not sent');
-					}
-				});
 				req.flash('succ', 'Invitee added');
-				res.redirect('/event/view/' + req.params.event_id);
+				res.redirect('/event/inviteList/' + req.params.event_id);
 			}
 		}
 	});
 });
 
+router.post('/inviteList/:event_id/invitePending', isLoggedIn, isAdminUser, function(req,res){
+	eventMapper.findEventBy_event_id(req.params.event_id, function(error,result){
+		inviteList.mailPendingInvitees(result,function(err){
+			if(err){
+				req.flash('err', err);
+				res.redirect('/event/inviteList/' + req.params.event_id);
+			}
+			else{
+				req.flash('succ', 'Invites Sent!');
+				res.redirect('/event/inviteList/' + req.params.event_id);
+			}
+		});
+	});
+
+});
+
 //Remove invitee
-router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(req,res){
+router.post('/inviteList/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(req,res){
 	eventMapper.findEventBy_event_id(req.params.event_id,function(error,result){
 
 		var newInvitees = [];
@@ -235,7 +319,7 @@ router.post('/view/:event_id/removeInvitee', isLoggedIn, isAdminUser,function(re
 			}
 		});
 		req.flash('succ', 'Invitee removed');
-		res.redirect('/event/view/' + req.params.event_id);
+		res.redirect('/event/inviteList/' + req.params.event_id);
 	});
 });
 
@@ -455,4 +539,5 @@ function getNewFilename(filepath, eventId){
 function validUpdateParams(body){
 	return (body.title&&body.location&&body.date&&body.description);
 }
+
 module.exports = router;
