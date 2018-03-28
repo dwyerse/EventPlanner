@@ -1,12 +1,12 @@
 <head>
-	<title>Guest Details</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<title>Guest Details</title>
+		<meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -25,52 +25,93 @@
   </div>
 </nav>
 <div class="container">
-	<% if(err && err.length > 0) { %>
-	<div class="alert alert-danger" role="alert">
-		Error in details provided: <%= err %>
-	</div>
-	<% } %>
-	<% if (succ && succ.length > 0) { %>
-	<div class="alert alert-success" role="alert">
-		<%= succ %>
-	</div>
-	<% } %>
-	<br>
-	<h2 style="word-break: break-all;">Guest Details</h2>
-	<br>
+		<% if(err && err.length > 0) { %>
+			<div class="alert alert-danger" role="alert">
+				Error in details provided: <%= err %>
+			</div>
+		<% } %>
+		<% if (succ && succ.length > 0) { %>
+			<div class="alert alert-success" role="alert">
+				<%= succ %>
+			</div>
+		<% } %>
 
-	<div class="form-group col-md-12">
-		<table class="table table-sm">
-			<thead>
-				<th>Guest Email</th>
-				<th>Status</th>
-				<th>Access Requirements</th>
-				<th>Dietary Requirements</th>
-				<th>Telephone #</th>
-			</thead>
-			<% if (result.invitees.length > 0) {
-			for (var i=0; i < result.invitees.length; i++) { %>
-			<tr>
-				<td><%= result.invitees[i].email %></td>
-				<td><%= result.invitees[i].state %></td>
-				<td><%= result.invitees[i].accessRequirements %></td>
-				<td><%= result.invitees[i].dietaryRestrictions %></td>
-				<td><%=usersWithAllInfoAvailable[i].telephoneNo%></td>
+		<div class="row" style="padding-top: 10px;">
+			<div class="form-group col-md-8">
+				<h2 style="word-break: break-all;">Guest Details</h2>
+			</div>
+			
+			<div class="form-group col-md-4">
+				<a href="/event/guests/send/<%=result.event_id%>"><button class="btn btn-primary">Send Details to Catering</button></a>
+			</div>
+		</div>
 
-			</tr>
-			<% 	} 
+		<div class="row">
+			<div class="form-group col-md-12">
+				<table class="table">
+					<colgroup>
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+						<col span="1" style="width: 20%;">
+					</colgroup>
 
-		}
-		else
-		{ %>
-			<strong>
-				<h5>There are currently no guests registered for the event.</h5>
-				<% } %>
-			</table>
+					<thead>
+						<tr>
+							<th style="padding-right:70px;">Guest Email</th>
+							<th style="padding-right:70px;">Status</th>
+							<th style="padding-right:70px;">Access Requirements</th>
+							<th style="padding-right:70px;">Dietary Restrictions</th>
+							<th style="padding-right:70px;">Telephone #</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="height: 350px; overflow-y:auto;">
+					<table class="table">
+						<colgroup>
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+							<col span="1" style="width: 20%;">
+						</colgroup>
 
+						<thead>
+							<tr>
+								<th style="padding-top:0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+								<th style="padding-top:0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+								<th style="padding-top:0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+								<th style="padding-top:0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+								<th style="padding-top:0px; padding-right:70px; padding-bottom: 0px; border: none;"></th>
+							</tr>
+						</thead>
+
+						<tbody>
+						<% if (result.invitees.length > 0) {
+								for (var i=0; i < result.invitees.length; i++) { %>
+						   		<tr>
+							    	<td><%= result.invitees[i].email %></td>
+							    	<td><%= result.invitees[i].state %></td>
+							    	<td><%= result.invitees[i].accessRequirements %></td>
+							    	<td><%= result.invitees[i].dietaryRestrictions %></td>
+							    	<td><%=usersWithAllInfoAvailable[i].telephoneNo%></td>
+						   		</tr>
+							<% 	} 
+
+							}
+							else
+							{ %>
+							<h5>There are currently no guests registered for the event.</h5>
+						<% } %>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 
 		<a href="/event/view/<%=result.event_id%>"><button class="btn btn-primary">Go Back</button> </a>
+		</div>
 		</div>
 	</body>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -1,0 +1,229 @@
+<head>
+	<title><%= result.name %></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+</head>
+<% if(err && err.length > 0) { %>
+	<% console.log(err) %>
+	<div class="alert alert-danger" role="alert">
+		Error: <%= err %>
+	</div>
+<% } %>
+<% if (succ && succ.length > 0) { %>
+	<div class="alert alert-success" role="alert">
+		<%= succ %>
+	</div>
+<% } %>
+	<style>
+			#milestonePopup{
+				display: none;
+				width:100%;
+				height:100%;
+				opacity:0.7;
+				background-color: orange;
+				z-index: 1000;
+				position: absolute;
+				left: 0;
+				top: 0;
+				text-align: center;
+				vertical-align: middle;
+				font-size: 3em;
+				margin: 0 auto;
+
+			}
+
+			#milestoneText{
+				display: none;
+				vertical-align: middle;
+				font-size: 4em;
+				position: absolute;
+				position: absolute;
+				top: 25%;
+				left: 25%;
+				width: 50%;
+				height: 25%;
+				text-align: center;
+				z-index: 1000;
+				vertical-align: middle;
+				color:white;
+			}
+
+			.achieved{
+				color:green;
+			}
+			.notachieved{
+				color:red;
+			}
+			.Blink {
+				animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+			}
+			@keyframes blinker {
+				from { opacity: 1; }
+				to { opacity: 0; }
+			}
+
+	</style>
+	<a href="/event/view/<%=eventId%>" ><button style="margin-top:10px;" class="btn btn-primary">Event Page</button> </a>
+	<div class="milestone" id ="milestonePopup"></div>
+	<div id="milestoneText"></div>
+	<body class="container">
+		<div class="row" style="margin-top:20px">
+				<div class="col-md-6" style="text-align:center;">
+					<div class="">
+						<div><i class="fa fa-circle text-danger Blink"></i>&nbsp; LIVE </div>
+						<h2 style="word-break: break-all; " > <%= result.title %> , Live Updates!</h2>
+					</div>
+					<br>
+					<div class="form-group">
+						<h3>Milestones</h3>
+						<%if(isAdminUser){%>
+						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">Add Milestone</button>
+						<%}%>
+						<% var existsGoal = true; if(!milestones||milestones.amounts.length==0){ existsGoal =false; %>
+							<div>-No milestones-</div>
+						<%}else{%>
+						<%for(var x=0;x<milestones.amounts.length;x++){%>
+							<div style="font-size:1.5em">
+								€<span class="milestones" data-ach="<%=milestones.amounts[x].achieved%>"><%=milestones.amounts[x].amount%></span>
+								<span><%=milestones.amounts[x].label%></span>
+								<span><% if(milestones.amounts[x].achieved){%>
+									<span class='achieved'>Achieved</span>
+								<% }else{ %>
+									<span class='notachieved'>Not reached yet</span>
+								<%}%>
+									</span>
+							</div>
+						<%}}%>
+						<%if(isAdminUser){%>
+
+						<div class="row">
+							<form action="/live/add/<%=eventId%>/<%=existsGoal%>" method="post" id='form'>
+								<div id="addModal" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button"style="float:left;margin:0;" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title" style="float:left">Add Milestone</h4>
+											</div>
+											<div class="modal-body" >
+												<label>Milestone Label</label>
+												<input type="label" name="label" class="form-control" value="" rows="5" required><br>
+												<label>Donation goal</label>
+												<input type="number" step="0.01" min="1" max = "9999999" name="amount" class="form-control" value="" rows="5" required><br>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+												<button type="submit" class="btn btn-success">Confirm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<%}%>
+
+					</div>
+				</div>
+
+				<div style="margin-top:10%;text-align:center;" class= "col-md-6">
+					<div class="">
+						<h2 style="word-break: break-all; " > Total raised <div style="color:green">€ <span id="totalRaised"><%=totalRaised.toLocaleString('en')%></span></div> </h2>
+					</div>
+					<a href="#paymentModal" class="btn btn-info" data-toggle="modal" onclick="">Make Donation</a>
+				</div>
+					<form action="donate" method="post" id='form'>
+					<div id="paymentModal" class="modal fade">
+						<div class="modal-dialog modal-confirm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">Payment</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								</div>
+									<input type="hidden" name="eventObjId" value="<%=result._id%>" />
+									<input type="hidden" name="eventId" value="<%=eventId%>" />
+									<input type="hidden" name="paymentAmount" id="paymentAmount" value=0 />
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="donationValue">Donation Amount</label>
+											<input type="number" class="form-control" step="0.01" name="donationValue" min="0" max= "1,000,000,000" required/>
+										</div>
+										<div class="form-group">
+											<label for="cardNo">Card Number</label>
+											<input type="number" class="form-control" name="cardNo" min="0" max="9999999999999999" required/>
+										</div>
+										<div class="form-group">
+											<label for="cvv" class="col-form-label">CVV</label>
+											<input type="number" class="form-control" name="cvv" min="0" max="999" required/>
+										</div>
+										<div class="form-group">
+											<label for="billingName" class="col-form-label">Card Holder Name</label>
+											<input type="text" class="form-control" name="billingName" required/>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary">Confirm</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+		</div>
+	</body>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+	<script> $("#datepicker").datepicker(); </script>
+	<script>
+
+	var amountLoop = setInterval(function(){
+		$.ajax({
+			url: "amount/<%=result._id%>",
+			type: "POST",
+			success: function(data) {
+			  $('#totalRaised').val(data.toLocaleString('en'));
+			},
+			error:   function(xhr, text, err) {
+			}
+		  });
+	}, 2000);
+
+	var milestones = $('.milestones');
+
+	var achievedLoop = setInterval(function(){
+		$.ajax({
+			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(),
+			type: "POST",
+			success: function(data) {
+				if(data&&data!='None'){
+					for(var d =0;d<data.length;d++){
+						if(milestones[data[d]].getAttribute("data-ach")=='false'){
+							milestonePop("Achieved €" + milestones[data[d]].innerHTML + " goal!");
+						}
+					}
+				}
+			},
+			error:   function(xhr, text, err) {
+			}
+		  });
+	}, 1000);
+
+	function milestonePop(milestoneMessage){
+		$('#milestonePopup').show();
+		$('#milestoneText').text(milestoneMessage);
+		$('#milestoneText').show();
+		setTimeout(function(){ $('#milestonePopup').fadeOut(); }, 3000);
+		setTimeout(function(){ $.when($('#milestoneText').fadeOut()).done(function() {
+				location.reload();
+			});
+		}, 3000);
+	}
+
+	</script>
