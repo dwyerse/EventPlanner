@@ -76,9 +76,14 @@
 		</table>
 	</div>
 	<%if(isAdmin){%>
-	<div class="form-group col-md-6">
-		<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
-	</div>
+	
+		<div class="form-group col-md-3">
+			<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
+		</div>
+		<div class="form-group col-md-3">
+			<a href="#deleteModal" data-toggle="modal"><button class="btn btn-primary">Delete</button></a>
+		</div>
+	
 	<%}%>
 	<div id="contactModal" class="modal fade">
 		<div class="modal-dialog modal-confirm">
@@ -110,6 +115,26 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						<button type="submit" class="btn btn-primary">Send Mail</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="deleteModal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Confirm Event Deletion</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<form method="post" action="/event/delete/<%=result.event_id%>">
+					<div class="modal-body">
+						<p>This Event will be deleted.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Confirm</button>
 					</div>
 				</form>
 			</div>

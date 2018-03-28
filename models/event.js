@@ -18,10 +18,18 @@ eventSchema.add({
 });
 
 eventSchema.pre('save', function (next) {
-
 	if (this.isNew){
-		EventModel.count().then(res => {
-			this.event_id = res; // Increment count
+		//EventModel.count().then(res => {
+		//this.event_id = res; // Increment count
+		//next();
+		//});
+		var newEvent = this;
+
+		EventModel.findOne().sort('-event_id').exec(function(err, res) {
+			if (res) {
+				newEvent.event_id = res.event_id + 1;				
+			}
+
 			next();
 		});
 	}
