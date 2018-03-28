@@ -16,17 +16,17 @@
 
 <br>
 <a href="/event/view/<%=event_id%>"><button class="btn btn-primary">Return to event</button> </a>
-<body class="container">		
+<body class="container">
 	<br>
 	<div style="text-align: center;font-size:2em;"><%=eventName%> - Table Plan</div>
 	<br>
 
-	<button type="button" style="margin-bottom:10px;"class="btn btn-warning" data-toggle="modal" data-target="#tableModal">Create Table</button>				
+	<button type="button" style="margin-bottom:10px;"class="btn btn-warning" data-toggle="modal" data-target="#tableModal">Create Table</button>
 	<% if(table.length>0){%>
-	<div class= "row">			
+	<div class= "row">
 			<% for(var i=0; i < table.length; i++) { %>
 			<div class="col-md-4" style="padding:5px;">
-				<div class="card" style="width:20rem; padding:15px;border-color:#0181C6; border-style:solid; border-radius:8px; border-width:medium">
+				<div class="card" style="width:20rem; padding:15px;border-color:#61210F; border-style:solid; border-radius:8px; border-width:medium">
 				<div class="card-body">
 					<h5 class="card-title" style="text-align: center;">Table <%= table[i].tableNumber%></h5>
 					<h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">
@@ -36,15 +36,15 @@
 								,
 								<%}%>
 
-							<% }%> 
+							<% }%>
 					</h6>
 					<p class="card-text">
 							<% for(var x=0; x < table[i].seatLabels.length; x++) { %>
 								Seat <%= x+1%> : <%= table[i].seatLabels[x]%><br>
-							<% }%> 
-					</p>		
-					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal<%=i%>">Edit</button>				
-					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%=i%>">Delete</button>							
+							<% }%>
+					</p>
+					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal<%=i%>">Edit</button>
+					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%=i%>">Delete</button>
 					<!-- Edit Model-->
 					<form action="/table/edit/<%= table[0].eventId %>/<%= table[i].tableNumber %>%>" method="post" id='form'>
 								<div id="myModal<%=i%>" class="modal fade" role="dialog">
@@ -55,25 +55,25 @@
 												<h4 class="modal-title" style="float:left">Table <%= table[i].tableNumber%></h4>
 											</div>
 											<div class="modal-body" >
-											<div style="margin:10px; text-align: center;">Table Labels</div>														
-											
-											<input type="name" name="label-0" class="labels0> form-control" value="<%= table[i].tableLabels[0]%>" name="label" rows="5" ><br>												
-																				
-											
+											<div style="margin:10px; text-align: center;">Table Labels</div>
+
+											<input type="name" name="label-0" class="labels0> form-control" value="<%= table[i].tableLabels[0]%>" name="label" rows="5" ><br>
+
+
 												<div style="padding:2px;text-align: center;">Seat Allocation</div>
 												<% for(var x=0; x < table[i].seatLabels.length; x++) { %>
 													Seat <%= x+1%> :<textarea type="name" class="form-control" name="seat-<%=x%>" rows="1" required><%= table[i].seatLabels[x]%></textarea> <br>
-												<% }%> 
+												<% }%>
 											</div>
-											<div class="modal-footer">		
-												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>							
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 												<button type="submit" class="btn btn-success">Confirm</button>
 											</div>
 										</div>
 									</div>
-								</div>			    
-							</div>		
-						</form>		
+								</div>
+							</div>
+						</form>
 						<!-- Delete Model-->
 						<div class="row">
 								<form action="/table/delete/<%=event_id%>/<%=table[i].tableNumber%>" method="post" id='form'>
@@ -87,30 +87,30 @@
 												<div style="padding:10px;">
 													<label >Are you sure you want to <b>delete table <%= table[i].tableNumber%>?</b></label>
 												</div>
-												
-												<div class="modal-footer">		
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>							
+
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 													<button type="submit" class="btn btn-success">Confirm</button>
 												</div>
 											</div>
 										</div>
-									</div>		
-								</form>	
+									</div>
+								</form>
 							</div>
 
 
 					</div>
-				</div>	
+				</div>
 				<%}%>
-			</div>			
-			
-		
+			</div>
+
+
 		</div>
 			<%}else{%>
 			<div style="text-align:center">-No tables allocated-</div>
 			<%}%>
 			<div class="row">
-				
+
 				<form action="/table/create/<%=event_id%> %>" method="post" id='form'>
 					<div id="tableModal" class="modal fade" role="dialog">
 						<div class="modal-dialog">
@@ -123,15 +123,15 @@
 									<label >How many seats?</label>
 									<input type="number" class="form-control" min="1" max="25" value="" name="seats" rows="5" required>
 								</div>
-								
-								<div class="modal-footer">		
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>							
+
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 									<button type="submit" class="btn btn-success">Confirm</button>
 								</div>
 							</div>
 						</div>
-					</div>		
-				</form>	
+					</div>
+				</form>
 			</div>
 
 </body>
@@ -143,10 +143,10 @@
 		$( document ).ready(function() {
 			var num = $('.labels'+ $(this).data("table")).length;
 			$(".addLabel").on("click", function () {
-				$('#noLabels' + $(this).data("table")).hide();				
+				$('#noLabels' + $(this).data("table")).hide();
 				$('#labelGroup' + $(this).data("table")).append('<input type="name" name="label-' +num+'" class="form-control" value="" name="label" rows="5" required><br>');
 				num = num + 1;
 			});
-	
+
 		});
 </script>

@@ -326,7 +326,7 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 					attending.push(result.invitees[i]);
 				}
 			}
-			res.render('attendeeReport', {attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
+			res.render('attendeeReport', {event_id:req.params.event_id,attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
 		});
 	});
 });
