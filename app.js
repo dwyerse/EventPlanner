@@ -25,6 +25,7 @@ var eventList = require('./routes/eventList');
 var table = require('./routes/table');
 var eventTickets = require('./routes/eventTickets');
 var ticketList = require('./routes/ticketList');
+var live = require('./routes/live')
 var userMapper = require('./mappers/userMapper');
 var http = require("http");
 var app = express();
@@ -93,7 +94,7 @@ app.use("/invitationResponse", inviteResponse);
 app.use('/events', eventList);
 app.use('/table', table);
 app.use('/tickets', ticketList);
-
+app.use('/live',live);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error("Not Found");
