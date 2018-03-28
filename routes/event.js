@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
-//var paymentMapper = require('../mappers/paymentMapper');
-var ticketMapper = require('../mappers/ticketMapper');
+//var ticketMapper = require('../mappers/ticketMapper');
 var ticketInfoMapper = require('../mappers/ticketInfoMapper');
 var tableMapper = require('../mappers/tableMapper');
 var path = require('path');
@@ -183,102 +182,67 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 			res.send(error);
 		}
 
-		userMapper.allUsers(function(err, users) {
+		paymentMapper.getPaymentBy_event_id(eventResult._id, function(err, payment) {
 			if (err) {
 				req.flash('err', err);
 			}
 			else
-			{
-				var ticketsSold = false;
+			{				
+				// Get all invitees of event and email them to say that event has been cancelled
+				if (payment != null)
+				{
+					req.flash('err', 'Payments have been made for this event, it cannot be cancelled.');
+					res.redirect('/event/view/' + req.params.event_id);
+				}
+				else
+				{
+					sendDeleteNotification(eventResult, function(notificationError) {
+						if (notificationError)
+						{
+							req.flash('err', notificationError);
+						}
 
-				let userPromises = users.map(function(user) {
-					return new Promise((resolve) => {
-						ticketMapper.getUserTickets(user._id, function(err, tickets) {
-							if (err)
-							{
+						tableMapper.findTablesByEventId(eventResult.event_id, function(err, tables) {
+							if (err) {
 								req.flash('err', err);
-								resolve();
 							}
 							else
 							{
-								let ticketPromises = tickets.map(function(ticket) {
-									return new Promise((resolve) => {
-										if (ticket.event.event_id == eventResult.event_id)
-										{	
-											ticketsSold = true;
-											resolve();
+								for (var i = 0; i < tables.length; i++) {
+									tableMapper.deleteTable(eventResult.event_id, tables[i].tableNumber, function(err, deletedTables) {
+										if (err)
+										{
+											req.flash('err', err);
 										}
-
-										resolve();
+										else
+										{
+											req.flash('deleted tables', deletedTables);
+										}
 									});
-								});
-
-								Promise.all(ticketPromises).then(function() {
-									resolve();
-								});
+								}
 							}
 						});
-					});
-				});
-
-				//Force node to execute all the promises in order before callback
-				Promise.all(userPromises).then(function(){
-					// Get all invitees of event and email them to say that event has been cancelled
-					if (ticketsSold)
-					{
-						req.flash('err', 'Tickets have been sold for this event, it cannot be cancelled.');
-						res.redirect('/event/view/' + req.params.event_id);
-					}
-					else
-					{
-						sendDeleteNotification(eventResult, function(notificationError) {
-							if (notificationError)
-							{
+												
+						ticketInfoMapper.deleteTicketInfo(eventResult.event_id, function(err) {
+							// Call EventMapper function to delete event and any dependencies
+							if (err) {
 								req.flash('err', notificationError);
 							}
-
-							tableMapper.findTablesByEventId(eventResult.event_id, function(err, tables) {
-								if (err) {
-									req.flash('err', err);
-								}
-								else
-								{
-									for (var i = 0; i < tables.length; i++) {
-										tableMapper.deleteTable(eventResult.event_id, tables[i].tableNumber, function(err, deletedTables) {
-											if (err)
-											{
-												req.flash('err', err);
-											}
-											else
-											{
-												req.flash('deleted tables', deletedTables);
-											}
-										});
+							else {
+								eventMapper.deleteEvent(eventResult.event_id, function(err) {	
+									if (err) {
+										req.flash('err', err);							
 									}
-								}
-							});
-												
-							ticketInfoMapper.deleteTicketInfo(eventResult.event_id, function(err) {
-								// Call EventMapper function to delete event and any dependencies
-								if (err) {
-									req.flash('err', notificationError);
-								}
-								else {
-									eventMapper.deleteEvent(eventResult.event_id, function(err) {	
-										if (err) {
-											req.flash('err', err);							
-										}
-										else {
-											req.flash('succ', 'Event was successfully deleted.');
-																
-											res.redirect('/events');
-										}
-									});
-								}		
-							});
-						});	
-					}	
-				});	
+									else {
+										req.flash('succ', 'Event was successfully deleted.');
+															
+										res.redirect('/events');
+									}
+								});
+							}		
+						});
+					});	
+				}	
 			}
 		});
 	});

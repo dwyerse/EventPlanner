@@ -14,10 +14,16 @@ function getAllPayments(callback){
 	});
 }
 
+function getPaymentBy_event_id(event_id, callback) {
+	Payment.findOne({event_id: event_id}, function(err, payment) {
+		callback(err, payment);
+	});
+}
+
 function deletePayment(payment_id, callback) {
 	Payment.remove({_id: payment_id}, function(err) {
 		callback(err);
 	});
 }
 
-module.exports = {addPayment, getAllPayments, deletePayment};
+module.exports = {addPayment, getAllPayments, getPaymentBy_event_id, deletePayment};

@@ -50,6 +50,15 @@ describe('paymentMapper testing suite', function() {
 		});
 	});
 
+	it('should find payment by event_id', function(done) {
+		mapper.getPaymentBy_event_id(99999, function(err,res) {
+			assert.equal(err,null);
+			assert.notEqual(res, null);
+			assert.notEqual(res, null);
+			done();
+		});
+	});
+
 	it('should remove test payment with _id', function(done) {
 		mapper.deletePayment(payment_id, function(err) {
 			assert.equal(err,null);
