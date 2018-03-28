@@ -4,11 +4,25 @@
     <title>Landing Page</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <style>
-        body{ padding-top:80px; word-wrap:break-word; }
-    </style>
 </head>
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <p class="navbar-text">
+                <a href="/login/landingPage" class="navbar-link">Home</a>
+            </p>
+            <p class="navbar-text">
+                <a href="/events" class="navbar-link">Events</a>
+            </p>
+            <p class="navbar-text">
+                <a href="/tickets" class="navbar-link">My Tickets</a>
+            </p>
+            <p class="navbar-text">
+                <a href="/login/logout" class="navbar-link">Logout</a>
+            </p>
+        </div>
+    </nav>
+
 <div class="container">
 
     <div class="page-header text-center">
@@ -20,10 +34,10 @@
             <div class="well">
                 <h3><span class="glyphicon glyphicon-user"></span> Profile</h3>
                 <% if (user) { %>
-                    <p>
-                        <strong>name</strong>: <%= user.name %><br>
-                        <strong>email</strong>: <%= user.email %><br>
-                    </p>
+                <p>
+                    <strong>name</strong>: <%= user.name %><br>
+                    <strong>email</strong>: <%= user.email %><br>
+                </p>
                 <% } %>
             </div>
             <div id="buttons">
@@ -32,25 +46,25 @@
                 <a class="btn btn-primary" href="/login/logout" role="button">Logout</a>
             </div>
         </div>
-				<div class="col-sm-6">
-						<h3>User Actions</h3>
-						<div style="padding-top:5px;">
-								<a class="btn btn-primary" href="/events" role="button">View all Events</a>
-								<a class="btn btn-primary" href="/tickets" role="button">View my Tickets</a>
-						</div>
-				</div>
-        <% if (user.type=='admin') { %>
         <div class="col-sm-6">
-            <h3>Admin Actions</h3>
-            <div style="padding-top:5px;">
-								<a class="btn btn-primary" href="/grant/admin" role="button" id='createBtn'>Grant Admin Access</a>
-                                <a class="btn btn-primary" href="/previous/guests" role="button" id='createBtn'>View Previous Guests</a>
-								<a class="btn btn-primary" href="/event/create" role="button">Create Event</a>
-            </div>
+          <h3>User Actions</h3>
+          <div style="padding-top:5px;">
+            <a class="btn btn-primary" href="/events" role="button">View all Events</a>
+            <a class="btn btn-primary" href="/tickets" role="button">View my Tickets</a>
         </div>
-        <% } %>
-
     </div>
+    <% if (user.type=='admin') { %>
+    <div class="col-sm-6">
+        <h3>Admin Actions</h3>
+        <div style="padding-top:5px;">
+            <a class="btn btn-primary" href="/grant/admin" role="button" id='createBtn'>Grant Admin Access</a>
+            <a class="btn btn-primary" href="/previous/guests" role="button" id='createBtn'>View Previous Guests</a>
+            <a class="btn btn-primary" href="/event/create" role="button">Create Event</a>
+        </div>
+    </div>
+    <% } %>
+
+</div>
 
 
 </div>
