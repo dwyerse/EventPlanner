@@ -56,11 +56,20 @@ describe('ticketInfoMapper testing suite', function() {
 		});
 	});
 
-	it('should update ticketInfo by event_id', function(done) {
+	it('should update ticketInfo availability by event_id', function(done) {
 		mapper.updateTicketAvailability(TEST_TICKETINFO.event_id, 50, TEST_TICKETINFO.tables.available, function(err,res) {
 			assert.equal(err, null);
 			assert.equal(res.event_id, TEST_TICKETINFO.event_id);
 			assert.equal(res.tickets.available, 50);
+			done();
+		});
+	});
+
+	it('should update ticketInfo by event_id', function(done){
+		TEST_TICKETINFO.tables.total = 12;
+		mapper.updateTicketInfo(TEST_TICKETINFO.event_id, TEST_TICKETINFO, function(err,res){
+			assert.equal(err, null);
+			assert.equal(res.tables.total, 12);
 			done();
 		});
 	});
