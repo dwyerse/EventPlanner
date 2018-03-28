@@ -19,95 +19,59 @@
 	<% } %>
 	<br>
 
-	<div class="row">
-		<div class="col-sm">
-			<h2 style="word-break: break-all; " > <%= result.title %> </h2>
-			<br>
-			<%if(isAdmin){%>
-				<div class="col-sm" style="margin-bottom:5px;">
-					<a href="#contactModal" class="btn btn-info btn-sm" data-toggle="modal">Contact Users</a>
-				</div>
-				<div class="col-sm" style="margin-bottom:5px;">
-					<a href="/event/tickets/setup/<%=result.event_id%>" class="btn btn-info btn-sm">Ticket Setup</a>
-				</div>
-			<%}%>
-			<div class="col-sm">
-			<% if(!isSubscribed) { %>
-			<form action="/event/subscribe" method="post" id='subForm'>
-				<input type="hidden" name="event_id" value=<%=result.event_id%> />
-				<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
-			</form>
-			<% } else { %>
-			<form action="/event/unsubscribe" method="post" id='unsubForm'>
-				<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
-				<input type="hidden" name="event_id" value=<%=result.event_id%> />
-			</form>
+	
+	<h2 style="word-break: break-all; " > <%= result.title %> </h2>
+	<br>
+	<%if(isAdmin){%>
+	<div class="col-sm" style="margin-bottom:5px;">
+		<a href="#contactModal" class="btn btn-info btn-sm" data-toggle="modal">Contact Users</a>
+		<a href="/event/tickets/setup/<%=result.event_id%>" class="btn btn-info btn-sm">Ticket Setup</a>
+		<a href="/event/payments/<%=result.event_id%>" class="btn btn-info btn-sm">View Payments for this Event</a>
+	</div>
+	<div class="col-sm" style="margin-bottom:5px;">
+		<a href="/event/inviteList/<%=result.event_id%>" class="btn btn-info btn-sm">Invite List</a>
+		<a class="btn btn-info btn-sm" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
+		<a href="/event/guests/<%=result.event_id%>"><button class="btn btn-info btn-sm">View Guest Details</button> </a>
+	</div>
+	<div class="col-sm" style="margin-bottom:5px;">
+		<a href="/table/<%=result.event_id%>"><button class="btn btn-info">Table Plan</button> </a>
+	</div>
+	<%}%>
+	<div class="col-sm">
+		<% if(!isSubscribed) { %>
+		<form action="/event/subscribe" method="post" id='subForm'>
+			<input type="hidden" name="event_id" value=<%=result.event_id%> />
+			<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
+		</form>
+		<% } else { %>
+		<form action="/event/unsubscribe" method="post" id='unsubForm'>
+			<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
+			<input type="hidden" name="event_id" value=<%=result.event_id%> />
+		</form>
+		<% } %>
+	</div>
+	<br>
+	<div class="form-group col-md-6">
+		<h4>Location</h4>
+		<label style="word-break: break-all;"><%= result.location %></label>
+	</div>
+	<div class="form-group col-md-6">
+		<h4>Date</h4>
+		<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
+	</div>
+	<div class="form-group col-md-6">
+		<h4>Description</h4>
+		<div style="word-break: break-all;"><%= result.description %></div>
+	</div>
+	<div class="form-group col-md-6">
+		<h5>Menus:</h5>
+		<table>
+			<% for(var i=0; i < menus.length; i++) { %>
+			<tr>
+				<td><a target='_blank' href='/event/viewMenu/<%= menus[i].filename %>'  > <%= menus[i].menuName %></a></td>
+			</tr>
 			<% } %>
-		</div>
-			<br>
-			<div class="form-group col-md-6">
-				<h4>Location</h4>
-				<label style="word-break: break-all;"><%= result.location %></label>
-			</div>
-			<div class="form-group col-md-6">
-				<h4>Date</h4>
-				<label style="word-break: break-all;"><%= result.date.getDate() %>/<%= result.date.getMonth()+1%>/<%= result.date.getFullYear() %></label>
-			</div>
-			<div class="form-group col-md-6">
-				<h4>Description</h4>
-				<div style="word-break: break-all;"><%= result.description %></div>
-			</div>
-			<div class="form-group col-md-6">
-				<h5>Menus:</h5>
-				<table>
-					<% for(var i=0; i < menus.length; i++) { %>
-					<tr>
-						<td><a target='_blank' href='/event/viewMenu/<%= menus[i].filename %>'  > <%= menus[i].menuName %></a></td>
-					</tr>
-					<% } %>
-				</table>
-
-			</div>
-		</div>
-		<%if(isAdmin){%>
-		<div class="col-sm">
-			<h5>
-				Invite List
-				<span class="float-right">
-					<a class="btn btn-default" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
-				</span>
-			</h5>
-			<br>
-			<form method="post" action="<%=result.event_id%>/addInvitee" class="inline">
-				<div class="input-group">
-					<input type="email" name="email" class="form-control" placeholder="Add new invite...">
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit">Add</button>
-					</span>
-				</div>
-			</form>
-			<table class="table table-sm">
-				<tbody>
-					<% for(var i=0; i < result.invitees.length; i++) { %>
-					<tr>
-						<td><%=result.invitees[i].email%></td>
-						<td><%=result.invitees[i].state%></td>
-						<td>
-							<form method="post" action="<%=result.event_id%>/removeInvitee" class="inline">
-								<input type="hidden" name="inviteeId" value="<%=i%>">
-								<button type="submit" name="submitInvitee">
-									Delete
-								</button>
-							</form>
-						</td>
-					</tr>
-					<% } %>
-				</tbody>
-			</table>
-		</div>
-		<a href="/event/guests/<%=result.event_id%>"><button class="btn btn-primary">View Guest Details</button> </a>
-		<a href="/table/<%=result.event_id%>" style="padding-left:2px"><button class="btn btn-warning">Table Plan</button> </a>
-		<%}%>
+		</table>
 	</div>
 	<%if(isAdmin){%>
 	
@@ -132,8 +96,8 @@
 						<div class="form-group">
 							<label for="select">Recipients</label>
 							<select class="custom-select" name="select">
-							  <option selected value="attendees">Attending Guests</option>
-							  <option value="invitees">Invited Guests</option>
+								<option selected value="attendees">Attending Guests</option>
+								<option value="invitees">Invited Guests</option>
 								<option value="subscribers">Subscribed Users</option>
 							</select>
 						</div>
@@ -142,9 +106,9 @@
 							<input type="text" class="form-control" name="subject" value="" required/>
 						</div>
 						<div class="form-group">
-	            <label for="message-text" class="col-form-label">Message:</label>
-	            <textarea class="form-control" id="message" name="message" rows=6 required></textarea>
-	          </div>
+							<label for="message-text" class="col-form-label">Message:</label>
+							<textarea class="form-control" id="message" name="message" rows=6 required></textarea>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
