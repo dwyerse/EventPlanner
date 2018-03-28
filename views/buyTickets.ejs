@@ -23,42 +23,57 @@
 		<h6>Ticket information</h6>
 	</div>
 	<div class= "row">
-		<p>General Tickets still available: <%=ticketInfo.tickets.available%></p>
+		<p>General Tickets still available: <%=ticketInfo.tickets.available%> <br>
+			Price per ticket: €<%=ticketInfo.tickets.price%> </p>
 	</div>
 	<div class= "row">
-		<p>Price per ticket: €<%=ticketInfo.tickets.price%> </p>
 	</div>
 	<div class= "row">
-		<p>Tables still available: <%=ticketInfo.tables.available%></p>
+		<p>Tables still available: <%=ticketInfo.tables.available%> <br>
+		Price per table: €<%=ticketInfo.tables.price%> <br>
+		Seats per table: <%=ticketInfo.tables.size%> <br></p>
 	</div>
 	<div class= "row">
-		<p>Price per table: €<%=ticketInfo.tables.price%> </p>
 	</div>
 	<div class= "row">
-		<p>Seats per table: <%=ticketInfo.tables.size%> </p>
-	</div>
-	<br>
+	</div> <hr>
 	<div class= "row">
-		<h5>Amount of tickets required</h5>
-	</diV>
-	<div class= "row">
+		<div class="form-group col-md-6">
+		<label for="noTicketsSelect">Amount of tickets required</label>
+		<br>
 		<select id="noTicketsSelect" name="noTicketsSelect">
 		<% for(let i=0; i<=ticketInfo.tickets.available; i++) { %>
 			 <option value="<%= i %>"><%= i %></option>
 		<% } %>
 		</select>
+		</div>
 	</div> <br>
 	<div class= "row">
-		<h5>Amount of tables required</h5>
-	</diV>
-	<div class= "row">
+		<div class="form-group col-md-6">
+		<label for="noTablesSelect">Amount of tables required</label>
+		<br>
 		<select id="noTablesSelect" name="noTablesSelect">
 		<% for(let i=0; i<=ticketInfo.tables.available; i++) { %>
 			 <option value="<%= i %>"><%= i %></option>
 		<% } %>
 		</select>
-	</div> <br>
+	</div>
+	</div>
 	<br>
+	<form action="/event/tickets/<%=event.event_id%>" method="post" id='form'>
+	<div class="row">
+			<div class="form-group col-md-6">
+				<label for="accessRequirementsInput">Access Requirements</label>
+				<textarea class="form-control" name="accessRequirements" rows="2"></textarea>
+			</div>
+	</div>
+
+	<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="dietaryRestrictionsInput">Dietary Restrictions</label>
+				<textarea class="form-control" name="dietaryRestrictions" rows="2" ></textarea>
+			</div>
+	</div> <br>
 	<div class= "row">
 		<a href="#paymentModal" class="btn btn-primary" data-toggle="modal" onclick="calculateTotalAmount()">Pay Now</a>
 	</div>
@@ -69,7 +84,6 @@
 					<h4 class="modal-title">Payment</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
-				<form action="/event/tickets/<%=event.event_id%>" method="post" id='form'>
 					<input type="hidden" name="event_id" value=<%=event.event_id%> />
 					<input type="hidden" name="noTickets" id="noTickets" value=0 />
 					<input type="hidden" name="noTables" id="noTables" value=0 />
@@ -100,8 +114,11 @@
 	<script>
 		function calculateTotalAmount() {
 			var noTickets = $("#noTicketsSelect").val();
-			var ticketCost = noTickets * <%=ticketInfo.tickets.price%>;
 			var noTables = $("#noTablesSelect").val();
+			if(noTickets == 0 && noTables == 0){
+				alert("You have not selected any tickets or tables!");
+			}
+			var ticketCost = noTickets * <%=ticketInfo.tickets.price%>;
 			var tableCost = noTables * <%=ticketInfo.tables.price%>;
 			$("#totalAmount").text("Total Amount : €" + (ticketCost + tableCost));
 			$("#noTickets").val(noTickets);

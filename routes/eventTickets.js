@@ -26,6 +26,10 @@ router.get('/:event_id', isLoggedIn, function(req, res) {
 
 router.post('/:event_id', isLoggedIn, function(req, res) {
 	let event_id = req.params.event_id;
+	if(req.body.noTickets == 0 && req.body.noTables == 0) {
+		req.flash('err', 'No tickets or tables were chosen');
+		return res.redirect('/event/tickets/'+event_id);
+	}
 	if(validatePaymentDetails(req.body.cardNo, req.body.cvv, req.body.billingName, req.body.paymentAmount)) {
 		eventMapper.findEventBy_event_id(event_id, function(err,event) {
 			if(err){
@@ -37,19 +41,25 @@ router.post('/:event_id', isLoggedIn, function(req, res) {
 					req.flash('err', err);
 					return res.redirect('/event/tickets/'+event_id);
 				}
-				let newPaymentObj = {event_id:event._id, amount: req.body.paymentAmount, user_id: req.user._id};
+				let newPaymentObj = {event_id:event._id, amount: req.body.paymentAmount, user_id: req.user._id, type:'tickets'};
 				paymentMapper.addPayment(newPaymentObj, function(err) {
 					if(err){
 						req.flash('err', err);
 						return res.redirect('/event/tickets/'+event_id);
 					}
-					addTickets(ticketInfo, req.user._id, event._id, event_id, req.body.noTickets, req.body.noTables, function(err){
+					updateInviteeList(event, req.user.email, req.body.accessRequirements, req.body.dietaryRestrictions, function(err) {
 						if(err){
 							req.flash('err', err);
 							return res.redirect('/event/tickets/'+event_id);
 						}
-						req.flash('succ', 'Succesfully Purchased Tickets');
-						return res.redirect('/event/view/'+event_id);
+						addTickets(ticketInfo, req.user._id, event._id, event_id, req.body.noTickets, req.body.noTables, function(err){
+							if(err){
+								req.flash('err', err);
+								return res.redirect('/event/tickets/'+event_id);
+							}
+							req.flash('succ', 'Succesfully Purchased Tickets');
+							return res.redirect('/event/view/'+event_id);
+						});
 					});
 				});
 			});
@@ -109,6 +119,25 @@ function generateTickets(ticketInfo, userID, event_id, noTickets, noTables,callb
 		tickets.push(newTicketObj);
 	}
 	callback(tickets);
+}
+
+function updateInviteeList(event, userEmail, accessRequirements, dietaryRestrictions, callback){
+	let inviteeIndex =  event.invitees.findIndex(invitee => invitee.email === userEmail);
+	let newInviteeList = event.invitees;
+	if(inviteeIndex == -1){ //New invitee
+		newInviteeList.push({email:userEmail, state:'Attending', accessRequirements:accessRequirements, dietaryRestrictions:dietaryRestrictions});
+	} else { //Present invitee
+		let invitee = newInviteeList[inviteeIndex];
+		invitee.state = 'Attending';
+		if(accessRequirements && accessRequirements.length>0)   //Won't overwrite if no info provided
+			invitee.accessRequirements = accessRequirements;
+		if(dietaryRestrictions && dietaryRestrictions.length>0)
+			invitee.dietaryRestrictions = dietaryRestrictions;
+		newInviteeList[inviteeIndex] = invitee;
+	}
+	eventMapper.updateInviteeList(event.event_id, newInviteeList,function(err, res) {
+		callback(err,res);
+	});
 }
 
 function addTickets(ticketInfo, userID, eventObjectID, event_id, noTickets, noTables,callback){

@@ -12,7 +12,8 @@ userSchema.add({
 		event_title: String
 	}],
 	salt:{ type: String, required: true },
-	subscriptions:{ type: [String] }
+	subscriptions:{ type: [String] },
+	telephoneNo:String
 });
 userSchema.index({email:1}, {unique: true});
 User = mongoose.model('user',userSchema);
