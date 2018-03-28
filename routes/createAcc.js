@@ -19,7 +19,7 @@ router.post('/account', function(req,res){
 
 			var userType = 'user';
 			var subscriptions = (req.body.subscribed && req.body.subscribed=='on')? [NEWEVENTS_SUB]:[];
-			userMapper.addUser(req.body.inputName, req.body.inputEmail, hash, userType, salt, subscriptions, [], function(error, result) {
+			userMapper.addUser(req.body.inputName, req.body.inputEmail, req.body.inputTelephone, hash, userType, salt, subscriptions, [], function(error, result) {
 				if (!result) {
 					req.flash('err', 'User could not be created');
 				} else if (error) {
