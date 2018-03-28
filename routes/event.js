@@ -78,15 +78,24 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 		{
 			var details = 'The following is a specification of guest dietary restrictions, access requirements and table arrangements for the upcoming event, ' + result.title + ' on ' + result.date + ':\n\n';
 
-			addGuestDetails(result, details, function(guestDetails) {
-				addTableDetails(result, guestDetails, function(guestAndTableDetails) {	
-					sendEmailToCatering(req.body.cateringEmail, guestAndTableDetails, function(error, information) {	
-						if (error) {
-							req.flash('error', error);
+			addGuestDetails(result, function(guestDetails) {
+				if (guestDetails == '') {
+					details = details + 'There are no guest requirements for this event.\n\n';
+				}
+				else
+				{
+					details = details + guestDetails;
+				}
+
+				addTableDetails(result, function(tableDetails) {
+					details = details + tableDetails;
+					sendEmailToCatering(req.body.cateringEmail, details, function(err, succ) {	
+						if (err) {
+							req.flash('err', err);
 						}
 						else
 						{
-							req.flash('information', information);
+							req.flash('succ', succ);
 						}
 
 						return res.redirect('/event/view/' + req.params.event_id);
@@ -358,61 +367,67 @@ function sendUpdateEmail(event) {
 	});
 }
 
-function addGuestDetails(event, details, callback) {
-	var guestDetails = details;
+function addGuestDetails(event, callback) {
+	var guestDetails = '';
 	var numInvitees = event.invitees.length;
 	var inviteeIndex = 0;
 
-	for (var i = 0; i < numInvitees; i++)
-	{	
-		var invitee = event.invitees[i];
-			
-		userMapper.findUserByEmail(invitee.email, function(err, user) {
-			if (invitee.state == 'Attending' && invitee.accessRequirements != null && invitee.dietaryRestrictions != null)
-			{
-				guestDetails = guestDetails + 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
-			}
+	if (numInvitees > 0)
+	{
+		for (var i = 0; i < numInvitees; i++)
+		{	
+			var invitee = event.invitees[i];
+				
+			userMapper.findUserByEmail(invitee.email, function(err, user) {
+				if (invitee.state == 'Attending' && (invitee.accessRequirements != null || invitee.dietaryRestrictions != null))
+				{
+					guestDetails = guestDetails + 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
+				}
 
-			if (inviteeIndex == (numInvitees - 1)) {
-				callback(guestDetails);
-			}
+				if (inviteeIndex == (numInvitees - 1)) {
+					callback(guestDetails);
+				}
 
-			inviteeIndex++;
-		});
+				inviteeIndex++;
+			});
+		}
+	}
+	else
+	{
+		callback(guestDetails);
 	}
 }
 
-function addTableDetails(event, guestDetails, callback) {
-	var guestAndTableDetails = guestDetails;
+function addTableDetails(event, callback) {
+	var tableDetails = '';
 
 	tableMapper.findTablesByEventId(event.event_id, function(err,table) {
 		if (!err && table != null && table.length > 0) {
 			for (var x = 0; x < table.length; x++) {
-				guestAndTableDetails = guestAndTableDetails + 'Table: ' + table[x].tableNumber + '\n';
+				tableDetails = tableDetails + 'Table: ' + table[x].tableNumber + '\n';
 
 				for (var y=0; y < table[x].tableLabels.length; y++) {		
-					guestAndTableDetails = guestAndTableDetails + table[x].tableLabels[y];
+					tableDetails = tableDetails + table[x].tableLabels[y];
 							
 					if (y != table[x].tableLabels.length-1) {
-						guestAndTableDetails = guestAndTableDetails + ', ';
+						tableDetails = tableDetails + ', ';
 					}
 				}
 
-				guestAndTableDetails = guestAndTableDetails + '\n';
+				tableDetails = tableDetails + '\n';
 			
 				for(var z=0; z < table[x].seatLabels.length; z++) {
-					guestAndTableDetails = guestAndTableDetails + 'Seat ' + (z + 1) + ': ' + table[x].seatLabels[z] + '\n';
+					tableDetails = tableDetails + 'Seat ' + (z + 1) + ': ' + table[x].seatLabels[z] + '\n';
 				}
-
-				guestAndTableDetails = guestAndTableDetails + '\n';
+				tableDetails = tableDetails + '\n';
 			}
 		}
 		else
 		{
-			guestAndTableDetails = guestAndTableDetails + 'No tables have been allocated for the event.';
+			tableDetails = tableDetails + 'No tables have been allocated for the event.';
 		}
 
-		callback(guestAndTableDetails);		
+		callback(tableDetails);		
 	});	
 }
 
@@ -423,8 +438,8 @@ function sendEmailToCatering(cateringEmail, guestAndTableDetails, callback) {
 	recipient.push(cateringEmail);
 
 	if (cateringEmail) {
-		mailer.sendMail(recipient, [], 'Guest Details', body, function(err, info) {
-			callback(err, info);
+		mailer.sendMail(recipient, [], 'Guest Details', body, function(err, succ) {
+			callback(err, succ);
 		});
 	}
 }
