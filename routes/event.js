@@ -89,21 +89,19 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 
 				addTableDetails(result, function(tableDetails) {
 					details = details + tableDetails;
-					sendEmailToCatering(req.body.cateringEmail, details, function(err, succ) {	
+					sendEmailToCatering(req.body.cateringEmail, details, function(err) {
 						if (err) {
 							req.flash('err', err);
 						}
 						else
 						{
-							req.flash('succ', succ);
+							req.flash('succ', 'Succesfully sent email to catering');
 						}
-
 						return res.redirect('/event/view/' + req.params.event_id);
 					});
 				});
 			});
 		}
-		res.redirect('/event/view/' + req.params.event_id);
 	});
 });
 
@@ -369,31 +367,28 @@ function sendUpdateEmail(event) {
 
 function addGuestDetails(event, callback) {
 	var guestDetails = '';
-	var numInvitees = event.invitees.length;
-	var inviteeIndex = 0;
 
-	if (numInvitees > 0)
-	{
-		for (var i = 0; i < numInvitees; i++)
-		{	
-			var invitee = event.invitees[i];
-				
-			userMapper.findUserByEmail(invitee.email, function(err, user) {
+	if (event.invitees.length > 0) {
+		//For every invitee create a promise (for sync operation)
+		let promises = event.invitees.map(function(invitee) {
+			return new Promise((resolve) => {
 				if (invitee.state == 'Attending' && (invitee.accessRequirements != null || invitee.dietaryRestrictions != null))
 				{
-					guestDetails = guestDetails + 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
+					userMapper.findUserByEmail(invitee.email, function(err, user) {
+						guestDetails += 'Guest Name: ' + user.name + '\nGuest Email: ' + invitee.email + '\nGuest Access Requirements: ' + invitee.accessRequirements + '\nGuest Dietary Restrictions: ' + invitee.dietaryRestrictions + '\n\n';
+						resolve();
+					});
+				} else{
+					resolve();
 				}
-
-				if (inviteeIndex == (numInvitees - 1)) {
-					callback(guestDetails);
-				}
-
-				inviteeIndex++;
 			});
-		}
+		});
+		//Force node to execute all the promises in order before callback
+		Promise.all(promises).then(function(){
+			callback(guestDetails);
+		});
 	}
-	else
-	{
+	else {
 		callback(guestDetails);
 	}
 }
@@ -406,16 +401,16 @@ function addTableDetails(event, callback) {
 			for (var x = 0; x < table.length; x++) {
 				tableDetails = tableDetails + 'Table: ' + table[x].tableNumber + '\n';
 
-				for (var y=0; y < table[x].tableLabels.length; y++) {		
+				for (var y=0; y < table[x].tableLabels.length; y++) {
 					tableDetails = tableDetails + table[x].tableLabels[y];
-							
+
 					if (y != table[x].tableLabels.length-1) {
 						tableDetails = tableDetails + ', ';
 					}
 				}
 
 				tableDetails = tableDetails + '\n';
-			
+
 				for(var z=0; z < table[x].seatLabels.length; z++) {
 					tableDetails = tableDetails + 'Seat ' + (z + 1) + ': ' + table[x].seatLabels[z] + '\n';
 				}
@@ -424,11 +419,11 @@ function addTableDetails(event, callback) {
 		}
 		else
 		{
-			tableDetails = tableDetails + 'No tables have been allocated for the event.';
+			tableDetails = tableDetails + 'No table details have been allocated for the event.';
 		}
 
-		callback(tableDetails);		
-	});	
+		callback(tableDetails);
+	});
 }
 
 function sendEmailToCatering(cateringEmail, guestAndTableDetails, callback) {
