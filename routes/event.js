@@ -6,6 +6,7 @@ var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
 var paymentMapper = require('../mappers/paymentMapper');
+var tableMapper = require('../mappers/tableMapper');
 var inviteList = require('./inviteList');
 var fs = require('fs');
 var isLoggedIn = require('../config/utils').isLoggedIn;

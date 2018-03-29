@@ -192,6 +192,17 @@ To confirm an invitee's attendance
 - If guests have been invited to this event their details will be listed. Press Go Back button to return to the event view page
 - If instead no guests had been registered for this event, a message will be displayed indicating this.
 
+### Feature 31: 'I want to be able to share special dietary requirements (including table info for guest) with the caterers so that they can make appropriate arrangements'
+- Login as an administrator user
+- Create a new event or view an existing event
+- Click View Guest Details button on the view page for this event
+- If guests have been invited to this event their details will be listed
+- To send an email of these details to catering, press the Send Details to Catering button to go to the Send Details page
+- Fill in a sample email to represent catering and press the Send Guest Details button
+- A pop-up confirmation box will appear, click the Confirm button
+- You will be redirected to the view page for the event and a confirmation message should indicate that the email was sent successfully
+
+
 ### Feature 17: 'Send out emails automatically when an event is created'
 - Log in to an admin account that is subscribed for new event notifications
 - Click Create Event button
