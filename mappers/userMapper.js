@@ -4,7 +4,15 @@ const ADMINUSER= {
 	'email' : 'eventplanner.gp@gmail.com',
 	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
 	'type' : 'admin',
-	'eventsAttended' : [],
+	'salt' : 'a548ce51589fff7a',
+	'subscriptions' : []
+};
+
+const SAMPLEUSER= {
+	'name' : 'John Doe',
+	'email' : 'john.doe@gmail.com',
+	'password' : '9bdbc3c894ad2cf5bc2b70ab4773b854d0a9c4f7db79bc6c497cecbc4a676cba',
+	'type' : 'user',
 	'salt' : 'a548ce51589fff7a',
 	'subscriptions' : []
 };
@@ -79,6 +87,12 @@ function addAdminUser(callback){
 	});
 }
 
+function addSampleUser(callback){
+	User.update({email:SAMPLEUSER.email}, SAMPLEUSER, {upsert:true}, function(err) {
+		callback(err);
+	});
+}
+
 function findSubscribedUsers(sub, callback) {
 	User.find({subscriptions:sub}, 'email', function(err,users) {
 		var emails = users.map((user) => {return user.email;});
@@ -97,5 +111,5 @@ function updateUserSubs(email, newSub, isSub, callback) {
 }
 
 module.exports = {allUsers,addUser,findUserById,findUserByName,findUserByEmail,updateUserByEmail,deleteAllUsers,
-	deleteUserByEmail,addAdminUser,findSubscribedUsers,updateUserSubs, findMultipleUsersByEmail};
+	deleteUserByEmail,addAdminUser,addSampleUser,findSubscribedUsers,updateUserSubs, findMultipleUsersByEmail};
 

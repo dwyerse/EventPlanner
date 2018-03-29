@@ -46,6 +46,10 @@ mongoose.connection.on('connected', function () {
 		if(err)
 			console.log('Failed to add admin user ', err);
 	});
+  userMapper.addSampleUser((err) => {
+    if(err)
+      console.log('Failed to add sample user ', err);
+  });
 });
 // If the connection throws an error
 mongoose.connection.on('error',function (err) {
