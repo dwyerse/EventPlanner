@@ -122,7 +122,13 @@ Once app server and mongoDB server running:
 ### Feature 6: 'Keep track of possibCreate a new event or view an existing eventle/previous guests'
 - Login as an administrator user
 - Click View Previous Guests button
-- If there are guests who have previously attended an event, their names, emails, and the ids and titles of the events they have attended will be displayed as a list
+- If there are guests who have previously attended an event, their names, emails, and the titles of the events they have attended will be displayed as a list
+- Click Go Back button to return to the landing page
+
+### Feature 7: 'Track which guests are big spenders and/or regular donors' (This could be fused with Feature 6 e.g. Feature 6/7)
+- Login as an administrator user
+- Click View Previous Guests button
+- If there are guests who have previously attended an event, the total amount of money they have donated, and the number of donations they have made, will be displayed in the list along with their names emails and the titles of the events they have attended
 - Click Go Back button to return to the landing page
 
 ### Feature 29: 'I want to create menus'
@@ -198,10 +204,10 @@ To confirm an invitee's attendance
 - Click View Guest Details button on the view page for this event
 - If guests have been invited to this event their details will be listed
 - To send an email of these details to catering, press the Send Details to Catering button to go to the Send Details page
-- Fill in a sample email to represent catering and press the Send Guest Details button
+- Fill in a sample contact email for catering and press the Send Guest Details button
 - A pop-up confirmation box will appear, click the Confirm button
 - You will be redirected to the view page for the event and a confirmation message should indicate that the email was sent successfully
-
+- Login to the sample email you used for catering to confirm that the email containing guest details and table information has arrived
 
 ### Feature 17: 'Send out emails automatically when an event is created'
 - Log in to an admin account that is subscribed for new event notifications
@@ -236,12 +242,18 @@ To confirm an invitee's attendance
 - Observe an email is present matching the one previously sent
 
 ### Feature 24: 'I want to be able to see a report of who is attending an event'
-
 - Create a new event or view an existing event
 - Add an invitee to the invite list
 - Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
 - From event view page, click the 'View Attendee Report' link
 - Details including the guest's name, email, and access/dietary restrictions are listed here
+
+### Feature 114: 'Admins can delete events'
+- Create a new event or view an existing event for which no tickets have yet been sold or other payments made
+- On the view page for that event, click the Delete button on the bottom of the page
+- A pop-up confirmation box will appear, click the Confirm button to proceed with event deletion
+- You will be redirected to the view events page and a confirmation message should be displayed indicating the event was deleted successfully
+- An email will also be sent to all invitees of the event, informing them that the event has been cancelled
 
 
 # Errors
