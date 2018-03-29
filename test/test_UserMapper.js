@@ -9,7 +9,6 @@ const TESTUSER= {
 	'password' : 'password',
 	'telephoneNo' : '1234',
 	'type' : 'admin',
-	'eventsAttended': [],
 	'salt' : 'salt',
 	'subscriptions' : []
 };
