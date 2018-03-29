@@ -42,10 +42,11 @@ Unit test files found in ./test
 npm test
 ```
 # Testing implemented features
-
+#### The following are credentials for pre-populated users in the app
 - There is an admin user automatically added to the database, the following is their credentials: email: eventplanner.gp@gmail.com password: cs4098
 - There is a general user automatically added to the database, the following is their credentials: email: john.doe@gmail.com password: cs4098
-- The following is a guided tour of our completed system which showcases all of the completed features.
+
+#### The following is a guided tour of our completed system which showcases all of the completed features.
 
 
 
@@ -104,9 +105,9 @@ npm test
 - When brought to application page, click 'Attending'
 - If desired you can close this tab and return to tab with invite list page.
 - Refresh this page and the invite list will show the invited guest is now Attending.
-    - This shows Feature 8: I want to send invitations to a mailing list, so that people know to come and that they are invited
-		- This shows Feature 9: Send out invitation(s)
-		- This shows Feature 14: I want to be able to send automated invitations, with link to register for the event
+    * This shows Feature 8: I want to send invitations to a mailing list, so that people know to come and that they are invited
+	* This shows Feature 9: Send out invitation(s)
+	* This shows Feature 14: I want to be able to send automated invitations, with link to register for the event
 - Click Back button to return to event page
 - Click Edit button
 - Click Register Guest button
@@ -114,10 +115,10 @@ npm test
 - Enter access requirements and dietary restrictions as desired
 - Click Register Guest
 - Click View Attendee Report button
-    - This shows Feature 13: As staff I need to register a guest for one event (including their details), so I can track what is need for the event (dietary, etc.)
-		- This shows Feature 22: I want to be able to see the rsvp list
-		- This shows Feature 12: I need to be able to manage the responses so I can know who is attending
-		- This shows Feature 24: I want to be able to see a report of who is attending an event
+    * This shows Feature 13: As staff I need to register a guest for one event (including their details), so I can track what is need for the event (dietary, etc.)
+	* This shows Feature 22: I want to be able to see the rsvp list
+	* This shows Feature 12: I need to be able to manage the responses so I can know who is attending
+	* This shows Feature 24: I want to be able to see a report of who is attending an event
 - Click back button to return to event page
 - Click Table Plan button
 - Click Create table, enter desired table size in the popup and click confirm
@@ -133,8 +134,8 @@ npm test
 - Click Send Details to Catering button
 - Enter an email which you have access to eg) andrew.butterfield@scss.tcd.ie
 - Press Send Guest Details buttons and press confirm in confirmation popup
-    - This shows Feature 30: I want to see dietary requirements and access requirements of attendees so I can provide details to catering
-		- This shows Feature 31: I want to be able to share special dietary requirements (including table info for guest) with the caterers so that they can make appropriate arrangements
+    * This shows Feature 30: I want to see dietary requirements and access requirements of attendees so I can provide details to catering
+    * This shows Feature 31: I want to be able to share special dietary requirements (including table info for guest) with the caterers so that they can make appropriate arrangements
 - Click Contact Users
 - Select 'Attending Guests' as recipients and enter desired subject and message
 - Click Send Mail button
@@ -164,8 +165,8 @@ npm test
 - Enter a donation amount (greater than created milestone) and enter payment details (the payment system is mocked so details entered are not verified)
 - Click confirm
 - After approx 5 seconds, the on-screen celebration will show
-    - This shows Feature 124: I want to have a tracker/counter that updates with donations throughout the event on the live screen
-		- This shows Feature 125: I want to enter milestone amounts of money raised and have some kind of on-screen celebration when these are achieved
+    * This shows Feature 124: I want to have a tracker/counter that updates with donations throughout the event on the live screen
+    * This shows Feature 125: I want to enter milestone amounts of money raised and have some kind of on-screen celebration when these are achieved
 - Click Event Page to return to the event
 - Click View Payments for this event
     - This shows Feature 49: I want to be able to accept/see payments
