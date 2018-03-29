@@ -2,7 +2,7 @@ var nodeMailer = require('nodemailer');
 var fs = require('fs');
 var emailConfig = JSON.parse(fs.readFileSync('config/mailerDetails.json'));
 const adminAcc = '"Event Planner" <admin@eventplanner.com>';
-const EVENT_BASE_URL = 'http://localhost:3000/event/';
+const EVENT_BASE_URL = 'http://localhost:3000/event/view/';
 const EVENT_INVITE_BASE_URL = 'http://localhost:3000/invitationResponse/view/';
 let transporter = nodeMailer.createTransport({
 	service: 'gmail',

@@ -16,7 +16,7 @@ router.get('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 });
 
 router.post('/guest/:event_id',isLoggedIn, isAdminUser, function(req, res) {
-	if(validGuestParams(req.body)){
+	if(validGuestEmail(req.body.guestEmail)){
 		var guestEmail = req.body.guestEmail;
 		var guestAccessRequirements = req.body.accessRequirements;
 		var guestDietaryRestrictions = req.body.dietaryRestrictions;
@@ -109,8 +109,8 @@ function isEmpty(obj) {
 	return true;
 }
 
-function validGuestParams(body){
-	return (body.guestEmail && body.accessRequirements && body.dietaryRestrictions);
+function validGuestEmail(guestEmail){
+	return (guestEmail);
 }
 
 module.exports = router;
