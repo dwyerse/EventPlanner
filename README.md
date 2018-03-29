@@ -64,9 +64,9 @@ npm test
 - Click logout button.
     - This shows Feature 1: Create Account and login
 - Click login button
-- Enter the admin credentials (Email: eventplanner.gp@gmail.com  Password: CS4098) and click submit.
+- Enter the admin credentials (Email: eventplanner.gp@gmail.com  Password: cs4098) and click submit.
 - Click Grant Admin Access.
-- Enter email of previously created user eg)andrew.butterfield@scss.tcd.ie and click grant.
+- Enter email of previously created user eg) andrew.butterfield@scss.tcd.ie and click grant.
 - Press logout button on the navbar.
 - Click login button
 - Enter details of previously created user and click submit.
@@ -108,7 +108,7 @@ npm test
     * This shows Feature 8: I want to send invitations to a mailing list, so that people know to come and that they are invited
 	* This shows Feature 9: Send out invitation(s)
 	* This shows Feature 14: I want to be able to send automated invitations, with link to register for the event
-- Click Back button to return to event page
+- Click Back To Event button to return to event page
 - Click Edit button
 - Click Register Guest button
 - Enter email john.doe@gmail.com (This is a pre-populated user for testing)
@@ -128,7 +128,7 @@ npm test
 - Click confirm
 - The created table should now have a label.
     - This shows Feature 35: I would like to be able to differentiate tables e.g. vip, tcd alumni
-- Click back button to return to event page
+- Click Return To Event button to return to event page
 - Click View Guest Details button
     - This shows Feature 11: I want to see guests contact details
 - Click Send Details to Catering button
