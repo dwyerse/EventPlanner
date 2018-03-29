@@ -235,10 +235,6 @@ router.get('/startLive/:event_id/:state',isLoggedIn, isAdminUser, function(req, 
 			req.flash('err',err);
 			res.redirect('/event/view/' + req.params.event_id);
 		}
-		if(!res){
-			res.redirect('/');
-		}
-
 		res.redirect('/live/'+req.params.event_id);
 
 	});

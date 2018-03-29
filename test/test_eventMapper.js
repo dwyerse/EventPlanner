@@ -9,7 +9,7 @@ const testInvitees = [{email:'test@email.com', state:'Pending'},{email:'test2@em
 const TEST_EVENT = {
 	title:'Test Event', location:'Test Location',
 	date:'01/01/2018',description:'test description',event_id:0,
-	creators:[],invitees:testInvitees,liveState:1};
+	creators:[],invitees:testInvitees,liveState:0};
 
 describe('eventMapper testing suite', function() {
 	before(function(done){
@@ -111,6 +111,15 @@ describe('eventMapper testing suite', function() {
 		mapper.updateInviteeList(testEventId,newInvitees,function(err,res){
 			assert.equal(err,null);
 			assert.equal(res.invitees[0].email,'updated@email.com');
+			done();
+		});
+	});
+
+	it('should set the live state', function(done) {
+		
+		mapper.setLiveState(testEventId,1,function(err,res){
+			assert.equal(err,null);
+			assert.equal(res.liveState,1);
 			done();
 		});
 	});
