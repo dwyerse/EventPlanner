@@ -3,18 +3,39 @@ var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var milestoneMapper = require('../mappers/milestoneMapper');
 var paymentMapper = require('../mappers/paymentMapper');
+var ticketMapper = require('../mappers/ticketMapper');
 var Payment = require('../models/payment');
+
 var isLoggedIn = require('../config/utils').isLoggedIn;
 var isAdminUser = require('../config/utils').isAdminUser;
 
 router.get('/:event_id',isLoggedIn, function(req, res) {	
 	eventMapper.findEventBy_event_id(req.params.event_id,function(err,result){
 		if(err){
-			res.send(err);
+			req.flash('err',err);
+			res.redirect('/event/view/'+result.event_id);
 		}
 		if(!result){
 			res.redirect('/');
 		}
+		if(result.liveState==0){
+			res.redirect('/event/view/'+result.event_id);
+		}
+		if(req.user.type!='admin'){
+			ticketMapper.getUserTickets(req.user._id,function(err,tickets)
+			{
+				if(err){
+					req.flash('err',JSON.stringify(err));
+					res.redirect('/event/view/'+req.params.event_id);
+				}
+				var str = tickets.toString();				
+				if(str.indexOf('_id: '+ result._id)==-1){
+					req.flash('err','You do not have a ticket for this event');
+					res.redirect('/event/view/'+result.event_id);
+				}
+			});
+		}
+
 		milestoneMapper.findMilestonesByEventId(req.params.event_id,function(error,milestones){
 			if(err){
 				req.flash('err', error);	

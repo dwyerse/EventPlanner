@@ -53,6 +53,7 @@
 		<a class="btn btn-info btn-sm" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
 		<a href="/event/guests/<%=result.event_id%>"><button class="btn btn-info btn-sm">View Guest Details</button> </a>
 	</div>
+	
 	<div class="col-sm" style="margin-bottom:8px;">
 		<a href="/event/tickets/setup/<%=result.event_id%>" class="btn btn-success btn-sm">Ticket Setup</a>
 		<a href="/table/<%=result.event_id%>"><button class="btn btn-success btn-sm">Table Plan</button> </a>
@@ -60,7 +61,12 @@
 		<a href="/event/payments/<%=result.event_id%>" class="btn btn-success btn-sm">View Payments for This Event</a>
 	</div>
 	<div class="col-sm" style="margin-bottom:8px;">
-		<a href="/live/<%=result.event_id%>"><button class="btn btn-danger btn-sm">Live Page</button> </a>
+			<%if(result.liveState==1){%>
+				<a href="/live/<%=result.event_id%>"><button class="btn btn-sm btn-danger">Live Page</button> </a>
+				<a href ="/event/startLive/<%=result.event_id%>/0"><button class="btn btn-sm btn-danger">End Live Event</button> </a>
+				<%}else{%>
+				<a href ="/event/startLive/<%=result.event_id%>/1"><button class="btn btn-sm btn-danger">Start Live Event</button> </a>
+			<%}%>
 	</div>
 
 	<%}%>
@@ -164,7 +170,6 @@
 			</div>
 		</div>
 	</div>
-</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

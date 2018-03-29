@@ -182,24 +182,25 @@
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
 	<script> $("#datepicker").datepicker(); </script>
 	<script>
-
+	var total = "<%=totalRaised%>";
 	var amountLoop = setInterval(function(){
 		$.ajax({
 			url: "amount/<%=result._id%>",
 			type: "POST",
 			success: function(data) {
-			  $('#totalRaised').val(data.toLocaleString('en'));
+				total = data;
+				$('#totalRaised').val(data.toLocaleString('en'));
 			},
 			error:   function(xhr, text, err) {
 			}
 		  });
-	}, 2000);
+	}, 5000);
 
 	var milestones = $('.milestones');
 
 	var achievedLoop = setInterval(function(){
 		$.ajax({
-			url: "achieved/<%=eventId%>/"+$('#totalRaised').html(),
+			url: "achieved/<%=eventId%>/"+total,
 			type: "POST",
 			success: function(data) {
 				if(data&&data!='None'){
@@ -213,7 +214,7 @@
 			error:   function(xhr, text, err) {
 			}
 		  });
-	}, 1000);
+	}, 5000);
 
 	function milestonePop(milestoneMessage){
 		$('#milestonePopup').show();

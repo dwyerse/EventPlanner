@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
 var ticketInfoMapper = require('../mappers/ticketInfoMapper');
-var tableMapper = require('../mappers/tableMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
@@ -181,7 +180,13 @@ router.post('/guests/send/:event_id', isLoggedIn, isAdminUser, function(req, res
 
 router.post('/create',isLoggedIn, isAdminUser, function(req, res) {
 	if(validUpdateParams(req.body)){
-		eventMapper.createEvent(req.body.title,req.body.location,req.body.date,req.body.description,0,[req.user._id],[],
+
+		const EVENT = {
+			title:req.body.title, location:req.body.location,
+			date:req.body.date,description:req.body.description,event_id:0,
+			creators:[req.user._id],invitees:[],liveState:0};
+
+		eventMapper.createEvent(EVENT,
 			function(error,result) {
 				if (!result) {
 					req.flash('err', 'Event not created');
@@ -222,6 +227,18 @@ router.post('/edit/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	}
 });
 
+router.get('/startLive/:event_id/:state',isLoggedIn, isAdminUser, function(req, res) {
+
+	eventMapper.setLiveState(req.params.event_id,req.params.state,function(err){
+
+		if(err){
+			req.flash('err',err);
+			res.redirect('/event/view/' + req.params.event_id);
+		}
+		res.redirect('/live/'+req.params.event_id);
+
+	});
+});
 
 router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 	eventMapper.findEventBy_event_id(req.params.event_id, function(error, eventResult) {
