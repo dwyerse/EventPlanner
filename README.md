@@ -44,194 +44,139 @@ npm test
 # Testing implemented features
 
 - There is an admin user automatically added to the database, the following is their credentials: email: eventplanner.gp@gmail.com password: cs4098
+- There is a general user automatically added to the database, the following is their credentials: email: john.doe@gmail.com password: cs4098
+- The following is a guided tour of our completed system which showcases all of the completed features.
 
-### Feature 1: 'I want to be able to create account'
-Once app server and mongoDB server running:
+
+
 - Point browser to http://localhost:3000
 - Click Create Account button
-- Enter all required fields in create account form
-- A success message will be displayed when you're redirected to login
-### Feature 1: 'I want to be able to login to an account'
-- Go to the homepage
+- Fill in account details (give email which you can access eg.) andrew.butterfield@scss.tcd.ie) and subscribe to new event notifications.
+- Click Submit button
+- Enter details of created account and click submit
+- Click Edit Account
+- Change name field and click confirm.
+- Press Back button to return to landing page.
+- Click Change Password
+- Type in your new password in both fields and click confirm. (Remember this new password)
+- Press Back button to return to landing page.
+- Click logout button.
+    - This shows Feature 1: Create Account and login
 - Click login button
-- Enter credentials of account previously created or test admin user
-- Should be redirected to a landing page displaying the user's details
-### Feature 1: 'I want to be able to edit account details'
-- Login to an account
-- Click edit account button
-- Make intended changes and submit
-- Observe a success message on the edit page
-### Feature 1: 'I want to be able to change my password'
-- Login to an account
-- Click change password button
-- Enter new password and submit
-- Observe a success message on the page
-### Feature 2: 'I want to be able to give admin access to other people'
-- Login as administrator user
-- Click Grant Admin Access button
-- This will proceed to grant admin access page
-- Enter email of non-admin user account
-- Click Grant button
-- Confirmation of successfully granted admin access should appear
-- Login as user that was just granted admin access
-- Click Grant Admin Access button
-- The user account can go to the grant admin access page because it now has admin access
-
-### Feature 4: I would like to be able to create an event e.g. a dinner
-- Login as an administrator user
-- Click Create Event button on the landing page
-- Fill in the details for the event
-- Click the confirm button
-- You will be redirected to the event page
-
-### Feature 5: I want to be able to update event information and submit event updates
-- Create a new event or view an existing event
-- Click 'Edit' button
-- Update event information using form fields
-- Click confirm button
-- You will be redirected to the event page with updated details.
-
-### Feature 8/9: Send out inivitation(s)
-- Login as an administrator user
-- Create a new event or view an existing event
-- Add an invitee by typing their email into the input labelled 'Add new invite' and press the add button
-- An email will be automatically sent to their email address
-
-### Feature 14: I want to be able to send automated invitations, with link to register for the event
-- Login as an administrator user
-- Create a new event or view an existing event
-- Add an invitee,typing an email(with an accessible inbox) into the input labelled 'Add new invite' and press the add button.
-- A new invitee will appear in the list , the response field will say 'Pending'.
-- An email will be automatically sent to the inputted email address.
-- Open a new tab, and navigate to the inbox of the email address specified
-- Click on the link contained in the email
-- The options on the response page are 'Attending' or 'Not Attending', choose an option.
-- The page will update with the response
-- Refresh the event page, the user response field will have updated with the correct response.
-
-### Feature 13: 'As staff, I need to register a guest for one event (including their details), so I can track what is needed for the event (dietary, ...)'
-- Login as an administrator user
-- Create a new event or view an existing event
-- Click edit button for event
-- Click Register Guest button
-- Fill in the email of a user account which has not been registered for the event
-- Fill in the access requirements and dietary restrictions fields
-- Click Register Guest button on this page
-- A confirmation message should appear indicating that the user has been registered as a guest for this event.
-
-### Feature 6: 'Keep track of possibCreate a new event or view an existing eventle/previous guests'
-- Login as an administrator user
-- Click View Previous Guests button
-- If there are guests who have previously attended an event, their names, emails, and the ids and titles of the events they have attended will be displayed as a list
-- Click Go Back button to return to the landing page
-
-### Feature 29: 'I want to create menus'
-- Create a new event or view an existing event
-- Click Edit button
-- Click the Add Menu link
-- Click the Browse button
-- Select a pdf file to upload as the menu, for example pdf-sample.pdf in the root directory of eventplanner
-- Type in a name for the menu or leave it as 'Menu Name'
-- Click the Upload button
-- The menu should appear uder the Current menus for this event header
-- To view the menu, click the menu's name here or in the event view or edit page
-- Click the back link to return to the edit screen of the event
-
-### Feature 10: 'I want to see the invite list'
-- Log in as administrator
-- Create a new event or view an existing event
-- The invite list is displayed on this screen
-- To add an invitee, type their email into the input labelled 'Add new invite' and press the add button
-- To remove an invitee, press the 'delete' button beside their email
-
-### Feature 11: 'I want to see guest contact details'
-- Log in as administrator
-- Create a new event or view an existing event
-- Add an invitee to the invite list
-- Invitee's contact email is displayed on the invite list
-
-If the invitee has RSVP'd as attending, the invitee's name and email are displayed in the attendee report.
-To view this:
-- Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
-- From event view page, click the 'View Attendee Report' link
-- Details about all attendees are displayed here
-
-### Feature 12: 'I need to be able to manage the responses so I can know who is attending'
-This feature describes the viewing, removal, and confirmation of user responses.
-
-To view responses:
-- Log in as administrator
-- Create a new event or view an existing event
-- Add an invitee to the invite list
-- Responses are listed in the invite list displayed
-- Invites are labelled as 'Pending' or 'attending'
-- Invitee that was just added should have value 'Pending'
-
-To view only those attending, you can view the attendee report:
-- Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
-- From event view page, click the 'View Attendee Report' link
-- Details about all attendees are displayed here
-
-To remove an invite (for example if an invitee has responded that they are not attending and
-you wish to remove them from the list):
-
-- Create a new event or view an existing event
-- Add an invitee to the invite list
-- Press the 'delete' button to remove the invite
-
-To confirm an invitee's attendance
-- Add an invitee to the invite list
-- Register the invitee (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
-- The invitee is now listed in the invite list as 'Attending'
-- This invitee will now also be listed in the attendee report
-
-### Feature 30: 'I want to see dietary requirements and access requirements of attendees so I can provide details to catering'
-- Login as an administrator user
-- Create a new event or view an existing event
-- Click View Guest Details button on the view page for this event
-- If guests have been invited to this event their details will be listed. Press Go Back button to return to the event view page
-- If instead no guests had been registered for this event, a message will be displayed indicating this.
-
-### Feature 17: 'Send out emails automatically when an event is created'
-- Log in to an admin account that is subscribed for new event notifications
+- Enter the admin credentials (Email: eventplanner.gp@gmail.com  Password: CS4098) and click submit.
+- Click Grant Admin Access.
+- Enter email of previously created user eg)andrew.butterfield@scss.tcd.ie and click grant.
+- Press logout button on the navbar.
+- Click login button
+- Enter details of previously created user and click submit.
+- Now admin actions are available
+    - This shows Feature 2: I want to be able to give admin access to other people
 - Click Create Event button
-- Enter event details and confirm
-- Read and confirm the modal
-- Should be redirected to the event page
-- Go to inbox for email of subscribed admin account
-- Observe an email is present stating that an event with the title provided has been created
-
-### Feature 20: Subscribe to an event
-- Create or login to an Account
-- Create a new event or view an existing event
-- Click subscribe button on the event page
-
-### Feature 20: 'I would like to email (legitimately) subscribed users'
-- Ensure a user account is subscribed to an event
-- Log in to an admin account
-- Go to an event page (eg localhost:3000/event/view/0) - Same event that the user is subscribed
-- Click Contact Users button
-- Choose to send email to subscribed users in the recipients dropdown. Complete the email details and send.
-- Go to inbox for email of subscribed user account
-- Observe an email is present matching the one previously sent
-
-### Feature 21: 'I want to be able to contact attendees easily e.g. group emails'
-- Log in to an admin account
-- Go to an event page (eg localhost:3000/event/view/0)
-- Ensure this user is either invited or an attendee (Has RSVP'd as going) of this event
-- Click Contact Users button
-- Choose to either send email to invitee or attendee (Depending on your user). Complete the email details and send.
-- Go to inbox for email of subscribed admin account
-- Observe an email is present matching the one previously sent
-
-### Feature 24: 'I want to be able to see a report of who is attending an event'
-
-- Create a new event or view an existing event
-- Add an invitee to the invite list
-- Register the invitee just added (create a user account with invitee's email, log in as administrator, view event, click edit, then register guest)
-- From event view page, click the 'View Attendee Report' link
-- Details including the guest's name, email, and access/dietary restrictions are listed here
-
+- Enter Event details and click confirm and confirm the popup confirmation.
+- Check email supplied of previously created (and subscribed) user for event creation notification email.
+    - This shows Feature 17: Send out emails automatically when an event is created
+- You should now be on the created event page.
+    - This shows Feature 4: I would like to be able to create an event e.g. a dinner
+- Click subscribe button (To receive emails about event updates)
+- Click Edit button
+- Edit Event as required and click confirm.
+- Confirm the event details have changed,
+    - This shows Feature 5: I want to be able to update event information and submit event updates
+- Check email supplied of previously created (and subscribed) user for event update notification email.
+    - This shows Feature 20: I would like to email (legitimately) subscribed users
+- Click Add Menu
+- Click browse button to initiate file directory popup.
+- Find and enter project folder (which was cloned)
+- Select the file named: 'pdf-sample.pdf' and click open
+- Enter menu name as desired (defaults to: 'Menu Name') and click upload
+- Click back button to return to event page
+- Click the new menu item displayed as the menu name provided
+- The pdf sample should show in a new tab
+- Close opened pdf tab if desired and return to event page
+    - This shows Feature 29: I want to create menus
+- Click on Invite List button
+- Enter current users email eg) andrew.butterfield@scss.tcd.ie and click Add
+- The invited user should be added to the invite list
+    - This shows Feature 10: I want to see invite list
+- Click Send Invites button
+- Check email supplied of invited user for invitation notification email.
+- In the email click on the link to RSVP
+- When brought to application page, click 'Attending'
+- If desired you can close this tab and return to tab with invite list page.
+- Refresh this page and the invite list will show the invited guest is now Attending.
+    - This shows Feature 8: I want to send invitations to a mailing list, so that people know to come and that they are invited
+		- This shows Feature 9: Send out invitation(s)
+		- This shows Feature 14: I want to be able to send automated invitations, with link to register for the event
+- Click Back button to return to event page
+- Click Edit button
+- Click Register Guest button
+- Enter email john.doe@gmail.com (This is a pre-populated user for testing)
+- Enter access requirements and dietary restrictions as desired
+- Click Register Guest
+- Click View Attendee Report button
+    - This shows Feature 13: As staff I need to register a guest for one event (including their details), so I can track what is need for the event (dietary, etc.)
+		- This shows Feature 22: I want to be able to see the rsvp list
+		- This shows Feature 12: I need to be able to manage the responses so I can know who is attending
+		- This shows Feature 24: I want to be able to see a report of who is attending an event
+- Click back button to return to event page
+- Click Table Plan button
+- Click Create table, enter desired table size in the popup and click confirm
+    - This shows Feature 33: I want to be able to see the table plan
+- Click edit button in created table
+- Enter desired table label eg) Club A and change the names in seating allocation if required.
+- Click confirm
+- The created table should now have a label.
+    - This shows Feature 35: I would like to be able to differentiate tables e.g. vip, tcd alumni
+- Click back button to return to event page
+- Click View Guest Details button
+    - This shows Feature 11: I want to see guests contact details
+- Click Send Details to Catering button
+- Enter an email which you have access to eg) andrew.butterfield@scss.tcd.ie
+- Press Send Guest Details buttons and press confirm in confirmation popup
+    - This shows Feature 30: I want to see dietary requirements and access requirements of attendees so I can provide details to catering
+		- This shows Feature 31: I want to be able to share special dietary requirements (including table info for guest) with the caterers so that they can make appropriate arrangements
+- Click Contact Users
+- Select 'Attending Guests' as recipients and enter desired subject and message
+- Click Send Mail button
+- Check email of current user (Who has RSVP'd as Attending) eg) andrew.butterfield@scss.tcd.ie
+    - This shows Feature 21: I want to be able to contact attendees easily e.g. group emails
+- Click Ticket Setup Button
+- Enter the ticket and table setup as desired
+- Click Confirm button
+- Click Buy Tickets
+- Select amount of ticket and/or tables desired
+- Enter any access requirements and dietary restrictions
+- Click Pay Now
+- Enter Payment Details in popup (the payment is mocked so details entered are not verified) and click confirm
+- Click My Tickets on navbar
+    - This shows Feature 18: Online ticketing - keeping in mind that mostly repeat customers/attendees
+- Click Events on navbar
+- Click event page button of created event
+- Click Invite List button
+- The previously invited user should show as 'Has paid'
+    - This shows Feature 23: I want to confirm people have paid to attend
+- Click Back To Event button to return to event page
+- Click Start Live Event
+    - This shows Feature 123: I want to have a separate webpage that can be used to display live information to attendees during the event (a live screen)
+- Click Add Milestone
+- Enter milestone label and donation goal eg) 1000 and click Confirm
+- Click Make Donation
+- Enter a donation amount (greater than created milestone) and enter payment details (the payment system is mocked so details entered are not verified)
+- Click confirm
+- After approx 5 seconds, the on-screen celebration will show
+    - This shows Feature 124: I want to have a tracker/counter that updates with donations throughout the event on the live screen
+		- This shows Feature 125: I want to enter milestone amounts of money raised and have some kind of on-screen celebration when these are achieved
+- Click Event Page to return to the event
+- Click View Payments for this event
+    - This shows Feature 49: I want to be able to accept/see payments
+- Click Home on navbar
+- Click View Previous Guests
+    - This shows Feature 6: Keep track of possible/previous guests, Feature 7: Track which guests are big spenders and/or regular donors
+- Click Back button
+- Click Create Event
+- Enter Event details and click confirm button and confirm the popup.
+- Click Delete and confirm the popup
+    - This shows Feature 114: Admins can delete events
 
 # Errors
 ### Port already in use
