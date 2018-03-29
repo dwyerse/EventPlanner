@@ -5,6 +5,7 @@ var testUser ={ _id: '5a81d81c086fec141cf002e1',
 	password: 'ad1a76378fb0544137e8564f90af189ebf752e8ccee87c868f2109baf2d9d1e6',
 	type: 'user',
 	eventsAttended: [],
+	amountSpent: 0,
 	salt: '01b026c4fc359b27',
 	__v: 0 };
 describe('Edit Account tests', function() {

@@ -1,12 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var eventMapper = require('../mappers/eventMapper');
-//var ticketMapper = require('../mappers/ticketMapper');
 var ticketInfoMapper = require('../mappers/ticketInfoMapper');
 var path = require('path');
 var menuMapper = require('../mappers/menuMapper');
 var userMapper = require('../mappers/userMapper');
-var tableMapper = require('../mappers/tableMapper');
 var paymentMapper = require('../mappers/paymentMapper');
 var inviteList = require('./inviteList');
 var fs = require('fs');
@@ -85,7 +83,7 @@ router.get('/guests/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 					{email:invitee.email});
 			res.render('viewGuestDetails', {result,usersWithAllInfoAvailable,err: req.flash('err'),succ: req.flash('succ')});
 		});
-		
+
 	});
 });
 
@@ -122,7 +120,7 @@ router.get('/payments/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 							}
 						}
 					}
-					res.render('eventPayments', {event:req.params.event_id,paymentTotal, 
+					res.render('eventPayments', {event:req.params.event_id,paymentTotal,
 						names, payments, err: req.flash('err'),succ: req.flash('succ')});
 				});
 			});
@@ -259,7 +257,7 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 				res.redirect('/event/view/' + req.params.event_id);
 			}
 			else
-			{				
+			{
 				// Get all invitees of event and email them to say that event has been cancelled
 				if (payment != null)
 				{
@@ -297,7 +295,7 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 								}
 							}
 						});
-												
+
 						ticketInfoMapper.deleteTicketInfo(eventResult.event_id, function(err) {
 							// Call EventMapper function to delete event and any dependencies
 							if (err) {
@@ -305,20 +303,20 @@ router.post('/delete/:event_id',isLoggedIn, isAdminUser, function(req, res) {
 								res.redirect('/event/view/' + req.params.event_id);
 							}
 							else {
-								eventMapper.deleteEvent(eventResult.event_id, function(err) {	
+								eventMapper.deleteEvent(eventResult.event_id, function(err) {
 									if (err) {
-										req.flash('err', err);	
-										res.redirect('/event/view/' + req.params.event_id);						
+										req.flash('err', err);
+										res.redirect('/event/view/' + req.params.event_id);
 									}
 									else {
-										req.flash('succ', 'Event was successfully deleted.');					
+										req.flash('succ', 'Event was successfully deleted.');
 										res.redirect('/events');
 									}
 								});
-							}		
+							}
 						});
-					});	
-				}	
+					});
+				}
 			}
 		});
 	});
@@ -349,7 +347,7 @@ router.get('/view/:event_id/attendeeReport',isLoggedIn,isAdminUser,function(req,
 					attending.push(result.invitees[i]);
 				}
 			}
-			res.render('attendeeReport', {attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
+			res.render('attendeeReport', {event_id:req.params.event_id,attending:attending, names:names, err: req.flash('err'), succ: req.flash('succ')});
 		});
 	});
 });
@@ -521,7 +519,7 @@ function sendDeleteNotification(event, callback) {
 
 		callback(err);
 	});
-		
+
 }
 
 router.post('/contact',isAdminUser, isLoggedIn, function(req, res){
@@ -548,7 +546,7 @@ function getRecipientEmails(select, event_id, callback){
 			eventMapper.findInviteeEmails(event_id, function(err,invitees){
 
 				recipients = recipients.concat(invitees);
-				
+
 				var sub = EVENT_SUB_PREFIX + event_id;
 				userMapper.findSubscribedUsers(sub, function(err , subscribers){
 
@@ -562,7 +560,7 @@ function getRecipientEmails(select, event_id, callback){
 	else if(select == 'attendees'){
 		eventMapper.findAttendeeEmails(event_id, function(err, attendees){
 			callback(err,attendees);
-		});	
+		});
 	} else if(select == 'invitees') {
 		eventMapper.findInviteeEmails(event_id, function(err,invitees){
 			callback(err,invitees);

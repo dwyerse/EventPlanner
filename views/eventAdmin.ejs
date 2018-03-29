@@ -6,8 +6,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="collapse navbar-collapse" id="navbarNav">
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" href="/login/landingPage">Home</a>
@@ -24,6 +27,7 @@
     </ul>
   </div>
 </nav>
+<a class="btn btn-primary" href="/events" role="button" style="margin:12px">Back</a>
 <div class="container">
 	<% if(err && err.length > 0) { %>
 	<div class="alert alert-danger" role="alert">
@@ -38,45 +42,49 @@
 	<% } %>
 	<br>
 
-	
+
 	<h2 style="word-break: break-all; " > <%= result.title %> </h2>
-	<br>
+	<hr>
+	<h5>Event Actions</h5>
 	<%if(isAdmin){%>
-	<div class="col-sm" style="margin-bottom:5px;">
+	 <div class="col-sm" style= "margin-bottom:8px;margin-top:12px;">
 		<a href="#contactModal" class="btn btn-info btn-sm" data-toggle="modal">Contact Users</a>
-		<a href="/event/tickets/setup/<%=result.event_id%>" class="btn btn-info btn-sm">Ticket Setup</a>
-		<a href="/event/payments/<%=result.event_id%>" class="btn btn-info btn-sm">View Payments for this Event</a>
-	</div>
-	<div class="col-sm" style="margin-bottom:5px;">
 		<a href="/event/inviteList/<%=result.event_id%>" class="btn btn-info btn-sm">Invite List</a>
 		<a class="btn btn-info btn-sm" href="<%=result.event_id%>/attendeeReport">View Attendee Report</a>
 		<a href="/event/guests/<%=result.event_id%>"><button class="btn btn-info btn-sm">View Guest Details</button> </a>
 	</div>
-	<div class="col-sm" style="margin-bottom:5px;">
-		<a href="/table/<%=result.event_id%>"><button class="btn btn-info">Table Plan</button> </a>
-		<%if(result.liveState==1){%>
-		<a href="/live/<%=result.event_id%>"><button class="btn btn-danger">Live Page</button> </a>
-		<a href ="/event/startLive/<%=result.event_id%>/0"><button class="btn btn-danger">End Live Event</button> </a>
-		<%}else{%>
-		<a href ="/event/startLive/<%=result.event_id%>/1"><button class="btn btn-danger">Start Live Event</button> </a>
-		<%}%>
-	</div>
 	
+	<div class="col-sm" style="margin-bottom:8px;">
+		<a href="/event/tickets/setup/<%=result.event_id%>" class="btn btn-success btn-sm">Ticket Setup</a>
+		<a href="/table/<%=result.event_id%>"><button class="btn btn-success btn-sm">Table Plan</button> </a>
+		<a href="/event/tickets/<%=result.event_id%>" class="btn btn-success btn-sm">Buy Tickets</a>
+		<a href="/event/payments/<%=result.event_id%>" class="btn btn-success btn-sm">View Payments for This Event</a>
+	</div>
+	<div class="col-sm" style="margin-bottom:8px;">
+			<%if(result.liveState==1){%>
+				<a href="/live/<%=result.event_id%>"><button class="btn btn-sm btn-danger">Live Page</button> </a>
+				<a href ="/event/startLive/<%=result.event_id%>/0"><button class="btn btn-sm btn-danger">End Live Event</button> </a>
+				<%}else{%>
+				<a href ="/event/startLive/<%=result.event_id%>/1"><button class="btn btn-sm btn-danger">Start Live Event</button> </a>
+			<%}%>
+	</div>
+
 	<%}%>
 	<div class="col-sm">
 		<% if(!isSubscribed) { %>
 		<form action="/event/subscribe" method="post" id='subForm'>
 			<input type="hidden" name="event_id" value=<%=result.event_id%> />
-			<button type="submit" class="btn btn-info btn-sm">Subscribe</button>
+			<button type="submit" class="btn btn-warning btn-sm">Subscribe</button>
 		</form>
 		<% } else { %>
 		<form action="/event/unsubscribe" method="post" id='unsubForm'>
-			<button type="submit" class="btn btn-info btn-sm">Unsubscribe</button>
+			<button type="submit" class="btn btn-warning btn-sm">Unsubscribe</button>
 			<input type="hidden" name="event_id" value=<%=result.event_id%> />
 		</form>
 		<% } %>
 	</div>
-	<br>
+	<hr>
+
 	<div class="form-group col-md-6">
 		<h4>Location</h4>
 		<label style="word-break: break-all;"><%= result.location %></label>
@@ -100,14 +108,12 @@
 		</table>
 	</div>
 	<%if(isAdmin){%>
-	
+
 		<div class="form-group col-md-3">
 			<a href="/event/edit/<%=result.event_id%>"><button class="btn btn-primary">Edit</button> </a>
-		</div>
-		<div class="form-group col-md-3">
 			<a href="#deleteModal" data-toggle="modal"><button class="btn btn-primary">Delete</button></a>
 		</div>
-	
+
 	<%}%>
 	<div id="contactModal" class="modal fade">
 		<div class="modal-dialog modal-confirm">
@@ -154,7 +160,7 @@
 				</div>
 				<form method="post" action="/event/delete/<%=result.event_id%>">
 					<div class="modal-body">
-						<p>This Event will be deleted.</p>
+						<p>This Event will be deleted. All invited guests will be informed.</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -164,7 +170,6 @@
 			</div>
 		</div>
 	</div>
-</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

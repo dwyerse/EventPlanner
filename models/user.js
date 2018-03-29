@@ -7,10 +7,6 @@ userSchema.add({
 	email: { type: String, required: true,unique:true},
 	password:{ type: String, required: true },
 	type:{ type: String, required: true },
-	eventsAttended:[{
-		event_id: Number,
-		event_title: String
-	}],
 	salt:{ type: String, required: true },
 	subscriptions:{ type: [String] },
 	telephoneNo:String
