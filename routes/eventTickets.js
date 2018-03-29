@@ -94,10 +94,10 @@ router.post('/setup/:event_id', isLoggedIn, isAdminUser, function(req, res) {
 	let event_id = req.params.event_id;
 	let ticketInfoObj = {event_id:event_id, tables: {total:req.body.totalTables, price:req.body.tablePrice, size:req.body.tableSize,
 		available:req.body.totalTables}, tickets: {total:req.body.totalTickets, price:req.body.ticketPrice, available:req.body.totalTickets}};
-	if(req.body.isUpdate){
+	if(req.body.isUpdate == 'true'){
 		ticketInfoMapper.updateTicketInfo(event_id, ticketInfoObj, function(err){
 			if(err){
-				req.flash('err', err);
+				req.flash('err', JSON.stringify(err));
 				res.redirect('/event/tickets/setup/'+event_id);
 			} else {
 				req.flash('succ', 'Updated Ticket Settings');
@@ -107,10 +107,10 @@ router.post('/setup/:event_id', isLoggedIn, isAdminUser, function(req, res) {
 	} else {
 		ticketInfoMapper.addTicketInfo(ticketInfoObj, function(err){
 			if(err){
-				req.flash('err', err);
+				req.flash('err', JSON.stringify(err));
 				res.redirect('/event/tickets/setup/'+event_id);
 			} else {
-				req.flash('succ', 'Updated Ticket Settings');
+				req.flash('succ', 'Created Ticket Settings');
 				res.redirect('/event/view/'+event_id);
 			}
 		});
