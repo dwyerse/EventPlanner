@@ -69,13 +69,9 @@
 					</div>
 			</div>
 
-			<div id="buttons">
-				<a class="btn btn-primary" href="/register/guest/<%= result.event_id %>" role="button" id='createBtn'>Register Guest</a>
-			</div>
 
 			<div class="form-row">
 					<div class="form-group col-md-6">
-						<a href="/event/edit/<%=result.event_id%>/addMenu">Add Menu</a><br><br>
 						<h5>Menus:</h5>
 						<table>
 							<% for(var i=0; i < menus.length; i++) { %>
@@ -87,6 +83,11 @@
 					</div>
 			</div>
 			<a href="#confirmModal" class="btn btn-primary" data-toggle="modal">Confirm</a>
+			<br></br>
+			<div id="buttons">
+				<a class="btn btn-info" href="/register/guest/<%= result.event_id %>" role="button" id='createBtn'>Register Guest</a>
+			</div>
+
 			<div id="confirmModal" class="modal fade">
 				<div class="modal-dialog modal-confirm">
 					<div class="modal-content">
